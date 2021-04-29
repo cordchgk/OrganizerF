@@ -48,7 +48,7 @@
             <h:panelGroup rendered="#{user.isAuthenticated()}">
                 <li>
 
-                   <f:websocket channel="testChannel" user="#{user.userID}" onmessage="onMessage()" />
+                   <f:websocket channel="testChannel" onmessage="onMessage()" />
                     <p:outputLabel id="nots" value="#{headerB.notifications}" binding="#{headerB.uiComponent}">
 
                     </p:outputLabel>

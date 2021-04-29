@@ -167,6 +167,14 @@ public class UserBean implements Serializable {
     }
 
 
+    @Push(channel = "testChannel")
+    @Inject
+    private PushContext testChannel;
 
+
+    public void send(){
+        System.out.println("hello World");
+        testChannel.send("Hello Word");
+    }
 
 }

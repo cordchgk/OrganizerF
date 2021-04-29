@@ -118,7 +118,7 @@
                     </h:dataTable>
                     <h:commandButton style="margin-bottom: 10px;margin-top:20px" value="Create"
                                      action="#{product.createProduct()}">
-                        <f:ajax render="@form" execute="@form"/>
+
                         <f:param name="gID" value="#{product.groupDTO.gID}"/>
                     </h:commandButton>
 

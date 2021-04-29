@@ -16,6 +16,7 @@
         <element id="directory" name="lib">
           <element id="library" level="project" name="Maven: org.jboss.weld.servlet:weld-servlet:2.2.14.Final" />
           <element id="library" level="project" name="Maven: javax.faces:javax.faces-api:2.3" />
+          <element id="library" level="project" name="Maven: org.primefaces:primefaces:8.0" />
           <element id="library" level="project" name="Maven: org.glassfish:javax.faces:2.4.0" />
           <element id="library" level="project" name="Maven: javax.el:javax.el-api:3.0.1-b04" />
           <element id="library" level="project" name="Maven: org.glassfish:javax.el:3.0.1-b04" />
@@ -52,8 +53,7 @@
           <element id="library" level="project" name="Maven: org.codehaus.plexus:plexus-compiler-manager:2.8.4" />
           <element id="library" level="project" name="Maven: org.codehaus.plexus:plexus-compiler-javac:2.8.4" />
           <element id="library" level="project" name="Maven: org.jetbrains:annotations:20.1.0" />
-          <element id="library" level="project" name="primefaces-8.0" />
-          <element id="library" level="project" name="postgresql-42.2.19" />
+          <element id="library" level="project" name="postgresql-42.2.20" />
         </element>
       </element>
       <element id="directory" name="META-INF">

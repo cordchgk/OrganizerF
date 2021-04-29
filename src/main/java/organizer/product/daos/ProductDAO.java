@@ -175,6 +175,7 @@ public class ProductDAO {
             nDTO.setMessage(new NotificationCreator().newProductNotification(nDTO));
             NotifcationDAO dao = new NotifcationDAO();
             dao.insertByDTO(nDTO);
+            userBean.send();
 
         } catch (SQLException ex) {
             Logger.getLogger(UserDAO.class.getName())
