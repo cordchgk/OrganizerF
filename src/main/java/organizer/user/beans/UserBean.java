@@ -17,6 +17,10 @@ import javax.faces.push.Push;
 import javax.faces.push.PushContext;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.websocket.OnMessage;
+import javax.websocket.Session;
+import javax.websocket.server.ServerEndpoint;
+import java.io.IOException;
 import java.io.Serializable;
 
 import java.util.ArrayList;
@@ -25,6 +29,7 @@ import java.util.List;
 /**
  * Created by cord on 05.07.16.
  */
+
 @Named("user")
 @SessionScoped
 public class UserBean implements Serializable {
@@ -165,6 +170,18 @@ public class UserBean implements Serializable {
             nav.performNavigation("access-denied");
         }
     }
+
+
+    @Push(channel = "testChannel")
+    @Inject
+    private PushContext testChannel;
+
+
+    public void send(){
+        System.out.println("hello World");
+        testChannel.send("Hello Word");
+    }
+
 
 
 

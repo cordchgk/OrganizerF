@@ -5,12 +5,14 @@ package organizer.commons.beans;
 import organizer.commons.daos.HeaderDAO;
 import organizer.commons.dtos.HeaderDTO;
 import organizer.system.Events.UserEventBean;
+import organizer.system.Utility;
 import organizer.user.beans.UserBean;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
 import javax.faces.component.UIComponent;
+import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -44,12 +46,24 @@ public class HeaderBean implements Serializable {
         this.uiComponent = uiComponent;
     }
 
+
+    private String url;
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
     @Inject
     UserBean userBean;
 
 
     @PostConstruct
     public void init() {
+        this.url = Utility.getURL();
 
         HeaderDAO dao = new HeaderDAO();
         this.dto = new HeaderDTO();
@@ -66,6 +80,8 @@ public class HeaderBean implements Serializable {
         }
 
     }
+
+
 
 
     @PreDestroy

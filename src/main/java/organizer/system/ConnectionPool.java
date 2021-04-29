@@ -379,7 +379,17 @@ this.createDatabase();
         } catch (SQLException ex) {
             LOGGER.log(Level.SEVERE, null, ex);
         }
-
+        try {
+            Statement stmt = connection.createStatement();
+            String query = "CREATE TABLE IF NOT EXISTS notificationsread (" +
+                    "nID smallint," +
+                    "uID smallint," +
+                    "read boolean)";
+            stmt.executeUpdate(query);
+            stmt.close();
+        } catch (SQLException ex) {
+            LOGGER.log(Level.SEVERE, null, ex);
+        }
 
         try {
             Statement stmt = connection.createStatement();
@@ -431,6 +441,8 @@ this.createDatabase();
             stmt.close();
         } catch (SQLException e) {
         }
+
+
 
         this.releaseConnection(connection);
         return userExists;

@@ -6,7 +6,7 @@
       xmlns:p="http://primefaces.org/ui">
 
 <ui:composition>
-    <script>
+    <script type="text/javascript">
 
         function myFunction() {
             var popup = document.getElementById("myPopup");
@@ -16,14 +16,16 @@
 
         }
 
+        function socketListener(message, channel, event) {
 
-        function onMessage(message, channel, event) {
-            console.log("w")
             var m = "message:" + message + ", channel:" + channel + ", event:" + event;
             console.log(m);
-            var n = document.getElementById("nots");
-            n.value = m
+            document.getElementById('nots').innerHTML = message;
+
+
         }
+
+
 
     </script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -48,10 +50,16 @@
             <h:panelGroup rendered="#{user.isAuthenticated()}">
                 <li>
 
-                   <f:websocket channel="testChannel" user="#{user.userID}" onmessage="onMessage()" />
+                   <f:websocket channel="testChannel" onmessage="socketListener" >
+
+
+                           <f:ajax event="someEvent" listener="#{user.send()}" render=":nots" />
+
+                   </f:websocket>
                     <p:outputLabel id="nots" value="#{headerB.notifications}" binding="#{headerB.uiComponent}">
 
                     </p:outputLabel>
+
                 </li>
                 <li>
 
@@ -59,7 +67,7 @@
                     <div class="popup" onclick="myFunction()">Notifications
 
                         <iframe allowtransparency="false" id="myPopup" class="popuptext login card-no-hover"
-                                src="http://localhost:8080/organizer_war_exploded/user/notifications.xhtml"
+                                src="#{headerB.url}/user/notifications.xhtml"
                                 height="600"
                                 style="width: 500px" name="Notifications">
 

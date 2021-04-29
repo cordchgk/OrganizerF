@@ -1,13 +1,14 @@
 package organizer.user.beans;
 
 
-
 import organizer.system.Utility;
 import organizer.system.enums.FaceletPath;
 import organizer.user.daos.NotifcationDAO;
 import organizer.user.dtos.NotificationDTO;
 
 import javax.annotation.PostConstruct;
+
+import javax.annotation.PreDestroy;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.model.DataModel;
 import javax.faces.model.ListDataModel;
@@ -41,6 +42,7 @@ public class NotificationBean implements Serializable {
 
         NotifcationDAO dao = new NotifcationDAO();
         this.dtos = dao.selectByUserDTO(this.userBean.getDto());
+        Collections.reverse(this.dtos);
 
         this.notificationDataModel = new
                 ListDataModel<>(this.dtos);
@@ -57,14 +59,15 @@ public class NotificationBean implements Serializable {
     }
 
 
+    public void refresh() {
+
+    }
 
 
+    @PreDestroy
+    public void destroy(){
 
-
-
-
-
-
+    }
 
 
 }

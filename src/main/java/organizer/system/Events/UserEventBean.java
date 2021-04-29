@@ -30,6 +30,9 @@ public class UserEventBean implements Serializable {
 
 
 
+
+
+
     public static UserEventBean getInstance() {
         return instance;
     }

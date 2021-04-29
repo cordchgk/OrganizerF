@@ -42,23 +42,34 @@
       <sourceFolder url="file://$MODULE_DIR$/src/test/java" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/test/resources" type="java-test-resource" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
+      <excludeFolder url="file://$MODULE_DIR$/.idea/dataSources" />
+      <excludeFolder url="file://$MODULE_DIR$/lib" />
+      <excludeFolder url="file://$MODULE_DIR$/out/artifacts/unnamed/WEB-INF/lib" />
+      <excludeFolder url="file://$MODULE_DIR$/out/artifacts/organizer_war_exploded/WEB-INF/lib" />
+      <excludeFolder url="file://$MODULE_DIR$/out/artifacts/unnamed/WEB-INF/classes/organizer" />
+      <excludeFolder url="file://$MODULE_DIR$/out/artifacts/organizer_war_exploded/WEB-INF/classes/organizer" />
+      <excludeFolder url="file://$MODULE_DIR$/out/artifacts/organizer_war" />
+      <excludeFolder url="file://$MODULE_DIR$/out/artifacts/organizerw" />
+      <excludeFolder url="file://$MODULE_DIR$/src/main/webapp/WEB-INF/postgresql" />
+      <excludeFolder url="file://$MODULE_DIR$/out/artifacts/organizer_war_exploded/WEB-INF/postgresql" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="font-awesome" level="application" />
     <orderEntry type="library" name="jquery" level="application" />
     <orderEntry type="library" name="javaee8-ri" level="application" />
-    <orderEntry type="library" name="primefaces-8.0" level="project" />
-    <orderEntry type="library" name="postgresql-42.2.19" level="project" />
+    <orderEntry type="library" name="postgresql-42.2.20" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: javax:javaee-api:8.0" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: com.sun.mail:javax.mail:1.6.0" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: javax.activation:activation:1.1" level="project" />
     <orderEntry type="library" name="Maven: org.jboss.weld.servlet:weld-servlet:2.2.14.Final" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: javax.servlet:javax.servlet-api:4.0.1" level="project" />
-    <orderEntry type="library" name="Maven: javax.faces:javax.faces-api:2.3" level="project" />
+    <orderEntry type="library" name="Maven: org.primefaces:primefaces:8.0" level="project" />
     <orderEntry type="library" name="Maven: org.glassfish:javax.faces:2.4.0" level="project" />
     <orderEntry type="library" name="Maven: javax.el:javax.el-api:3.0.1-b04" level="project" />
     <orderEntry type="library" name="Maven: org.glassfish:javax.el:3.0.1-b04" level="project" />
+    <orderEntry type="library" name="Maven: javax.json:javax.json-api:1.1.4" level="project" />
+    <orderEntry type="library" name="Maven: org.glassfish:javax.json:1.1" level="project" />
     <orderEntry type="library" name="Maven: org.apache.maven.plugins:maven-compiler-plugin:3.8.1" level="project" />
     <orderEntry type="library" name="Maven: org.apache.maven:maven-plugin-api:3.0" level="project" />
     <orderEntry type="library" name="Maven: org.apache.maven:maven-model:3.0" level="project" />

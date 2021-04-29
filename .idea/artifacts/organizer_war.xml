@@ -1,13 +1,7 @@
 <component name="ArtifactManager">
   <artifact type="war" name="organizer:war">
-    <output-path>$PROJECT_DIR$/target</output-path>
-    <properties id="maven-jee-properties">
-      <options>
-        <module>organizer</module>
-        <packaging>war</packaging>
-      </options>
-    </properties>
-    <root id="archive" name="organizer-1.0.0-SNAPSHOT.war">
+    <output-path>$PROJECT_DIR$/out/artifacts/organizer_war</output-path>
+    <root id="archive" name="organizer_war.war">
       <element id="artifact" artifact-name="organizer:war exploded" />
     </root>
   </artifact>

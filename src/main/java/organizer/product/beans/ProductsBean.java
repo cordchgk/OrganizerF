@@ -253,7 +253,7 @@ dto.setCount(dto.getCount() + dto.getDiff());
         } catch (DuplicateException e) {
             e.printStackTrace();
         }
-     //   return FaceletPath.PRODUCTS.getRedirectionPath() + "&includeViewParams=true";
+      // return FaceletPath.PRODUCTS.getRedirectionPath() + "&includeViewParams=true";
     }
 
     public void delete() {
