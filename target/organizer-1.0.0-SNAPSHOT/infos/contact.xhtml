@@ -1,0 +1,78 @@
+<ui:composition template="/resources/templates/commonLayout.xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:p="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <ui:define name="title">Kontakt</ui:define>
+    <ui:define name="content">
+        <section class="contact">
+            <h:messages errorClass="errorMessage_center"
+                        infoClass="infoMessage_center"
+                        showDetail="false"
+                        globalOnly="true"
+
+            />
+
+            <h:form>
+                <ul class="table">
+
+                    <li>
+                        <ul>
+                            <li>Ihre Email Adresse</li>
+                            <li>
+                                <h:inputText rendered="#{!user.isAuthenticated()}" id="email" title="email" size="30"
+                                             maxlength="50"
+                                             value="#{contact.dto.email}"
+                                             required="true"
+                                             requiredMessage="Bitte geben sie ihre E-Mail-Adresse ein">
+                                    validatorMessage="Invalid email format">
+                                    <f:validateRegex
+                                            pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$"
+                                    />
+                                </h:inputText>
+                                <h:inputText rendered="#{user.isAuthenticated()}" id="emailtrue" title="email" size="30"
+                                             maxlength="50"
+                                             value="#{user.dto.email}"
+                                             required="true"
+                                             requiredMessage="Bitte geben sie ihre E-Mail-Adresse ein"
+                                             readonly="true">
+                                    validatorMessage="Invalid email format">
+
+                                </h:inputText>
+                                <div class="errorMessage_specific">
+                                    <div><h:message for="email" errorClass=""/></div>
+                                </div>
+                            </li>
+                        </ul>
+                    </li>
+                    <li><h:inputTextarea style="height: 30px;resize: none" id="subject" title="subject"
+                                         p:placeholder="Subject"
+                                         value="#{contact.dto.subject}"
+                                         required="true"
+                                         requiredMessage="Your subject please"/>
+                        <div class="errorMessage_specific_center">
+                            <div><h:message for="message" errorClass=""/></div>
+                        </div>
+
+                    </li>
+                    <li><h:inputTextarea style="resize: none; " id="message" title="message"
+                                         p:placeholder="Message"
+                                         value="#{contact.dto.msg}"
+                                         required="true"
+                                         requiredMessage="Type your message"/>
+                        <div class="errorMessage_specific_center">
+                            <div><h:message for="message" errorClass=""/></div>
+                        </div>
+
+                    </li>
+                </ul>
+
+                <h:commandButton value="Send!"
+                                 action="#{contact.send()}"/>
+            </h:form>
+
+        </section>
+
+    </ui:define>
+</ui:composition>
