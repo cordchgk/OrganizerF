@@ -3,6 +3,7 @@ package organizer.product.beans;
 import organizer.group.dtos.GroupDTO;
 import organizer.product.daos.ProductDAO;
 import organizer.product.dtos.ProductDTO;
+import organizer.system.Utility;
 import organizer.system.enums.FaceletPath;
 import organizer.system.exceptions.DuplicateException;
 import organizer.user.beans.UserBean;
@@ -170,12 +171,12 @@ public class ProductsBean implements Serializable, Validator {
     }
 
 
-    public void save() {
+    public String save() {
         ProductDAO dao = new ProductDAO();
-        for (ProductDTO dto: this.dto
-             ) {
+        for (ProductDTO dto : this.dto
+        ) {
 
-dto.setCount(dto.getCount() + dto.getDiff());
+            dto.setCount(dto.getCount() + dto.getDiff());
             try {
                 dao.update(dto);
             } catch (DuplicateException e) {
@@ -185,6 +186,7 @@ dto.setCount(dto.getCount() + dto.getDiff());
 
 
         reset();
+        return FaceletPath.PRODUCTS.getRedirectionPath() + "&includeViewParams=true";
 
     }
 
@@ -246,14 +248,14 @@ dto.setCount(dto.getCount() + dto.getDiff());
 
     public void createProduct() {
         this.newProduct.setgID(this.groupDTO.getgID());
-
+        this.dto.add(this.newProduct);
         ProductDAO dao = new ProductDAO();
         try {
-            dao.insert(this.newProduct,this.userBean);
+            dao.insert(this.newProduct, this.userBean);
         } catch (DuplicateException e) {
             e.printStackTrace();
         }
-      // return FaceletPath.PRODUCTS.getRedirectionPath() + "&includeViewParams=true";
+        //return FaceletPath.PRODUCTS.getRedirectionPath() + "&includeViewParams=true";
     }
 
     public void delete() {
@@ -268,4 +270,9 @@ dto.setCount(dto.getCount() + dto.getDiff());
         return this.dto.isEmpty();
     }
 
+
+    public String toGroupManager() {
+        System.out.println(Utility.getURL() + FaceletPath.GROUPMANAGER.getPath() + "?gID=" + this.groupDTO.getgID());
+        return Utility.getURL() + FaceletPath.GROUPMANAGER.getPath() + "?gID=" + this.groupDTO.getgID();
+    }
 }

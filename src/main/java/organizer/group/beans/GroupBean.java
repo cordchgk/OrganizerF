@@ -121,4 +121,8 @@ public class GroupBean implements Serializable {
         return FaceletPath.GROUPS.getRedirectionPath();
     }
 
+
+
+
+
 }

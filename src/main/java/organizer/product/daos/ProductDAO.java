@@ -14,6 +14,11 @@ import organizer.user.daos.UserDAO;
 import organizer.user.dtos.NotificationDTO;
 import organizer.user.dtos.UserDTO;
 
+import javax.enterprise.context.ApplicationScoped;
+import javax.faces.context.FacesContext;
+import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
+import javax.inject.Named;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -26,6 +31,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
+
 public class ProductDAO {
 
 
@@ -34,6 +40,9 @@ public class ProductDAO {
     public static ProductDAO getInstance() {
         return instance;
     }
+
+
+
 
 
     public List<ProductDTO> selectByDTO(GroupDTO groupDTO) throws DatabaseException {
@@ -175,7 +184,7 @@ public class ProductDAO {
             nDTO.setMessage(new NotificationCreator().newProductNotification(nDTO));
             NotifcationDAO dao = new NotifcationDAO();
             dao.insertByDTO(nDTO);
-            userBean.send();
+            userBean.send(this.getUserIds(dto.getgID()));
 
         } catch (SQLException ex) {
             Logger.getLogger(UserDAO.class.getName())
@@ -244,6 +253,36 @@ public class ProductDAO {
         }
         pool.releaseConnection(conn);
 
+    }
+
+    private List<Integer> getUserIds(int gID) {
+        ConnectionPool pool = ConnectionPool.getInstance();
+        ArrayList<Integer> users = new ArrayList<>();
+
+        Connection conn = pool.getConnection();
+        String query = "SELECT memberofgroup.uid FROM postgres.public.memberofgroup WHERE memberofgroup.gid = ?";
+        PreparedStatement statement = null;
+        ResultSet result;
+        try {
+            statement = conn.prepareStatement(query);
+        } catch (SQLException ex) {
+            Logger.getLogger(GroupDAO.class.getName())
+                    .log(Level.SEVERE, null, ex);
+            pool.releaseConnection(conn);
+        }
+        try {
+            statement.setInt(1, gID);
+            result = statement.executeQuery();
+            while (result.next()) {
+                users.add(result.getInt(1));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(GroupDAO.class.getName())
+                    .log(Level.SEVERE, null, ex);
+            pool.releaseConnection(conn);
+        }
+        pool.releaseConnection(conn);
+        return users;
     }
 
 

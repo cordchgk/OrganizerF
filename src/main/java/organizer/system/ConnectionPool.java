@@ -1,5 +1,6 @@
 package organizer.system;
 
+import organizer.system.Events.UserEventBean;
 import organizer.user.beans.UserBean;
 
 import organizer.system.exceptions.DatabaseException;
@@ -49,7 +50,9 @@ public class ConnectionPool implements Serializable {
     }
 
     private ConnectionPool() {
+
         users = new ArrayList<>();
+
         final Integer maxConnections = Config.getEntry("MAX_CONNECTIONS", 20);
         final String dbDriver =
                 Config.getEntry("DB_DRIVER", "org.postgresql.Driver");
@@ -81,12 +84,9 @@ public class ConnectionPool implements Serializable {
         while (this.availableConnections.size() < maxConnections) {
             this.addConnection();
         }
-this.createDatabase();
+        this.createDatabase();
         LOGGER.info("ConnectionPool initialized.");
     }
-
-
-
 
 
     public static ConnectionPool getInstance() {
@@ -113,7 +113,6 @@ this.createDatabase();
      * @param connection the connection to release
      */
     public void releaseConnection(final Connection connection) {
-
 
 
         synchronized (this.closed) {
@@ -288,9 +287,6 @@ this.createDatabase();
     public boolean createDatabase() {
 
 
-
-
-
         Connection connection = this.getConnection();
 
         boolean userExists = true;
@@ -441,7 +437,6 @@ this.createDatabase();
             stmt.close();
         } catch (SQLException e) {
         }
-
 
 
         this.releaseConnection(connection);

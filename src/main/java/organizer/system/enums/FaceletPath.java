@@ -19,6 +19,7 @@ public enum FaceletPath {
     @NonNls PROFILE("/user/products.xhtml"),
     @NonNls PRODUCTS("/product/products.xhtml"),
     @NonNls GROUPS("/group/groups.xhtml"),
+    @NonNls GROUPMANAGER("/group/groupmanager.xhtml"),
     @NonNls VERIFICATION("/verification.xhtml"),
     @NonNls SETTINGS("/user/restaurant.xhtml"),
     @NonNls SMTP_SETTINGS("/user/smtp-settings.xhtml"),

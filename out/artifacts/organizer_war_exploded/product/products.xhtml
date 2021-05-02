@@ -11,7 +11,7 @@
     <ui:define name="title">Products</ui:define>
     <ui:define name="content">
         <f:event listener="#{product.isAllowed()}" type="preRenderView"/>
-        <div class="product card-no-hover" style="width: 50%">
+        <div class="login card-no-hover" style="width: 50%;position: fixed" id="form_div">
 
 
             <h:panelGroup style="width: 100%" rendered="#{user.isAuthenticated() }">
@@ -118,7 +118,7 @@
                     </h:dataTable>
                     <h:commandButton style="margin-bottom: 10px;margin-top:20px" value="Create"
                                      action="#{product.createProduct()}">
-
+                       <f:ajax render="form" execute="@form"/>
                         <f:param name="gID" value="#{product.groupDTO.gID}"/>
                     </h:commandButton>
 

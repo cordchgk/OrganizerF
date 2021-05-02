@@ -21,11 +21,7 @@ import java.util.logging.Logger;
  * Created by cord on 07.06.16.
  */
 public class GroupDAO {
-    private static GroupDAO instance = new GroupDAO();
 
-    public static GroupDAO getInstance() {
-        return instance;
-    }
 
 
     public List<GroupDTO> selectByUser(UserDTO userDTO) throws DatabaseException {

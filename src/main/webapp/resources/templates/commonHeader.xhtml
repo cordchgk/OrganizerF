@@ -9,8 +9,11 @@
     <script type="text/javascript">
 
         function myFunction() {
+
             var popup = document.getElementById("myPopup");
-            popup.focus()
+            document.getElementById('myPopup').contentWindow.location.reload(true);
+
+            popup.focus();
             popup.classList.toggle("show");
 
 
@@ -50,10 +53,10 @@
             <h:panelGroup rendered="#{user.isAuthenticated()}">
                 <li>
 
-                   <f:websocket channel="testChannel" onmessage="socketListener" >
+                   <f:websocket channel="testChannel" user="#{user.userID}" onmessage="socketListener" >
 
 
-                           <f:ajax event="someEvent" listener="#{user.send()}" render=":nots" />
+
 
                    </f:websocket>
                     <p:outputLabel id="nots" value="#{headerB.notifications}" binding="#{headerB.uiComponent}">

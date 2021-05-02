@@ -17,36 +17,36 @@ import javax.faces.push.Push;
 import javax.faces.push.PushContext;
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.websocket.OnMessage;
-import javax.websocket.Session;
-import javax.websocket.server.ServerEndpoint;
+
 import java.io.IOException;
 import java.io.Serializable;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by cord on 05.07.16.
- */
+
 
 @Named("user")
 @SessionScoped
 public class UserBean implements Serializable {
-    private String f;
+
     private Integer userID = null;
     private UserDTO dto = new UserDTO();
     private String verificationHash;
     private List<GroupDTO> gDTOAccepted;
-
+    private int notifications = 0;
     private List<GroupDTO> gDTONotAccepted;
 
-    public String getF() {
-        return f;
+    public int getNotifications() {
+        return notifications;
+    }
+
+    public void setNotifications(int notifications) {
+        this.notifications = notifications;
     }
 
     public Integer getUserID() {
-        System.out.println(userID);
+
         return userID;
     }
 
@@ -70,11 +70,6 @@ public class UserBean implements Serializable {
         this.gDTONotAccepted = gDTONotAccepted;
     }
 
-    public void setF(String f) {
-        FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("test");
-
-        this.f = f;
-    }
 
     public String getVerificationHash() {
         return verificationHash;
@@ -177,13 +172,13 @@ public class UserBean implements Serializable {
     private PushContext testChannel;
 
 
-    public void send(){
-        System.out.println("hello World");
-        testChannel.send("Hello Word");
+    public void send(List<Integer> users) {
+        System.out.println(users.size());
+        System.out.println(FacesContext.getCurrentInstance().getRenderResponse());
+        this.notifications++;
+        testChannel.send(this.notifications,users);
+
     }
-
-
-
 
 
 }

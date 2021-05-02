@@ -1,60 +1,27 @@
 <component name="ArtifactManager">
   <artifact type="exploded-war" name="organizer:war exploded">
-    <output-path>$PROJECT_DIR$/out/artifacts/organizer_war_exploded</output-path>
+    <output-path>$PROJECT_DIR$/target/organizer-1.0</output-path>
+    <properties id="maven-jee-properties">
+      <options>
+        <exploded>true</exploded>
+        <module>organizer</module>
+        <packaging>war</packaging>
+      </options>
+    </properties>
     <root id="root">
       <element id="directory" name="WEB-INF">
         <element id="directory" name="classes">
           <element id="module-output" name="organizer" />
-          <element id="library" level="application" name="font-awesome" />
-          <element id="library" level="application" name="jquery" />
         </element>
         <element id="directory" name="lib">
-          <element id="library" level="project" name="postgresql-42.2.20" />
-          <element id="library" level="project" name="Maven: org.jboss.weld.servlet:weld-servlet:2.2.14.Final" />
-          <element id="library" level="project" name="Maven: org.primefaces:primefaces:8.0" />
-          <element id="library" level="project" name="Maven: org.glassfish:javax.faces:2.4.0" />
-          <element id="library" level="project" name="Maven: javax.el:javax.el-api:3.0.1-b04" />
-          <element id="library" level="project" name="Maven: org.glassfish:javax.el:3.0.1-b04" />
-          <element id="library" level="project" name="Maven: javax.json:javax.json-api:1.1.4" />
-          <element id="library" level="project" name="Maven: org.glassfish:javax.json:1.1" />
-          <element id="library" level="project" name="Maven: org.apache.maven.plugins:maven-compiler-plugin:3.8.1" />
-          <element id="library" level="project" name="Maven: org.apache.maven:maven-plugin-api:3.0" />
-          <element id="library" level="project" name="Maven: org.apache.maven:maven-model:3.0" />
-          <element id="library" level="project" name="Maven: org.sonatype.sisu:sisu-inject-plexus:1.4.2" />
-          <element id="library" level="project" name="Maven: org.sonatype.sisu:sisu-inject-bean:1.4.2" />
-          <element id="library" level="project" name="Maven: org.sonatype.sisu:sisu-guice:noaop:2.1.7" />
-          <element id="library" level="project" name="Maven: org.apache.maven:maven-artifact:3.0" />
-          <element id="library" level="project" name="Maven: org.codehaus.plexus:plexus-utils:2.0.4" />
-          <element id="library" level="project" name="Maven: org.apache.maven:maven-core:3.0" />
-          <element id="library" level="project" name="Maven: org.apache.maven:maven-settings:3.0" />
-          <element id="library" level="project" name="Maven: org.apache.maven:maven-settings-builder:3.0" />
-          <element id="library" level="project" name="Maven: org.apache.maven:maven-repository-metadata:3.0" />
-          <element id="library" level="project" name="Maven: org.apache.maven:maven-model-builder:3.0" />
-          <element id="library" level="project" name="Maven: org.apache.maven:maven-aether-provider:3.0" />
-          <element id="library" level="project" name="Maven: org.sonatype.aether:aether-impl:1.7" />
-          <element id="library" level="project" name="Maven: org.sonatype.aether:aether-spi:1.7" />
-          <element id="library" level="project" name="Maven: org.sonatype.aether:aether-api:1.7" />
-          <element id="library" level="project" name="Maven: org.sonatype.aether:aether-util:1.7" />
-          <element id="library" level="project" name="Maven: org.codehaus.plexus:plexus-interpolation:1.14" />
-          <element id="library" level="project" name="Maven: org.codehaus.plexus:plexus-classworlds:2.2.3" />
-          <element id="library" level="project" name="Maven: org.codehaus.plexus:plexus-component-annotations:1.5.5" />
-          <element id="library" level="project" name="Maven: org.sonatype.plexus:plexus-sec-dispatcher:1.3" />
-          <element id="library" level="project" name="Maven: org.sonatype.plexus:plexus-cipher:1.4" />
-          <element id="library" level="project" name="Maven: org.apache.maven.shared:maven-shared-utils:3.2.1" />
-          <element id="library" level="project" name="Maven: commons-io:commons-io:2.5" />
-          <element id="library" level="project" name="Maven: org.apache.maven.shared:maven-shared-incremental:1.1" />
-          <element id="library" level="project" name="Maven: org.codehaus.plexus:plexus-java:0.9.10" />
-          <element id="library" level="project" name="Maven: org.ow2.asm:asm:6.2" />
-          <element id="library" level="project" name="Maven: com.thoughtworks.qdox:qdox:2.0-M8" />
-          <element id="library" level="project" name="Maven: org.codehaus.plexus:plexus-compiler-api:2.8.4" />
-          <element id="library" level="project" name="Maven: org.codehaus.plexus:plexus-compiler-manager:2.8.4" />
-          <element id="library" level="project" name="Maven: org.codehaus.plexus:plexus-compiler-javac:2.8.4" />
+          <element id="library" level="project" name="Maven: org.jboss.weld.servlet:weld-servlet:2.4.8.Final" />
           <element id="library" level="project" name="Maven: org.jetbrains:annotations:20.1.0" />
         </element>
       </element>
-      <element id="library" level="application" name="javaee8-ri" />
+      <element id="directory" name="META-INF">
+        <element id="file-copy" path="$PROJECT_DIR$/target/organizer-1.0/META-INF/MANIFEST.MF" />
+      </element>
       <element id="javaee-facet-resources" facet="organizer/web/Web" />
-      <element id="javaee-facet-resources" facet="organizer/javaeeApplication/javaEEApplication" />
     </root>
   </artifact>
 </component>

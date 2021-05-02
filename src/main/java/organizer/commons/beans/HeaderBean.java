@@ -1,7 +1,6 @@
 package organizer.commons.beans;
 
 
-
 import organizer.commons.daos.HeaderDAO;
 import organizer.commons.dtos.HeaderDTO;
 import organizer.system.Events.UserEventBean;
@@ -20,8 +19,6 @@ import java.io.Serializable;
 
 
 @Named("headerB")
-
-
 @ViewScoped
 public class HeaderBean implements Serializable {
 
@@ -70,37 +67,21 @@ public class HeaderBean implements Serializable {
         if (userBean.isAuthenticated()) {
             this.dto.setUserID(userBean.getUserID());
             this.dto.setgIDs(dao.selectByUser(this.dto));
-            UserEventBean event = UserEventBean.getInstance();
-            for (Integer i : this.dto.getgIDs()
-            ) {
-                event.add(i, this);
-            }
 
 
         }
 
     }
-
-
 
 
     @PreDestroy
     public void destroy() {
 
 
-        UserEventBean event = UserEventBean.getInstance();
-        if (this.dto.getgIDs() != null) {
-            for (Integer i : this.dto.getgIDs()
-            ) {
-                event.remove(i, this);
-            }
-        }
-
     }
 
 
-
-    public void notificate(){
+    public void notificate() {
 
         this.notifications++;
         System.out.println(this.uiComponent.getClientId());

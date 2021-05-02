@@ -1,0 +1,49 @@
+<ui:composition template="/resources/templates/commonLayout.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core" xmlns:p="http://java.sun.com/jsf/html">
+    <f:metadata>
+        <f:viewParam name="gID" value="#{groupManager.dto.gID}"/>
+    </f:metadata>
+
+    <ui:define name="title">Manage Group</ui:define>
+    <ui:define name="content">
+        <!-- TODO: fix table;center,colums etc -->
+        <!-- TODO: fix preRenderView,access -->
+        <div class="card-no-hover">
+
+            <h:form>
+
+
+                <h:dataTable value="#{groupManager.userDataModel}" var="u">
+                    <h:column>
+                        <f:facet name="header">Name</f:facet>
+                        <div style="text-align: center">
+                            <h:outputText value="#{u.firstname} #{u.surname}">
+
+                            </h:outputText>
+                        </div>
+                    </h:column>
+                    <h:column>
+                        <h:commandButton value="Remove?" action="#{groupManager.remove()}">
+                            <f:ajax render="@form" execute="@form"/>
+                        </h:commandButton>
+
+                    </h:column>
+                    <h:column>
+                        <h:commandButton value="Make Admin"  rendered="#{!u.groupAdmin}">
+                            <f:ajax render="@form" execute="@form"/>
+                        </h:commandButton>
+
+
+                    </h:column>
+
+                </h:dataTable>
+            </h:form>
+
+
+        </div>
+
+    </ui:define>
+</ui:composition>
