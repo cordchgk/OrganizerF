@@ -6,64 +6,105 @@
 
     <ui:define name="title">My Groups</ui:define>
     <ui:define name="content">
-        <div style="width: 100%;height: 100%">
-            <div class="login card-no-hover">
-                <div>
 
-                    <h:panelGroup style="width: auto" rendered="#{user.isAuthenticated()}">
+        <div id="div" class="card-no-hover" style="width: 20%;height:auto;margin: auto;margin-top: 10%">
+            <div>
 
-
-                        <h:form id="form">
-                            <h:outputText value="Accepted:"/>
-                            <h:dataTable id="table" cellspacing=" 10" value="#{group.groupModelAccepted}"
-                                         var="gAccepted">
+                <h:panelGroup style="width: auto" rendered="#{user.isAuthenticated()}">
 
 
-                                <h:column>
+                    <h:form id="form">
+                        <h:outputText value="Accepted:"/>
+                        <h:dataTable id="table" cellspacing=" 10" value="#{group.groupModelAccepted}"
+                                     columnClasses="column" style="width: 100%"
+                                     var="gAccepted">
 
 
+                            <h:column>
+                                <div style="text-align: center">
                                     <h:outputLink value="#{group.select()}">
                                         #{gAccepted.name}
                                     </h:outputLink>
-                                </h:column>
-                            </h:dataTable>
+
+                                </div>
 
 
-                        </h:form>
-
-                    </h:panelGroup>
-
-                </div>
-                <div style="margin-top: 50px">
+                            </h:column>
+                        </h:dataTable>
 
 
-                    <h:panelGroup style="width: auto">
-                        <h:form>
-                            <h:outputText value="Not Accepted:"/>
-                            <h:dataTable id="notacceptedtable" cellspacing="10"
-                                         value="#{group.groupModelNotAccepted}" var="gNotAccepted">
+                    </h:form>
 
-                                <h:column>
+                </h:panelGroup>
 
+            </div>
+            <div style="margin-top: 50px">
+
+
+                <h:panelGroup style="width: auto">
+                    <h:form>
+                        <h:outputText value="Not Accepted:"/>
+                        <h:dataTable id="notacceptedtable" cellspacing="10" columnClasses="column"
+                                     value="#{group.groupModelNotAccepted}" var="gNotAccepted" style="width: 100%">
+
+                            <h:column>
+                                <div style="text-align: center">
                                     <h:outputText value="#{gNotAccepted.name}">
 
                                     </h:outputText>
+                                </div>
 
-                                </h:column>
-                                <h:column>
-                                    <h:commandButton value="Accept!" action="#{group.accept()}">
-                                        <f:ajax execute="@form" render="@form"/>
-                                    </h:commandButton>
-                                </h:column>
-                            </h:dataTable>
-                        </h:form>
-                    </h:panelGroup>
 
-                </div>
+                            </h:column>
+                            <h:column>
+                                <h:commandButton value="Accept!" action="#{group.accept()}">
+                                    <f:ajax execute="@form" render="@form"/>
+                                </h:commandButton>
+                            </h:column>
+                        </h:dataTable>
+                    </h:form>
+                </h:panelGroup>
 
             </div>
 
+
+            <div style="margin-top: 5%">
+
+                <h:form style="border-top: black 1px solid;margin-top: 10%">
+                    <div style="text-align: center">
+                        <h:outputText style="font-weight: bold" value="Create new Group:">
+
+                        </h:outputText>
+
+
+                    </div>
+
+                    <div>
+
+
+                        <div style="margin-top: 1%;text-align: center">
+                            <h:inputText value="#{group.newGroupName}" style="width: 100%">
+
+                            </h:inputText>
+                            <div>
+                                <h:commandButton style="margin-bottom: 1%;margin-top: 5%" value="Create"
+                                                 action="#{group.createGroup()}">
+
+                                    <f:ajax render="form" execute="@form"/>
+                                </h:commandButton>
+                            </div>
+
+
+                        </div>
+
+                    </div>
+
+                </h:form>
+            </div>
+
+
         </div>
+
 
     </ui:define>
 </ui:composition>

@@ -3,8 +3,8 @@ package organizer.group.daos;
 import organizer.group.dtos.GroupDTO;
 import organizer.system.ConnectionPool;
 import organizer.system.exceptions.DatabaseException;
-import organizer.user.dtos.UserDTO;
-import organizer.user.dtos.UserGroupDTO;
+import organizer.user.daos.UserDAO;
+import organizer.group.dtos.GroupUserDTO;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -18,15 +18,15 @@ import java.util.logging.Logger;
 public class GroupManagerDAO {
 
 
-    public List<UserGroupDTO> getUsers(GroupDTO dto) throws DatabaseException {
+    public List<GroupUserDTO> getUsers(GroupDTO dto) throws DatabaseException {
 
 
         ConnectionPool pool = ConnectionPool.getInstance();
-        List<UserGroupDTO> users = new ArrayList<>();
+        List<GroupUserDTO> users = new ArrayList<>();
 
 
         Connection conn = pool.getConnection();
-        String query = "SELECT users.firstname, users.surname, memberofgroup.admin\n" +
+        String query = "SELECT users.userid,users.firstname, users.surname, memberofgroup.admin\n" +
                 "FROM postgres.public.users,\n" +
                 "     postgres.public.memberofgroup\n" +
                 "WHERE memberofgroup.gid = ? AND memberofgroup.uid = userid;";
@@ -45,10 +45,12 @@ public class GroupManagerDAO {
             statement.setInt(1, dto.getgID());
             result = statement.executeQuery();
             while (result.next()) {
-                UserGroupDTO toAdd = new UserGroupDTO();
-                toAdd.setFirstname(result.getString(1));
-                toAdd.setSurname(result.getString(2));
-                toAdd.setGroupAdmin(result.getBoolean(3));
+                GroupUserDTO toAdd = new GroupUserDTO();
+                toAdd.setUserID(result.getInt(1));
+                toAdd.setFirstname(result.getString(2));
+                toAdd.setSurname(result.getString(3));
+                toAdd.setGroupAdmin(result.getBoolean(4));
+                toAdd.setgID(dto.getgID());
                 users.add(toAdd);
             }
         } catch (SQLException ex) {
@@ -97,6 +99,31 @@ public class GroupManagerDAO {
         pool.releaseConnection(conn);
 
         return toReturn;
+    }
+
+
+    public boolean makeAdmin(GroupUserDTO dto) {
+        ConnectionPool pool = ConnectionPool.getInstance();
+        Connection conn = pool.getConnection();
+        String query =
+                "UPDATE postgres.public.memberofgroup SET admin = TRUE WHERE postgres.public.memberofgroup.uid = ? AND " +
+                        "postgres.public.memberofgroup.gid = ?";
+
+        try {
+            PreparedStatement statement = conn.prepareStatement(query);
+            statement.setInt(1, dto.getUserID());
+            statement.setInt(2, dto.getgID());
+            statement.execute();
+
+        } catch (SQLException ex) {
+
+            Logger.getLogger(UserDAO.class.getName())
+                    .log(Level.SEVERE, null, ex);
+            pool.releaseConnection(conn);
+            return false;
+        }
+        pool.releaseConnection(conn);
+return true;
     }
 
 

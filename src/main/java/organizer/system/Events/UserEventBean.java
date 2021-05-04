@@ -28,7 +28,7 @@ public class UserEventBean implements Serializable {
 
 @PostConstruct
     public void init() {
-        System.out.println("hello");
+
     }
 
 

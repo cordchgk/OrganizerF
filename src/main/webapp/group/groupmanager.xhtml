@@ -10,13 +10,13 @@
     <ui:define name="title">Manage Group</ui:define>
     <ui:define name="content">
         <!-- TODO: fix table;center,colums etc -->
-        <!-- TODO: fix preRenderView,access -->
-        <div class="card-no-hover">
+        <f:event listener="#{groupManager.isAllowed()}" type="preRenderView"/>
+        <div class="card-no-hover" style="width: 15%;height:auto;margin: auto;margin-top: 15%">
 
             <h:form>
 
 
-                <h:dataTable value="#{groupManager.userDataModel}" var="u">
+                <h:dataTable value="#{groupManager.userDataModel}" var="u" columnClasses="column" style="width: 100%">
                     <h:column>
                         <f:facet name="header">Name</f:facet>
                         <div style="text-align: center">
@@ -26,13 +26,14 @@
                         </div>
                     </h:column>
                     <h:column>
-                        <h:commandButton value="Remove?" action="#{groupManager.remove()}">
+                        <h:commandButton  value="Remove?" action="#{groupManager.remove()}">
                             <f:ajax render="@form" execute="@form"/>
                         </h:commandButton>
 
                     </h:column>
                     <h:column>
-                        <h:commandButton value="Make Admin"  rendered="#{!u.groupAdmin}">
+                        <h:commandButton style="height: 10px" value="Make Admin" action="#{groupManager.makeAdmin()}"
+                                         rendered="#{!u.groupAdmin}">
                             <f:ajax render="@form" execute="@form"/>
                         </h:commandButton>
 

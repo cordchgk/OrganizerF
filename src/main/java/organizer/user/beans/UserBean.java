@@ -25,7 +25,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-
 @Named("user")
 @SessionScoped
 public class UserBean implements Serializable {
@@ -173,11 +172,16 @@ public class UserBean implements Serializable {
 
 
     public void send(List<Integer> users) {
-        System.out.println(users.size());
-        System.out.println(FacesContext.getCurrentInstance().getRenderResponse());
-        this.notifications++;
-        testChannel.send(this.notifications,users);
 
+        this.notifications++;
+        testChannel.send(this.notifications, users);
+
+    }
+
+
+    public void reset() {
+
+        this.notifications = 0;
     }
 
 

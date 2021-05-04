@@ -330,8 +330,8 @@ public class ConnectionPool implements Serializable {
         try {
             Statement stmt = connection.createStatement();
             String query = "CREATE TABLE IF NOT EXISTS groupo ("
-                    + "groupID SERIAL PRIMARY KEY, "
-                    + "name varchar(50))";
+                    + "groupID SERIAL PRIMARY KEY UNIQUE , "
+                    + "name varchar(50) UNIQUE )";
             stmt.executeUpdate(query);
             stmt.close();
         } catch (SQLException ex) {

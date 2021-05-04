@@ -1,7 +1,9 @@
 package organizer.group.beans;
 
 import organizer.group.daos.GroupDAO;
+import organizer.group.daos.GroupUserDAO;
 import organizer.group.dtos.GroupDTO;
+import organizer.group.dtos.GroupUserDTO;
 import organizer.system.Utility;
 import organizer.system.enums.FaceletPath;
 import organizer.system.exceptions.DuplicateException;
@@ -33,6 +35,15 @@ public class GroupBean implements Serializable {
     private List<GroupDTO> gDTONotAccepted;
     private List<GroupDTO> allGroups;
     private int ID;
+    private String newGroupName;
+
+    public String getNewGroupName() {
+        return newGroupName;
+    }
+
+    public void setNewGroupName(String newGroupName) {
+        this.newGroupName = newGroupName;
+    }
 
     public DataModel getGroupModelAccepted() {
         return groupModelAccepted;
@@ -122,7 +133,24 @@ public class GroupBean implements Serializable {
     }
 
 
+    public String createGroup() {
 
+        GroupDAO dao = new GroupDAO();
+        GroupUserDTO newGroupUserDTO = new GroupUserDTO();
+        newGroupUserDTO.setgName(this.newGroupName);
+        newGroupUserDTO.setUserID(this.userBean.getUserID());
+        try {
+            dao.createGroup(newGroupUserDTO);
+
+
+        } catch (DuplicateException e) {
+            FacesContext.getCurrentInstance().addMessage();
+            e.printStackTrace();
+        }
+
+        return FaceletPath.GROUPS.getRedirectionPath();
+
+    }
 
 
 }

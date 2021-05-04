@@ -4,7 +4,7 @@ import organizer.group.daos.GroupDAO;
 import organizer.group.dtos.GroupDTO;
 import organizer.product.dtos.ProductDTO;
 import organizer.system.ConnectionPool;
-import organizer.system.Events.UserEventBean;
+
 import organizer.system.exceptions.DatabaseException;
 import organizer.system.exceptions.DuplicateException;
 import organizer.user.Creator.NotificationCreator;
@@ -12,13 +12,7 @@ import organizer.user.beans.UserBean;
 import organizer.user.daos.NotifcationDAO;
 import organizer.user.daos.UserDAO;
 import organizer.user.dtos.NotificationDTO;
-import organizer.user.dtos.UserDTO;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.faces.context.FacesContext;
-import javax.faces.view.ViewScoped;
-import javax.inject.Inject;
-import javax.inject.Named;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -87,41 +81,10 @@ public class ProductDAO {
     }
 
 
-    public boolean isGroupAdminByDTO(GroupDTO groupDTO, UserDTO userDTO) throws DatabaseException {
-        ConnectionPool pool = ConnectionPool.getInstance();
 
 
-        Connection conn = pool.getConnection();
-        String query = "SELECT * FROM postgres.public.memberofgroup WHERE\n" +
-                "memberofgroup.gid = ? AND memberofgroup.uid = ?";
-        PreparedStatement statement = null;
-        ResultSet result;
-        try {
-            statement = conn.prepareStatement(query);
-        } catch (SQLException ex) {
-            Logger.getLogger(GroupDAO.class.getName())
-                    .log(Level.SEVERE, null, ex);
-            pool.releaseConnection(conn);
-        }
-        try {
-            statement.setInt(1, groupDTO.getgID());
-            statement.setInt(2, userDTO.getUserID());
-            result = statement.executeQuery();
-            while (result.next()) {
-                pool.releaseConnection(conn);
-                return true;
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(GroupDAO.class.getName())
-                    .log(Level.SEVERE, null, ex);
-            pool.releaseConnection(conn);
-        }
-        pool.releaseConnection(conn);
-        return false;
-    }
 
-
-    public void update(ProductDTO dto)
+    public boolean update(ProductDTO dto)
             throws DatabaseException, DuplicateException {
 
         ConnectionPool pool = ConnectionPool.getInstance();
@@ -142,8 +105,10 @@ public class ProductDAO {
             Logger.getLogger(UserDAO.class.getName())
                     .log(Level.SEVERE, null, ex);
             pool.releaseConnection(conn);
+            return false;
         }
         pool.releaseConnection(conn);
+        return true;
     }
 
 

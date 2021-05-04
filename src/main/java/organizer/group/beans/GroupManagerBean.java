@@ -2,17 +2,18 @@ package organizer.group.beans;
 
 
 import organizer.group.daos.GroupManagerDAO;
+import organizer.group.daos.GroupUserDAO;
 import organizer.group.dtos.GroupDTO;
-import organizer.system.Utility;
-import organizer.system.enums.FaceletPath;
-import organizer.user.dtos.UserDTO;
-import organizer.user.dtos.UserGroupDTO;
+import organizer.user.beans.UserBean;
+import organizer.group.dtos.GroupUserDTO;
 
 import javax.annotation.PostConstruct;
+import javax.faces.application.ConfigurableNavigationHandler;
 import javax.faces.context.FacesContext;
 import javax.faces.model.DataModel;
 import javax.faces.model.ListDataModel;
 import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
 import javax.inject.Named;
 import java.io.Serializable;
 import java.util.List;
@@ -23,10 +24,13 @@ import java.util.Map;
 @ViewScoped
 public class GroupManagerBean implements Serializable {
 
+    @Inject
+    UserBean userBean;
+
 
     GroupDTO dto;
-    List<UserGroupDTO> userDTOS;
-    DataModel<UserGroupDTO> userDataModel;
+    List<GroupUserDTO> userDTOS;
+    DataModel<GroupUserDTO> userDataModel;
 
     public GroupDTO getDto() {
         return dto;
@@ -36,19 +40,19 @@ public class GroupManagerBean implements Serializable {
         this.dto = dto;
     }
 
-    public List<UserGroupDTO> getUserDTOS() {
+    public List<GroupUserDTO> getUserDTOS() {
         return userDTOS;
     }
 
-    public void setUserDTOS(List<UserGroupDTO> userDTOS) {
+    public void setUserDTOS(List<GroupUserDTO> userDTOS) {
         this.userDTOS = userDTOS;
     }
 
-    public DataModel<UserGroupDTO> getUserDataModel() {
+    public DataModel<GroupUserDTO> getUserDataModel() {
         return userDataModel;
     }
 
-    public void setUserDataModel(DataModel<UserGroupDTO> userDataModel) {
+    public void setUserDataModel(DataModel<GroupUserDTO> userDataModel) {
         this.userDataModel = userDataModel;
     }
 
@@ -61,8 +65,8 @@ public class GroupManagerBean implements Serializable {
         GroupManagerDAO dao = new GroupManagerDAO();
         this.dto = dao.getDtoByID(this.dto);
         this.userDTOS = dao.getUsers(this.dto);
+
         this.userDataModel = new ListDataModel<>(this.userDTOS);
-        System.out.println(this.userDTOS.size());
 
 
     }
@@ -71,10 +75,40 @@ public class GroupManagerBean implements Serializable {
     //TODO: implement methods
 
     public void remove() {
-
+        GroupUserDTO selectedDTO = userDataModel.getRowData();
+        userDTOS.remove(selectedDTO);
+        selectedDTO.setgID(this.dto.getgID());
+        GroupUserDAO dao = new GroupUserDAO();
+        dao.removeUserFromGroup(selectedDTO);
     }
 
     public void makeAdmin() {
+
+        GroupUserDTO selectedDTO = userDataModel.getRowData();
+
+
+        GroupManagerDAO dao = new GroupManagerDAO();
+        boolean success = dao.makeAdmin(selectedDTO);
+        if (success) {
+            selectedDTO.setGroupAdmin(true);
+        }
+        //TODO: FacesContext...addMessage
+    }
+
+
+    public void isAllowed() {
+
+
+        FacesContext fc = FacesContext.getCurrentInstance();
+
+        boolean b = new GroupUserDAO().isGroupAdminByDTO(this.getDto(), this.userBean.getDto());
+
+
+        if (!b) {
+            ConfigurableNavigationHandler nav = (ConfigurableNavigationHandler) fc.getApplication().getNavigationHandler();
+            nav.performNavigation("/access/access-denied.xhtml");
+        }
+
 
     }
 

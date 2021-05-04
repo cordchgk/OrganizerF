@@ -36,9 +36,9 @@
                     <h:column>
                         <f:facet name="header">Decrease</f:facet>
                         <div style="text-align: center">
-                            <h:commandButton immediate="true" rendered="#{product.rendered()}" value="-"
+                            <h:commandButton  rendered="#{product.rendered()}" value="-"
                                              action="#{product.dec()}">
-                                <f:ajax execute="@form" render="@form"/>
+                                <f:ajax execute="form" render="form"/>
                             </h:commandButton>
                         </div>
                     </h:column>
@@ -58,8 +58,8 @@
                     <h:column>
                         <f:facet name="header">Increase</f:facet>
                         <div style="text-align: center">
-                            <h:commandButton immediate="true" value="+" action="#{product.inc()}">
-                                <f:ajax execute="@form" render="@form"/>
+                            <h:commandButton value="+" action="#{product.inc()}">
+                                <f:ajax execute="form" render="form"/>
                             </h:commandButton>
                         </div>
                     </h:column>
@@ -152,19 +152,17 @@
 
                 </div>
             </h:form>
+            <h:form>
+
+
+                <h:outputLink value="#{product.toGroupManager()}" rendered="#{product.isGroupAdmin()}"
+                              style="margin-bottom: 5px;margin-left: 5px">
+                    Manage Group
+                </h:outputLink>
+            </h:form>
 
 
         </div>
-        <h:form>
-            <h:commandButton style="margin-bottom: 1%" value="Manage Group"
-                             action="#{product.toGroupManager()}">
-
-            </h:commandButton>
-            <!-- TODO: fix link position -->
-            <h:outputLink value="#{product.toGroupManager()}">
-                Manage Group
-            </h:outputLink>
-        </h:form>
 
     </ui:define>
 </ui:composition>

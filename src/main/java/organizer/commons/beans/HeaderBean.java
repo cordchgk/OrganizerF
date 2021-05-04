@@ -84,7 +84,7 @@ public class HeaderBean implements Serializable {
     public void notificate() {
 
         this.notifications++;
-        System.out.println(this.uiComponent.getClientId());
+
 
 
     }

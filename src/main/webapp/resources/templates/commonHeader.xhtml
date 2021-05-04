@@ -15,14 +15,15 @@
 
             popup.focus();
             popup.classList.toggle("show");
-
+resetCommand();
+document.getElementById('nots').innerHTML = 0;
 
         }
 
         function socketListener(message, channel, event) {
 
-            var m = "message:" + message + ", channel:" + channel + ", event:" + event;
-            console.log(m);
+
+
             document.getElementById('nots').innerHTML = message;
 
 
@@ -65,8 +66,7 @@
 
                 </li>
                 <li>
-
-
+<p:remoteCommand name="resetCommand" action="#{user.reset()}"/>
                     <div class="popup" onclick="myFunction()">Notifications
 
                         <iframe allowtransparency="false" id="myPopup" class="popuptext login card-no-hover"

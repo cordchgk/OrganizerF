@@ -1,6 +1,7 @@
 package organizer.group.daos;
 
 import organizer.group.dtos.GroupDTO;
+import organizer.group.dtos.GroupUserDTO;
 import organizer.product.dtos.ProductDTO;
 import organizer.system.ConnectionPool;
 import organizer.system.exceptions.DatabaseException;
@@ -21,7 +22,6 @@ import java.util.logging.Logger;
  * Created by cord on 07.06.16.
  */
 public class GroupDAO {
-
 
 
     public List<GroupDTO> selectByUser(UserDTO userDTO) throws DatabaseException {
@@ -79,7 +79,7 @@ public class GroupDAO {
 
         try {
             PreparedStatement statement = conn.prepareStatement(query);
-            statement.setBoolean(1,dto.isAccepted());
+            statement.setBoolean(1, dto.isAccepted());
             statement.setInt(2, dto.getgID());
             statement.setInt(3, userDTO.getUserID());
             statement.execute();
@@ -91,5 +91,89 @@ public class GroupDAO {
         }
         pool.releaseConnection(conn);
     }
+
+
+    public void createGroup(GroupUserDTO dto)
+            throws DatabaseException, DuplicateException {
+
+        ConnectionPool pool = ConnectionPool.getInstance();
+        Connection conn = pool.getConnection();
+        String query =
+                "INSERT INTO postgres.public.groupo(name) VALUES ( ?)";
+
+        try {
+            PreparedStatement statement = conn.prepareStatement(query);
+
+            statement.setString(1, dto.getgName());
+            statement.execute();
+            System.out.println("called");
+            GroupDTO gDTO = new GroupDTO();
+            gDTO.setName(dto.getgName());
+
+            int gID = this.getGroupID(gDTO);
+
+            String query2 =
+                    "INSERT INTO postgres.public.memberofgroup VALUES (?, ?," +
+                            "TRUE,TRUE)";
+
+            try {
+                PreparedStatement statement2 = conn.prepareStatement(query2);
+                statement2.setInt(1, dto.getUserID());
+                statement2.setInt(2, gID);
+                statement2.execute();
+
+            } catch (SQLException ex) {
+                Logger.getLogger(UserDAO.class.getName())
+                        .log(Level.SEVERE, null, ex);
+                pool.releaseConnection(conn);
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(UserDAO.class.getName())
+                    .log(Level.SEVERE, null, ex);
+            pool.releaseConnection(conn);
+        }
+
+
+
+
+        pool.releaseConnection(conn);
+    }
+
+
+    private int getGroupID(GroupDTO dto) {
+        ConnectionPool pool = ConnectionPool.getInstance();
+
+
+        Connection conn = pool.getConnection();
+        String query = "SELECT * FROM postgres.public.groupo WHERE groupo.name = ?";
+        PreparedStatement statement = null;
+        ResultSet result;
+        try {
+
+            statement = conn.prepareStatement(query);
+        } catch (SQLException ex) {
+            Logger.getLogger(GroupDAO.class.getName())
+                    .log(Level.SEVERE, null, ex);
+            pool.releaseConnection(conn);
+        }
+        try {
+            assert statement != null;
+            statement.setString(1, dto.getName());
+            result = statement.executeQuery();
+            while (result.next()) {
+                pool.releaseConnection(conn);
+                return result.getInt(1);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(GroupDAO.class.getName())
+                    .log(Level.SEVERE, null, ex);
+            pool.releaseConnection(conn);
+        }
+        pool.releaseConnection(conn);
+
+        return 0;
+    }
+
 }
 

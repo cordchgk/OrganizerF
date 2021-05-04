@@ -1,5 +1,6 @@
 package organizer.product.beans;
 
+import organizer.group.daos.GroupUserDAO;
 import organizer.group.dtos.GroupDTO;
 import organizer.product.daos.ProductDAO;
 import organizer.product.dtos.ProductDTO;
@@ -10,6 +11,7 @@ import organizer.user.beans.UserBean;
 import organizer.user.dtos.UserDTO;
 
 import javax.annotation.PostConstruct;
+import javax.enterprise.context.RequestScoped;
 import javax.faces.application.ConfigurableNavigationHandler;
 import javax.faces.application.FacesMessage;
 
@@ -101,6 +103,10 @@ public class ProductsBean implements Serializable, Validator {
         this.groupDTO = groupDTO;
     }
 
+    @Inject
+    UserBean userBean;
+
+
     @PostConstruct
     public void init() {
 
@@ -112,7 +118,8 @@ public class ProductsBean implements Serializable, Validator {
 
 
         groupDTO.setgID(Integer.parseInt(parameter.get("gID")));
-        this.groupDTO.setGroupAdmin(dao.isGroupAdminByDTO(groupDTO, userBean.getDto()));
+        this.groupDTO.setGroupAdmin(new GroupUserDAO().isGroupAdminByDTO(groupDTO, userBean.getDto()));
+
         this.dto = dao.selectByDTO(groupDTO);
 
 
@@ -124,9 +131,6 @@ public class ProductsBean implements Serializable, Validator {
 
 
     }
-
-    @Inject
-    UserBean userBean;
 
 
     public boolean isGroupAdmin() {
@@ -272,7 +276,7 @@ public class ProductsBean implements Serializable, Validator {
 
 
     public String toGroupManager() {
-        System.out.println(Utility.getURL() + FaceletPath.GROUPMANAGER.getPath() + "?gID=" + this.groupDTO.getgID());
+
         return Utility.getURL() + FaceletPath.GROUPMANAGER.getPath() + "?gID=" + this.groupDTO.getgID();
     }
 }
