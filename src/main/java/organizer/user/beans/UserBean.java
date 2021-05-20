@@ -96,7 +96,7 @@ public class UserBean implements Serializable {
         if (!list.isEmpty()) {
             userID = list.get(0).getUserID();
             dto = list.get(0);
-            ConnectionPool.getInstance().getUsers().add(this);
+
             if (dto.isStatus()) {
                 return FaceletPath.GROUPS.getRedirectionPath();
             } else {

@@ -402,6 +402,22 @@ public class ConnectionPool implements Serializable {
             LOGGER.log(Level.SEVERE, null, ex);
         }
 
+        try {
+            Statement stmt = connection.createStatement();
+            String query = "CREATE TABLE IF NOT EXISTS groupmessages ("
+                    + "mID SERIAL PRIMARY KEY," +
+                    "gID smallint," +
+                    "uID smallint," +
+                    "message varchar," +
+                    "time timestamp)";
+
+
+            stmt.executeUpdate(query);
+            stmt.close();
+        } catch (SQLException ex) {
+            LOGGER.log(Level.SEVERE, null, ex);
+        }
+
         Statement stmt = null;
         try {
             stmt = connection.createStatement();

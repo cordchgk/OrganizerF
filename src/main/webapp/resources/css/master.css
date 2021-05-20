@@ -746,7 +746,7 @@ ul.responsive-table.index li.table-body ul li, ul.responsive-table.index li ul l
 main#content .login {
     position: absolute;
     text-align: center;
-    top: 30%;
+    top: 50%;
     left: 50%;
     -webkit-transform: translate(-50%, -50%);
     transform: translate(-50%, -50%)
@@ -1588,8 +1588,16 @@ select:disabled {
 }
 
 
-.column center{
+.column {
+
     width: auto;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.columnNP {
+
+    width: 30%;
     margin-left: auto;
     margin-right: auto;
 }
@@ -1610,6 +1618,13 @@ select:disabled {
     color: black;
 }
 
+.ui-inputfield {
+    font-weight: normal;
+    margin: 0;
+    outline: medium none;
+    padding: 0px;
+    width: 90%;
+}
 
 
 .column_notifications {

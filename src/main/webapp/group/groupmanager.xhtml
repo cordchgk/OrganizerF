@@ -9,7 +9,7 @@
 
     <ui:define name="title">Manage Group</ui:define>
     <ui:define name="content">
-        <!-- TODO: fix table;center,colums etc -->
+
         <f:event listener="#{groupManager.isAllowed()}" type="preRenderView"/>
         <div class="card-no-hover" style="width: 15%;height:auto;margin: auto;margin-top: 15%">
 
@@ -26,13 +26,14 @@
                         </div>
                     </h:column>
                     <h:column>
-                        <h:commandButton  value="Remove?" action="#{groupManager.remove()}">
+                        <h:commandButton value="Remove?" action="#{groupManager.remove()}"
+                                         rendered="#{!groupManager.isLast() and !u.groupAdmin}">
                             <f:ajax render="@form" execute="@form"/>
                         </h:commandButton>
 
                     </h:column>
                     <h:column>
-                        <h:commandButton style="height: 10px" value="Make Admin" action="#{groupManager.makeAdmin()}"
+                        <h:commandButton value="Make Admin" action="#{groupManager.makeAdmin()}"
                                          rendered="#{!u.groupAdmin}">
                             <f:ajax render="@form" execute="@form"/>
                         </h:commandButton>
@@ -41,6 +42,18 @@
                     </h:column>
 
                 </h:dataTable>
+                <h:panelGroup style="margin-top: 10px;border-top: #121212 1px;">
+
+                    <h:inputText value="#{groupManager.newGroupUser.email}">
+
+                    </h:inputText>
+                    <h:commandButton value="Add" action="#{groupManager.addUserByEmail()}">
+                        <f:ajax render="@form" execute="@form"/>
+                    </h:commandButton>
+
+
+                </h:panelGroup>
+
             </h:form>
 
 

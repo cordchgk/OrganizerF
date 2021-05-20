@@ -144,7 +144,7 @@ public class GroupBean implements Serializable {
 
 
         } catch (DuplicateException e) {
-            FacesContext.getCurrentInstance().addMessage();
+          //  FacesContext.getCurrentInstance().addMessage();
             e.printStackTrace();
         }
 

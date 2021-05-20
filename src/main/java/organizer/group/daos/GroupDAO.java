@@ -106,7 +106,7 @@ public class GroupDAO {
 
             statement.setString(1, dto.getgName());
             statement.execute();
-            System.out.println("called");
+
             GroupDTO gDTO = new GroupDTO();
             gDTO.setName(dto.getgName());
 

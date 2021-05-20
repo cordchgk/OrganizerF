@@ -27,7 +27,7 @@ public class GroupManagerBean implements Serializable {
     @Inject
     UserBean userBean;
 
-
+    private GroupUserDTO newGroupUser;
     GroupDTO dto;
     List<GroupUserDTO> userDTOS;
     DataModel<GroupUserDTO> userDataModel;
@@ -56,8 +56,17 @@ public class GroupManagerBean implements Serializable {
         this.userDataModel = userDataModel;
     }
 
+    public GroupUserDTO getNewGroupUser() {
+        return newGroupUser;
+    }
+
+    public void setNewGroupUser(GroupUserDTO newGroupUser) {
+        this.newGroupUser = newGroupUser;
+    }
+
     @PostConstruct
     public void init() {
+        this.newGroupUser = new GroupUserDTO();
         Map<String, String> parameter = FacesContext.getCurrentInstance()
                 .getExternalContext().getRequestParameterMap();
         this.dto = new GroupDTO();
@@ -71,8 +80,6 @@ public class GroupManagerBean implements Serializable {
 
     }
 
-
-    //TODO: implement methods
 
     public void remove() {
         GroupUserDTO selectedDTO = userDataModel.getRowData();
@@ -107,6 +114,22 @@ public class GroupManagerBean implements Serializable {
         if (!b) {
             ConfigurableNavigationHandler nav = (ConfigurableNavigationHandler) fc.getApplication().getNavigationHandler();
             nav.performNavigation("/access/access-denied.xhtml");
+        }
+
+
+    }
+
+
+    public boolean isLast() {
+        return !(this.userDTOS.size() > 1);
+    }
+
+
+    public void addUserByEmail() {
+        this.newGroupUser.setgID(this.dto.getgID());
+        GroupManagerDAO dao = new GroupManagerDAO();
+        if (!dao.addToGroup(this.newGroupUser)) {
+            System.out.println("user does not exist");
         }
 
 

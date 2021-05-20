@@ -36,7 +36,7 @@
                     <h:column>
                         <f:facet name="header">Decrease</f:facet>
                         <div style="text-align: center">
-                            <h:commandButton  rendered="#{product.rendered()}" value="-"
+                            <h:commandButton rendered="#{product.rendered()}" value="-"
                                              action="#{product.dec()}">
                                 <f:ajax execute="form" render="form"/>
                             </h:commandButton>
@@ -105,8 +105,8 @@
 
                 </div>
 
-                <h:dataTable columnClasses="column" value="#{product.newProductModel}" var="nP"
-                             style="width: 100%;margin: auto;margin-top:20px"
+                <h:dataTable columnClasses="columnNP" value="#{product.newProductModel}" var="nP"
+                             style="width: 100%;margin: auto;margin-top:20px;"
 
                 >
                     <h:column>
