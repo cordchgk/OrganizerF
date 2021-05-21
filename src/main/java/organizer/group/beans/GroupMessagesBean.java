@@ -6,6 +6,7 @@ import organizer.group.dtos.GroupMessageDTO;
 import organizer.user.beans.UserBean;
 
 import javax.annotation.PostConstruct;
+import javax.faces.context.FacesContext;
 import javax.faces.model.DataModel;
 import javax.faces.model.ListDataModel;
 import javax.faces.view.ViewScoped;
@@ -13,6 +14,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 
 
 @ViewScoped
@@ -23,9 +25,6 @@ public class GroupMessagesBean implements Serializable {
     private GroupDTO groupDTO;
     private DataModel messagesDataModel;
     private GroupMessageDTO newDTO;
-
-
-
 
 
     @Inject
@@ -75,6 +74,9 @@ public class GroupMessagesBean implements Serializable {
 
 
     public void insert(){
+        Map<String, String> parameter = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
+this.groupDTO = new GroupDTO();
+this.groupDTO.setgID(Integer.parseInt(parameter.get("gID")));
         GroupMessageDAO dao = new GroupMessageDAO();
         dao.insertByDTOs(this.groupDTO,this.userBean.getDto(),this.newDTO);
 
