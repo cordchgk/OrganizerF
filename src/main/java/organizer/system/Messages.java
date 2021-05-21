@@ -14,7 +14,7 @@ public enum Messages {
     /**
      * The resource bundle name for messages.properties.
      */
-    @NonNls private static final String BUNDLE_NAME = "config";
+    @NonNls private static final String BUNDLE_NAME = "config_de";
 
     /**
      * The resource bundle.

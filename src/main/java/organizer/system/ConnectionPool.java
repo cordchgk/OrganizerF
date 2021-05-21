@@ -39,19 +39,10 @@ public class ConnectionPool implements Serializable {
     private final List<Connection> blockedConnections;
     private Integer failedConnections;
     private Boolean closed;
-    private List<UserBean> users;
 
-    public List<UserBean> getUsers() {
-        return users;
-    }
-
-    public void setUsers(List<UserBean> users) {
-        this.users = users;
-    }
 
     private ConnectionPool() {
 
-        users = new ArrayList<>();
 
         final Integer maxConnections = Config.getEntry("MAX_CONNECTIONS", 20);
         final String dbDriver =
