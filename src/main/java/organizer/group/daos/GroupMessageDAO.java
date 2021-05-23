@@ -26,7 +26,7 @@ public class GroupMessageDAO {
 
         Connection conn = pool.getConnection();
         String query = "SELECT time,users.firstname,message FROM groupmessages,users,memberofgroup WHERE\n" +
-                "gid = ? AND groupmessages.gid = memberofgroup.gid AND memberofgroup.uid = users.userid";
+                "groupmessages.gid = ? AND groupmessages.gid = memberofgroup.gid AND memberofgroup.uid = users.userid";
         PreparedStatement statement = null;
         ResultSet result;
         try {
@@ -86,6 +86,9 @@ public class GroupMessageDAO {
         }
         pool.releaseConnection(conn);
     }
+
+
+
 
 
 }

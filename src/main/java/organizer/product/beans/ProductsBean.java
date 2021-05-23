@@ -1,10 +1,15 @@
 package organizer.product.beans;
 
+import organizer.group.daos.GroupDAO;
+import organizer.group.daos.GroupMessageDAO;
 import organizer.group.daos.GroupUserDAO;
 import organizer.group.dtos.GroupDTO;
+import organizer.group.dtos.GroupMessageDTO;
+import organizer.group.dtos.GroupUserDTO;
 import organizer.product.daos.ProductDAO;
 import organizer.product.dtos.ProductDTO;
 import organizer.system.Utility;
+import organizer.system.converter.HashConverter;
 import organizer.system.enums.FaceletPath;
 import organizer.system.exceptions.DuplicateException;
 import organizer.user.beans.UserBean;
@@ -21,6 +26,8 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.DataModel;
 import javax.faces.model.ListDataModel;
+import javax.faces.push.Push;
+import javax.faces.push.PushContext;
 import javax.faces.validator.Validator;
 import javax.faces.validator.ValidatorException;
 import javax.faces.view.ViewScoped;
@@ -30,7 +37,11 @@ import javax.inject.Named;
 
 import java.io.Serializable;
 
+import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -43,12 +54,30 @@ import java.util.Map;
 public class ProductsBean implements Serializable, Validator {
 
 
+    private String GroupUserHash;
+
+
     private List<ProductDTO> dto;
     private DataModel<ProductDTO> productModel;
     private DataModel<ProductDTO> newProductModel;
     private UIComponent dTable;
     ProductDTO newProduct;
     GroupDTO groupDTO;
+
+    private List<GroupMessageDTO> dtos;
+
+    private DataModel messagesDataModel;
+
+    public String getGroupUserHash() {
+        return GroupUserHash;
+    }
+
+    public void setGroupUserHash(String groupUserHash) {
+        GroupUserHash = groupUserHash;
+    }
+
+    private GroupMessageDTO newDTO;
+
 
 
     public DataModel<ProductDTO> getNewProductModel() {
@@ -85,6 +114,29 @@ public class ProductsBean implements Serializable, Validator {
 
     private UIComponent saveButton;
 
+    public List<GroupMessageDTO> getDtos() {
+        return dtos;
+    }
+
+    public void setDtos(List<GroupMessageDTO> dtos) {
+        this.dtos = dtos;
+    }
+
+    public DataModel getMessagesDataModel() {
+        return messagesDataModel;
+    }
+
+    public void setMessagesDataModel(DataModel messagesDataModel) {
+        this.messagesDataModel = messagesDataModel;
+    }
+
+    public GroupMessageDTO getNewDTO() {
+        return newDTO;
+    }
+
+    public void setNewDTO(GroupMessageDTO newDTO) {
+        this.newDTO = newDTO;
+    }
 
     public UIComponent getSaveButton() {
         return saveButton;
@@ -129,7 +181,19 @@ public class ProductsBean implements Serializable, Validator {
         newProductModel = new ListDataModel<>(n);
         productModel = new ListDataModel<>(this.dto);
 
+this.newDTO = new GroupMessageDTO();
 
+        GroupMessageDAO groupMessageDAO= new GroupMessageDAO();
+        this.dtos = groupMessageDAO.getMessages(this.groupDTO);
+        this.messagesDataModel = new ListDataModel(this.dtos);
+
+        System.out.println(this.dtos.size());
+        try {
+            this.GroupUserHash = HashConverter.sha384((HashConverter.sha384(String.valueOf(this.userBean.getDto().getUserID())))
+            + HashConverter.sha384(String.valueOf(this.groupDTO.getgID())));
+        } catch (UnsupportedEncodingException | NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -147,6 +211,7 @@ public class ProductsBean implements Serializable, Validator {
         ) {
             if (dto.getgID() == this.groupDTO.getgID()) {
                 toReturn = true;
+                break;
             }
         }
 
@@ -259,6 +324,7 @@ public class ProductsBean implements Serializable, Validator {
         } catch (DuplicateException e) {
             e.printStackTrace();
         }
+
         //return FaceletPath.PRODUCTS.getRedirectionPath() + "&includeViewParams=true";
     }
 
@@ -278,5 +344,70 @@ public class ProductsBean implements Serializable, Validator {
     public String toGroupManager() {
 
         return Utility.getURL() + FaceletPath.GROUPMANAGER.getPath() + "?gID=" + this.groupDTO.getgID();
+    }
+
+
+
+    public void insert(){
+
+        GroupMessageDAO dao = new GroupMessageDAO();
+        dao.insertByDTOs(this.groupDTO,this.userBean.getDto(),this.newDTO);
+
+    }
+
+
+
+
+    public void sendMessage(){
+
+        this.send();
+        this.insert();
+    }
+
+
+
+
+    @Inject
+    @Push
+    PushContext groupMessageChannel;
+
+
+    public void send() {
+
+        GroupDAO dao = new GroupDAO();
+        GroupUserDAO groupUserDAO = new GroupUserDAO();
+        String userName = groupUserDAO.getUsernameById(this.userBean.getDto().getUserID());
+
+
+        List<String> users = this.groupUserHashes(dao.getUsers(this.groupDTO));
+
+this.newDTO.setMessage("Hello World");
+this.newDTO.setUser(userName);
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        Date date = new Date();
+        this.newDTO.setTime(formatter.format(date));
+        groupMessageChannel.send(this.newDTO, users);
+
+    }
+
+
+
+    private List<String> groupUserHashes(List<GroupUserDTO>  users){
+
+        ArrayList toReturn = new ArrayList();
+for(GroupUserDTO dto : users){
+    try {
+        String h= HashConverter.sha384((HashConverter.sha384(String.valueOf(dto.getUserID())))
+                + HashConverter.sha384(String.valueOf(this.groupDTO.getgID())));
+
+
+        toReturn.add(h);
+    } catch (UnsupportedEncodingException | NoSuchAlgorithmException e) {
+        e.printStackTrace();
+    }
+}
+return toReturn;
+
+
     }
 }

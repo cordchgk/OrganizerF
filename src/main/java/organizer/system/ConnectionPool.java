@@ -400,7 +400,7 @@ public class ConnectionPool implements Serializable {
                     "gID smallint," +
                     "uID smallint," +
                     "message varchar," +
-                    "time timestamp)";
+                    "time varchar)";
 
 
             stmt.executeUpdate(query);

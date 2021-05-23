@@ -168,6 +168,45 @@
 
         </div>
 
+        <script type="text/javascript">
 
-    </ui:define>
+
+
+            function groupMessagesListener(message, channel, event) {
+                console.log("Test");
+                console.log(message);
+
+
+
+
+            }
+
+
+        </script>
+        <f:websocket channel="groupMessageChannel" user="#{product.groupUserHash}" onmessage="groupMessagesListener"/>
+
+        <h:panelGroup >
+
+
+            <h:form>
+
+
+                <h:dataTable style="width: auto" columnClasses="column_notifications" value="#{product.messagesDataModel}"
+                             var="groupMessagesList">
+                    <h:column>
+                        <h:outputText value="#{groupMessagesList.time}"/>
+                    </h:column>
+                    <h:column>
+                        <h:outputText value="#{groupMessagesList.user}"/>
+                    </h:column>
+                    <h:column>
+                        <h:outputText value="#{groupMessagesList.message}"/>
+                    </h:column>
+                </h:dataTable>
+            </h:form>
+        </h:panelGroup>
+
+
+
+        </ui:define>
 </ui:composition>
