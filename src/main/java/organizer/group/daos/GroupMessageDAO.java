@@ -19,7 +19,7 @@ import java.util.logging.Logger;
 
 public class GroupMessageDAO {
 
-    public List<GroupMessageDTO> getMessages(GroupDTO dto){
+    public List<GroupMessageDTO> getMessages(GroupDTO dto) {
         ArrayList toReturn = new ArrayList();
         ConnectionPool pool = ConnectionPool.getInstance();
 
@@ -39,13 +39,14 @@ public class GroupMessageDAO {
         }
         try {
             statement.setInt(1, dto.getgID());
+
             result = statement.executeQuery();
             while (result.next()) {
-            GroupMessageDTO toAdd = new GroupMessageDTO();
-            toAdd.setTime(result.getString(1));
-            toAdd.setTime(result.getString(2));
-            toAdd.setTime(result.getString(3));
-            toReturn.add(toAdd);
+                GroupMessageDTO toAdd = new GroupMessageDTO();
+                toAdd.setTime(result.getString(1));
+                toAdd.setUser(result.getString(2));
+                toAdd.setMessage(result.getString(3));
+                toReturn.add(toAdd);
             }
         } catch (SQLException ex) {
             Logger.getLogger(GroupDAO.class.getName())
@@ -57,26 +58,23 @@ public class GroupMessageDAO {
 
 
 
-
-
-     return toReturn;
+        return toReturn;
     }
 
 
-
-    public void insertByDTOs(GroupDTO groupDTO, UserDTO userDTO,GroupMessageDTO groupMessageDTO) {
+    public void insertByDTOs(GroupDTO groupDTO, UserDTO userDTO, GroupMessageDTO groupMessageDTO) {
 
         ConnectionPool pool = ConnectionPool.getInstance();
         Connection conn = pool.getConnection();
         String query =
-                "INSERT INTO groupmessages(gid, uid, message, time) VALUES (?,?,?,?)";
+                "INSERT INTO postgres.public.groupmessages(gid, uid, message, time) VALUES (?,?,?,?)";
 
         try {
             PreparedStatement statement = conn.prepareStatement(query);
-            statement.setInt(1,groupDTO.getgID());
-            statement.setInt(2,userDTO.getUserID());
-            statement.setString(3,groupMessageDTO.getMessage());
-            statement.setString(4,groupMessageDTO.getTime());
+            statement.setInt(1, groupDTO.getgID());
+            statement.setInt(2, userDTO.getUserID());
+            statement.setString(3, groupMessageDTO.getMessage());
+            statement.setString(4, groupMessageDTO.getTime());
             statement.execute();
 
         } catch (SQLException ex) {
@@ -86,9 +84,6 @@ public class GroupMessageDAO {
         }
         pool.releaseConnection(conn);
     }
-
-
-
 
 
 }

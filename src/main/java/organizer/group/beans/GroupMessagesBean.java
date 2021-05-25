@@ -3,6 +3,7 @@ package organizer.group.beans;
 import organizer.group.daos.GroupMessageDAO;
 import organizer.group.dtos.GroupDTO;
 import organizer.group.dtos.GroupMessageDTO;
+import organizer.product.beans.ProductsBean;
 import organizer.user.beans.UserBean;
 
 import javax.annotation.PostConstruct;
@@ -26,6 +27,9 @@ public class GroupMessagesBean implements Serializable {
     private DataModel messagesDataModel;
     private GroupMessageDTO newDTO;
 
+
+    @Inject
+    ProductsBean productsBean;
 
     @Inject
     UserBean userBean;
@@ -63,7 +67,7 @@ public class GroupMessagesBean implements Serializable {
     }
 
     @PostConstruct
-    public void init(){
+    public void init() {
         this.groupDTO = new GroupDTO();
         GroupMessageDAO dao = new GroupMessageDAO();
         this.dtos = dao.getMessages(this.groupDTO);
@@ -72,28 +76,14 @@ public class GroupMessagesBean implements Serializable {
     }
 
 
-
-    public void insert(){
+    public void insert() {
         Map<String, String> parameter = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
-this.groupDTO = new GroupDTO();
-this.groupDTO.setgID(Integer.parseInt(parameter.get("gID")));
+        this.groupDTO = new GroupDTO();
+        this.groupDTO.setgID(Integer.parseInt(parameter.get("gID")));
         GroupMessageDAO dao = new GroupMessageDAO();
-        dao.insertByDTOs(this.groupDTO,this.userBean.getDto(),this.newDTO);
+        dao.insertByDTOs(this.groupDTO, this.userBean.getDto(), this.newDTO);
 
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 }

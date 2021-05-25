@@ -6,22 +6,6 @@
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:p="http://java.sun.com/jsf/html">
 <h:outputStylesheet name="master.css" library="css"/>
-
-<script type="text/javascript">
-
-
-
-    function groupMessagesListener(message, channel, event) {
-        Console.log(message);
-
-        document.getElementById('gMessages').append(message);
-
-
-    }
-
-
-</script>
-
 <h:body>
 
 
@@ -31,29 +15,28 @@
         <h:form>
 
 
-            <h:dataTable style="width: auto" columnClasses="column_notifications" value="#{groupMessages.messagesDataModel}"
-                         var="groupMessages">
+            <h:dataTable style="width: auto" columnClasses="column_notifications" value="#{notification.notificationDataModel}"
+                         var="notifications">
                 <h:column>
-                    <h:outputText value="#{groupMessages.time}"/>
+                    <h:outputLink value="#{notification.select()}"  target="_parent" style="color: #eeeeee">
+                        #{notifications.time}
+                    </h:outputLink>
                 </h:column>
                 <h:column>
-                    <h:outputText value="#{groupMessages.user}"/>
+                    <h:outputLink value="#{notification.select()}" target="_parent" style="color: #eeeeee">
+                        #{notifications.name}
+                    </h:outputLink>
+
+
                 </h:column>
                 <h:column>
-                    <h:outputText value="#{groupMessages.message}"/>
+                    <h:outputLink value="#{notification.select()}" target="_parent" style="color: #eeeeee">
+                        #{notifications.message}
+                    </h:outputLink>
                 </h:column>
             </h:dataTable>
         </h:form>
     </h:panelGroup>
 </h:body>
 </html>
-
-
-
-
-
-
-
-
-
 

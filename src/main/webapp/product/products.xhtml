@@ -177,6 +177,8 @@
                 console.log(message);
 
 
+let l = document.getElementById('groupMessages');
+console.log(l);
 
 
             }
@@ -191,7 +193,7 @@
             <h:form>
 
 
-                <h:dataTable style="width: auto" columnClasses="column_notifications" value="#{product.messagesDataModel}"
+                <h:dataTable id="groupMessages" style="width: auto" columnClasses="column_notifications" value="#{product.messagesDataModel}"
                              var="groupMessagesList">
                     <h:column>
                         <h:outputText value="#{groupMessagesList.time}"/>

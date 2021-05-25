@@ -79,7 +79,6 @@ public class ProductsBean implements Serializable, Validator {
     private GroupMessageDTO newDTO;
 
 
-
     public DataModel<ProductDTO> getNewProductModel() {
         return newProductModel;
     }
@@ -181,16 +180,16 @@ public class ProductsBean implements Serializable, Validator {
         newProductModel = new ListDataModel<>(n);
         productModel = new ListDataModel<>(this.dto);
 
-this.newDTO = new GroupMessageDTO();
+        this.newDTO = new GroupMessageDTO();
 
-        GroupMessageDAO groupMessageDAO= new GroupMessageDAO();
+        GroupMessageDAO groupMessageDAO = new GroupMessageDAO();
         this.dtos = groupMessageDAO.getMessages(this.groupDTO);
         this.messagesDataModel = new ListDataModel(this.dtos);
 
-        System.out.println(this.dtos.size());
+
         try {
             this.GroupUserHash = HashConverter.sha384((HashConverter.sha384(String.valueOf(this.userBean.getDto().getUserID())))
-            + HashConverter.sha384(String.valueOf(this.groupDTO.getgID())));
+                    + HashConverter.sha384(String.valueOf(this.groupDTO.getgID())));
         } catch (UnsupportedEncodingException | NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
@@ -324,6 +323,7 @@ this.newDTO = new GroupMessageDTO();
         } catch (DuplicateException e) {
             e.printStackTrace();
         }
+        this.sendMessage();
 
         //return FaceletPath.PRODUCTS.getRedirectionPath() + "&includeViewParams=true";
     }
@@ -347,24 +347,19 @@ this.newDTO = new GroupMessageDTO();
     }
 
 
-
-    public void insert(){
+    public void insert() {
 
         GroupMessageDAO dao = new GroupMessageDAO();
-        dao.insertByDTOs(this.groupDTO,this.userBean.getDto(),this.newDTO);
+        dao.insertByDTOs(this.groupDTO, this.userBean.getDto(), this.newDTO);
 
     }
 
 
-
-
-    public void sendMessage(){
+    public void sendMessage() {
 
         this.send();
         this.insert();
     }
-
-
 
 
     @Inject
@@ -381,8 +376,8 @@ this.newDTO = new GroupMessageDTO();
 
         List<String> users = this.groupUserHashes(dao.getUsers(this.groupDTO));
 
-this.newDTO.setMessage("Hello World");
-this.newDTO.setUser(userName);
+        this.newDTO.setMessage("Hello World");
+        this.newDTO.setUser(userName);
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         Date date = new Date();
         this.newDTO.setTime(formatter.format(date));
@@ -391,22 +386,21 @@ this.newDTO.setUser(userName);
     }
 
 
-
-    private List<String> groupUserHashes(List<GroupUserDTO>  users){
+    private List<String> groupUserHashes(List<GroupUserDTO> users) {
 
         ArrayList toReturn = new ArrayList();
-for(GroupUserDTO dto : users){
-    try {
-        String h= HashConverter.sha384((HashConverter.sha384(String.valueOf(dto.getUserID())))
-                + HashConverter.sha384(String.valueOf(this.groupDTO.getgID())));
+        for (GroupUserDTO dto : users) {
+            try {
+                String h = HashConverter.sha384((HashConverter.sha384(String.valueOf(dto.getUserID())))
+                        + HashConverter.sha384(String.valueOf(this.groupDTO.getgID())));
 
 
-        toReturn.add(h);
-    } catch (UnsupportedEncodingException | NoSuchAlgorithmException e) {
-        e.printStackTrace();
-    }
-}
-return toReturn;
+                toReturn.add(h);
+            } catch (UnsupportedEncodingException | NoSuchAlgorithmException e) {
+                e.printStackTrace();
+            }
+        }
+        return toReturn;
 
 
     }
