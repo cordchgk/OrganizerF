@@ -323,7 +323,7 @@ public class ProductsBean implements Serializable, Validator {
         } catch (DuplicateException e) {
             e.printStackTrace();
         }
-        this.sendMessage();
+
 
         //return FaceletPath.PRODUCTS.getRedirectionPath() + "&includeViewParams=true";
     }
@@ -359,6 +359,7 @@ public class ProductsBean implements Serializable, Validator {
 
         this.send();
         this.insert();
+        this.newDTO.setMessage("");
     }
 
 
@@ -376,7 +377,7 @@ public class ProductsBean implements Serializable, Validator {
 
         List<String> users = this.groupUserHashes(dao.getUsers(this.groupDTO));
 
-        this.newDTO.setMessage("Hello World");
+
         this.newDTO.setUser(userName);
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         Date date = new Date();

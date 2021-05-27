@@ -25,7 +25,7 @@ public class GroupMessageDAO {
 
 
         Connection conn = pool.getConnection();
-        String query = "SELECT time,users.firstname,message FROM groupmessages,users,memberofgroup WHERE\n" +
+        String query = "SELECT time,users.firstname,users.surname,message FROM groupmessages,users,memberofgroup WHERE\n" +
                 "groupmessages.gid = ? AND groupmessages.gid = memberofgroup.gid AND memberofgroup.uid = users.userid";
         PreparedStatement statement = null;
         ResultSet result;
@@ -44,8 +44,9 @@ public class GroupMessageDAO {
             while (result.next()) {
                 GroupMessageDTO toAdd = new GroupMessageDTO();
                 toAdd.setTime(result.getString(1));
-                toAdd.setUser(result.getString(2));
-                toAdd.setMessage(result.getString(3));
+                String u = result.getString(2) + " " + result.getString(3);
+toAdd.setUser(u);
+                toAdd.setMessage(result.getString(4));
                 toReturn.add(toAdd);
             }
         } catch (SQLException ex) {

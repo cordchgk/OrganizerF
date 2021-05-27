@@ -1626,16 +1626,45 @@ select:disabled {
     width: 90%;
 }
 
-
-.column_notifications {
-    width: auto;
+.column_notificationsFirst {
+    width: 20%;
+    float: left;
+    text-align: left;
     margin-left: auto;
     margin-right: auto;
     margin-top: 1em;
-    height: 100px;
+    height: auto;
 
 
 }
+
+.column_notificationsSecond {
+    width: 20%;
+    float: left;
+    text-align: left;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 1em;
+    height: auto;
+
+
+}
+
+.column_notificationsThird {
+    width: 60%;
+    border-left: 1px black;
+    float: left;
+    text-align: left;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 1em;
+    height: auto;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    hyphens: auto;
+
+}
+
 
 .popup {
     position: relative;
