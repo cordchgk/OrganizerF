@@ -200,9 +200,11 @@
 
                     // Füge der Zelle einen textnode hinzu
                     let newTextTime = document.createTextNode(time);
-
+newTextTime.className = "chat_text";
                     let newTextUser = document.createTextNode(name);
+                    newTextUser.className = "chat_text";
                     let newTextMessage = document.createTextNode(m);
+                    newTextMessage.className = "chat_text";
                     newCellTime.appendChild(newTextTime);
                     newCellName.appendChild(newTextUser);
                     newCellMessage.appendChild(newTextMessage);
@@ -236,15 +238,15 @@
                                      value="#{product.messagesDataModel}"
                                      var="groupMessagesList">
                             <h:column>
-                                <h:outputText style="overflow-wrap: break-word;word-wrap: break-word;hyphens: auto"
+                                <h:outputText styleClass="chat_text"
                                               value="#{groupMessagesList.time}"/>
                             </h:column>
                             <h:column>
-                                <h:outputText style="overflow-wrap: break-word;word-wrap: break-word;hyphens: auto"
+                                <h:outputText styleClass="chat_text"
                                               value="#{groupMessagesList.user}"/>
                             </h:column>
                             <h:column>
-                                <h:outputText style="overflow-wrap: break-word;word-wrap: break-word;hyphens: auto;"
+                                <h:outputText styleClass="chat_text"
                                               value="#{groupMessagesList.message}"/>
                             </h:column>
                         </h:dataTable>

@@ -216,7 +216,8 @@ public class ProductsBean implements Serializable, Validator {
 
 
         if (!toReturn) {
-            ConfigurableNavigationHandler nav = (ConfigurableNavigationHandler) fc.getApplication().getNavigationHandler();
+            ConfigurableNavigationHandler nav = (ConfigurableNavigationHandler) fc.getApplication()
+                    .getNavigationHandler();
             nav.performNavigation("/access/access-denied.xhtml");
         }
 

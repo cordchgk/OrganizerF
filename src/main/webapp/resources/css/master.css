@@ -1627,6 +1627,7 @@ select:disabled {
 }
 
 .column_notificationsFirst {
+    overflow-wrap: break-word;word-wrap: break-word;hyphens: auto;
     width: 20%;
     float: left;
     text-align: left;
@@ -1639,6 +1640,7 @@ select:disabled {
 }
 
 .column_notificationsSecond {
+    overflow-wrap: break-word;word-wrap: break-word;hyphens: auto;
     width: 20%;
     float: left;
     text-align: left;
@@ -1651,6 +1653,7 @@ select:disabled {
 }
 
 .column_notificationsThird {
+    overflow-wrap: break-word;word-wrap: break-word;hyphens: auto;
     width: 60%;
     border-left: 1px black;
     float: left;
@@ -1659,9 +1662,7 @@ select:disabled {
     margin-right: auto;
     margin-top: 1em;
     height: auto;
-    overflow-wrap: break-word;
-    word-wrap: break-word;
-    hyphens: auto;
+
 
 }
 
@@ -1732,6 +1733,11 @@ select:disabled {
     to {
         opacity: 1;
     }
+}
+
+
+.chat_text{
+    overflow-wrap: break-word;word-wrap: break-word;hyphens: auto;
 }
 
 
