@@ -15,6 +15,13 @@ import java.io.Serializable;
 public class RegistrationBean implements Serializable {
     UserDTO newUserDTO;
 
+    public UserDTO getNewUserDTO() {
+        return newUserDTO;
+    }
+
+    public void setNewUserDTO(UserDTO newUserDTO) {
+        this.newUserDTO = newUserDTO;
+    }
 
     @PostConstruct
     public void init() {

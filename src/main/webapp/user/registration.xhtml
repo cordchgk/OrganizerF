@@ -20,22 +20,22 @@
 
                 <ul>
                     <li><h:outputText value="First name"/></li>
-                    <li><h:inputText id="firstname" value="#{user.dto.firstname}"
+                    <li><h:inputText id="firstname" value="#{registrationBean.newUserDTO.firstname}"
                                      required="true"
                                      requiredMessage="First name"
                                      label="First name" p:min="1" p:required="true"/></li>
                     <li><h:outputText value="Surname"/></li>
-                    <li><h:inputText id="surname" value="#{user.dto.surname}"
+                    <li><h:inputText id="surname" value="#{registrationBean.newUserDTO.surname}"
                                      required="true"
                                      requiredMessage="Surname"
                                      label="Surname" p:min="1" p:required="true"/></li>
                     <li><h:outputText value="Address"/></li>
-                    <li><h:inputText id="address" value="#{user.dto.address}"
+                    <li><h:inputText id="address" value="#{registrationBean.newUserDTO.address}"
                                      required="true"
                                      requiredMessage="Address"
                                      label="Address" p:min="1" p:required="true"/></li>
                     <li><h:outputText value="E-Mail-Adresse"/></li>
-                    <li><h:inputText id="email" value="#{user.dto.email}"
+                    <li><h:inputText id="email" value="#{registrationBean.newUserDTO.email}"
                                      required="true"
                                      requiredMessage="E-Mail-Adresse angeben"
                                      label="E-Mail" p:min="1" p:required="true"
@@ -50,7 +50,7 @@
                     </li>
                     <li><h:outputText value="Passwort"/></li>
                     <li><h:inputSecret id="password"
-                                       value="#{user.dto.passwordHash}"
+                                       value="#{registrationBean.newUserDTO.passwordHash}"
                                        required="true"
                                        requiredMessage="Passwort angeben"
                                        label="Password" p:min="1" p:required="true">
@@ -62,7 +62,7 @@
                     </li>
                 </ul>
                 <h:commandButton value="Register" id="Register"
-                                 action="#{user.edit}"/>
+                                 action="#{registrationBean.createUser()}"/>
                 <div class="errorMessage_specific">
                     <div><h:message for="Register" errorClass=""/></div>
                 </div>
