@@ -19,14 +19,14 @@ import java.util.logging.Logger;
 
 public class GroupMessageDAO {
 
-    public List<GroupMessageDTO> getMessages(GroupDTO dto) {
+    public List<GroupMessageDTO> getMessages(GroupDTO dto,UserDTO userDTO) {
         ArrayList toReturn = new ArrayList();
         ConnectionPool pool = ConnectionPool.getInstance();
 
 
         Connection conn = pool.getConnection();
-        String query = "SELECT time,users.firstname,users.surname,message FROM groupmessages,users,memberofgroup WHERE\n" +
-                "groupmessages.gid = ? AND groupmessages.gid = memberofgroup.gid AND memberofgroup.uid = users.userid";
+        String query = "SELECT groupmessages.time,users.firstname,users.surname,groupmessages.message FROM groupmessages,users,memberofgroup WHERE\n" +
+                "                groupmessages.gid = ? AND groupmessages.gid = memberofgroup.gid AND memberofgroup.uid = users.userid AND userid = ?";
         PreparedStatement statement = null;
         ResultSet result;
         try {
@@ -39,6 +39,7 @@ public class GroupMessageDAO {
         }
         try {
             statement.setInt(1, dto.getgID());
+            statement.setInt(2,userDTO.getUserID());
 
             result = statement.executeQuery();
             while (result.next()) {

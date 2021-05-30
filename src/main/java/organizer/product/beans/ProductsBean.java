@@ -183,7 +183,7 @@ public class ProductsBean implements Serializable, Validator {
         this.newDTO = new GroupMessageDTO();
 
         GroupMessageDAO groupMessageDAO = new GroupMessageDAO();
-        this.dtos = groupMessageDAO.getMessages(this.groupDTO);
+        this.dtos = groupMessageDAO.getMessages(this.groupDTO, userBean.getDto());
         this.messagesDataModel = new ListDataModel(this.dtos);
 
 

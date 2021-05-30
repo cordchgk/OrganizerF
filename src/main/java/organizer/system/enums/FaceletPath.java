@@ -10,7 +10,7 @@ import org.jetbrains.annotations.Nullable;
  */
 public enum FaceletPath {
     @NonNls INDEX("/index.xhtml"),
-    @NonNls LOGIN("/login.xhtml"),
+    @NonNls LOGIN("/user/login.xhtml"),
     @NonNls PASSWORD_FORGOTTEN("/password-forgotten.xhtml"),
     @NonNls RESET_PASSWORD("/reset-password.xhtml"),
     @NonNls SIGNUP("/signup.xhtml"),

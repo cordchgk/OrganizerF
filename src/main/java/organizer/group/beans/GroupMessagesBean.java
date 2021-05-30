@@ -70,7 +70,7 @@ public class GroupMessagesBean implements Serializable {
     public void init() {
         this.groupDTO = new GroupDTO();
         GroupMessageDAO dao = new GroupMessageDAO();
-        this.dtos = dao.getMessages(this.groupDTO);
+        this.dtos = dao.getMessages(this.groupDTO, userBean.getDto());
         this.messagesDataModel = new ListDataModel(this.dtos);
 
     }

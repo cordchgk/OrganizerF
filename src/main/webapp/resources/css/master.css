@@ -1662,7 +1662,7 @@ select:disabled {
     margin-right: auto;
     margin-top: 1em;
     height: auto;
-
+max-width: fit-content;
 
 }
 
