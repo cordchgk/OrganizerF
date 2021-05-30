@@ -13,10 +13,8 @@ import organizer.system.converter.HashConverter;
 import organizer.system.enums.FaceletPath;
 import organizer.system.exceptions.DuplicateException;
 import organizer.user.beans.UserBean;
-import organizer.user.dtos.UserDTO;
 
 import javax.annotation.PostConstruct;
-import javax.enterprise.context.RequestScoped;
 import javax.faces.application.ConfigurableNavigationHandler;
 import javax.faces.application.FacesMessage;
 
@@ -388,7 +386,7 @@ public class ProductsBean implements Serializable, Validator {
     }
 
 
-    private List<String> groupUserHashes(List<GroupUserDTO> users) {
+    private ArrayList groupUserHashes(List<GroupUserDTO> users) {
 
         ArrayList toReturn = new ArrayList();
         for (GroupUserDTO dto : users) {

@@ -84,9 +84,8 @@
                         </h:column>
 
                     </h:dataTable>
-                    <div style="margin-top: 5%;margin-bottom: 5%">
-                        <h:commandButton style=" margin: 0;position: absolute;left: 50%;-ms-transform: translate(-50%, -50%);
-  transform: translate(-50%, -50%);" id="save" value="Save" action="#{product.save()}"
+                    <div style="margin-top: 5%;margin-bottom: 5%;text-align: center">
+                        <h:commandButton  id="save" value="Save" action="#{product.save()}"
                                          binding="#{product.saveButton}">
                             <f:ajax execute="@form" render="@form"/>
 
@@ -197,6 +196,7 @@
                     newCellName.className = "column_notificationsSecond";
                     let newCellMessage = newRow.insertCell(2);
                     newCellMessage.className = "column_notificationsThird";
+
 
                     // Füge der Zelle einen textnode hinzu
                     let newTextTime = document.createTextNode(time);

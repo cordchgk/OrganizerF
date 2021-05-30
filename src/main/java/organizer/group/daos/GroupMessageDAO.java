@@ -46,8 +46,9 @@ public class GroupMessageDAO {
                 GroupMessageDTO toAdd = new GroupMessageDTO();
                 toAdd.setTime(result.getString(1));
                 String u = result.getString(2) + " " + result.getString(3);
-toAdd.setUser(u);
+                toAdd.setUser(u);
                 toAdd.setMessage(result.getString(4));
+
                 toReturn.add(toAdd);
             }
         } catch (SQLException ex) {
