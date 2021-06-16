@@ -1,8 +1,7 @@
 package organizer.user.beans;
 
 
-import organizer.system.Utility;
-import organizer.system.enums.FaceletPath;
+
 import organizer.system.exceptions.DuplicateException;
 import organizer.user.daos.UserDAO;
 import organizer.user.dtos.UserDTO;
@@ -31,14 +30,14 @@ public class RegistrationBean implements Serializable {
     }
 
 
-    public String createUser() {
+    public void createUser() {
         UserDAO dao = new UserDAO();
         try {
             dao.insert(this.newUserDTO);
         } catch (DuplicateException e) {
             e.printStackTrace();
         }
-return Utility.getURL() + FaceletPath.LOGIN.getPath();
+
     }
 
 }
