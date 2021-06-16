@@ -35,7 +35,6 @@
     </servlet-mapping>
 
 
-
     <context-param>
         <param-name>javax.faces.ENABLE_CDI_RESOLVER_CHAIN</param-name>
         <param-value>true</param-value>
@@ -48,8 +47,11 @@
         <param-name>javax.faces.CONFIG_FILES</param-name>
         <param-value>/META-INF/context.xml</param-value>
     </context-param>
-<session-config>
-    <session-timeout>-1</session-timeout>
-</session-config>
+    <session-config>
+        <session-timeout>-1</session-timeout>
+    </session-config>
+
+
+
 
 </web-app>

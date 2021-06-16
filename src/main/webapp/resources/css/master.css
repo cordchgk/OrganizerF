@@ -1737,6 +1737,7 @@ max-width: fit-content;
 
 
 .chat_text{
+    text-align: left;
     overflow-wrap: break-word;word-wrap: break-word;hyphens: auto;
 }
 

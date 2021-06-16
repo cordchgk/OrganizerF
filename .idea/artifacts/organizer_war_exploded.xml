@@ -24,7 +24,11 @@
           <element id="library" level="project" name="Maven: org.checkerframework:checker-qual:3.5.0" />
           <element id="library" level="project" name="Maven: javax.json:javax.json-api:1.1.4" />
           <element id="library" level="project" name="Maven: org.glassfish:javax.json:1.1.4" />
-          <element id="library" level="project" name="postgresql-42.2.20" />
+          <element id="library" level="project" name="Maven: com.sun.jersey:jersey-server:1.19" />
+          <element id="library" level="project" name="Maven: com.sun.jersey:jersey-core:1.19" />
+          <element id="library" level="project" name="Maven: javax.ws.rs:jsr311-api:1.1.1" />
+          <element id="library" level="project" name="Maven: com.sun.jersey:jersey-servlet:1.19" />
+          <element id="library" level="project" name="Maven: com.sun.jersey:jersey-client:1.19" />
         </element>
       </element>
       <element id="directory" name="META-INF">
