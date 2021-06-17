@@ -65,7 +65,6 @@
     <orderEntry type="library" name="font-awesome" level="application" />
     <orderEntry type="library" name="jquery" level="application" />
     <orderEntry type="library" name="javaee8-ri" level="application" />
-    <orderEntry type="library" name="postgresql-42.2.20" level="project" />
     <orderEntry type="library" name="Maven: org.jboss.weld.servlet:weld-servlet:2.4.8.Final" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: javax:javaee-api:8.0.1" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: com.sun.mail:javax.mail:1.6.2" level="project" />
