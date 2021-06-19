@@ -1,11 +1,17 @@
 package organizer.user.dtos;
 
 
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.XmlType;
 import java.io.Serializable;
 
 /**
  * Created by cord on 07.06.16.
  */
+@XmlRootElement(name = "user")
+
 public class UserDTO  implements Serializable {
 
     private static final long serialVersionUID = 3461340127831352062L;
@@ -19,9 +25,23 @@ public class UserDTO  implements Serializable {
     private String verificationHash = null;
     private Boolean status;
 
+    @XmlElement
+    public String getFirstname() {
+        return firstname;
+    }
+
+    @XmlElement
+    public String getSurname() {
+        return surname;
+    }
+
+
+
+
     public static long getSerialVersionUID() {
         return serialVersionUID;
     }
+
 
     public String getVerificationHash() {
         return verificationHash;
@@ -30,6 +50,7 @@ public class UserDTO  implements Serializable {
     public void setVerificationHash(String verificationHash) {
         this.verificationHash = verificationHash;
     }
+
 
     public Boolean isStatus() {
         return status;
@@ -40,6 +61,8 @@ public class UserDTO  implements Serializable {
         this.status = status;
     }
 
+
+    @XmlElement
     public String getAddress() {
         return address;
     }
@@ -48,6 +71,7 @@ public class UserDTO  implements Serializable {
         this.address = address;
     }
 
+    @XmlElement
     public Integer getUserID() {
         return userID;
     }
@@ -58,6 +82,7 @@ public class UserDTO  implements Serializable {
     }
 
 
+    @XmlElement
     public String getEmail() {
         return email;
     }
@@ -66,21 +91,17 @@ public class UserDTO  implements Serializable {
         this.email = email;
     }
 
-    public String getFirstname() {
-        return firstname;
-    }
 
     public void setFirstname(String firstname) {
         this.firstname = firstname;
     }
 
-    public String getSurname() {
-        return surname;
-    }
+
 
     public void setSurname(String surname) {
         this.surname = surname;
     }
+
 
     public String getPasswordHash() {
         return passwordHash;
@@ -90,5 +111,11 @@ public class UserDTO  implements Serializable {
         this.passwordHash = passwordHash;
     }
 
+public UserDTO(){
 
+
+}
+public UserDTO(int id){
+
+}
 }

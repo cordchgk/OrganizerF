@@ -14,35 +14,44 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.xml.bind.JAXB;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
+import java.io.StringWriter;
 
 
 @Path("/user")
-@Named("rest")
-@SessionScoped
+
 public class HelloResource implements Serializable {
 
+    @Inject
+    UserBean userBean;
 
 
 
 
     @GET
+    @Path("/get")
     @Produces(MediaType.APPLICATION_XML)
-    public String direBonjour() {
+    public UserDTO getSelf() {
 
-        UserDAO dao = new UserDAO();
-        UserDTO users = dao.selectById(1);
-        return "<?xml version=\"1.0\"?>" + "<user>" + users.getFirstname() + " " + users.getSurname() + "</user>";
+        if (userBean.getDto().getUserID() == null) {
+            return null;
+        }
+
+
+        return userBean.getDto();
     }
 
 
-
-    @GET
-    @Path("/{id}/get")
-    @Produces(MediaType.APPLICATION_XML)
-    public String getUser(@PathParam("id") int id) {
-        UserDAO dao = new UserDAO();
-        UserDTO users = dao.selectById(id);
-        return "<?xml version=\"1.0\"?>" + "<user>" + users.getFirstname() + " " + users.getSurname() + "</user>";
-    }
+/**
+ @GET
+ @Path("/{id}/get")
+ @Produces(MediaType.APPLICATION_XML) public String getUser(@PathParam("id") int id) {
+ System.out.println(userBean.getDto().getUserID());
+ UserDAO dao = new UserDAO();
+ UserDTO users = dao.selectById(id);
+ return "<?xml version=\"1.0\"?>" + "<user>" + users.getFirstname() + " " + users.getSurname() + "</user>";
+ }
+ **/
 }
