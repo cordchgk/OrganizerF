@@ -1,24 +1,23 @@
 package organizer.REST.services;
 
+
+//import org.springframework.beans.factory.annotation.Autowired;
+import organizer.group.daos.GroupDAO;
+import organizer.group.dtos.GroupDTO;
 import organizer.user.beans.UserBean;
-import organizer.user.daos.UserDAO;
 import organizer.user.dtos.UserDTO;
 
-import javax.annotation.PostConstruct;
-
-import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
-import javax.inject.Named;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import javax.xml.bind.JAXB;
-import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
-import java.io.StringWriter;
-
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Path("/user")
 
@@ -34,15 +33,41 @@ public class HelloResource implements Serializable {
     @Path("/get")
     @Produces(MediaType.APPLICATION_XML)
     public UserDTO getSelf() {
-
+      //  System.out.println(this.getHeadersInfo());
+        System.out.println("called");
         if (userBean.getDto().getUserID() == null) {
             return null;
         }
 
 
-        return userBean.getDto();
+        return  userBean.getDto();
     }
 
+    @GET
+    @Path("/get/groups")
+    @Produces(MediaType.APPLICATION_XML)
+    public List<GroupDTO> getUserGroups(){
+
+        return new GroupDAO().selectByUser(userBean.getDto());
+    }
+/*
+    @Autowired
+    private HttpServletRequest request;
+
+    private Map<String, String> getHeadersInfo() {
+
+        Map<String, String> map = new HashMap<String, String>();
+
+        Enumeration headerNames = request.getHeaderNames();
+        while (headerNames.hasMoreElements()) {
+            String key = (String) headerNames.nextElement();
+            String value = request.getHeader(key);
+            map.put(key, value);
+        }
+
+        return map;
+    }
+*/
 
 /**
  @GET

@@ -7,7 +7,7 @@ import organizer.system.ConnectionPool;
 
 import organizer.system.exceptions.DatabaseException;
 import organizer.system.exceptions.DuplicateException;
-import organizer.user.Creator.NotificationCreator;
+import organizer.user.creator.NotificationCreator;
 import organizer.user.beans.UserBean;
 import organizer.user.daos.NotifcationDAO;
 import organizer.user.daos.UserDAO;

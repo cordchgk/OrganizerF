@@ -1,10 +1,7 @@
 package organizer.user.dtos;
 
 
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
-import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.*;
 import java.io.Serializable;
 
 /**
@@ -12,7 +9,7 @@ import java.io.Serializable;
  */
 @XmlRootElement(name = "user")
 
-public class UserDTO  implements Serializable {
+public class UserDTO implements Serializable {
 
     private static final long serialVersionUID = 3461340127831352062L;
 
@@ -34,8 +31,6 @@ public class UserDTO  implements Serializable {
     public String getSurname() {
         return surname;
     }
-
-
 
 
     public static long getSerialVersionUID() {
@@ -71,7 +66,7 @@ public class UserDTO  implements Serializable {
         this.address = address;
     }
 
-    @XmlElement
+    @XmlAttribute
     public Integer getUserID() {
         return userID;
     }
@@ -97,12 +92,11 @@ public class UserDTO  implements Serializable {
     }
 
 
-
     public void setSurname(String surname) {
         this.surname = surname;
     }
 
-
+    @XmlTransient
     public String getPasswordHash() {
         return passwordHash;
     }
@@ -111,11 +105,12 @@ public class UserDTO  implements Serializable {
         this.passwordHash = passwordHash;
     }
 
-public UserDTO(){
+    public UserDTO() {
 
 
-}
-public UserDTO(int id){
+    }
 
-}
+    public UserDTO(int id) {
+
+    }
 }

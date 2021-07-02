@@ -3,20 +3,13 @@ package organizer.group.daos;
 import organizer.group.dtos.GroupDTO;
 import organizer.system.ConnectionPool;
 import organizer.system.exceptions.DatabaseException;
-import organizer.user.Creator.NotificationCreator;
-import organizer.user.daos.NotifcationDAO;
 import organizer.user.daos.UserDAO;
 import organizer.group.dtos.GroupUserDTO;
-import organizer.user.dtos.NotificationDTO;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 

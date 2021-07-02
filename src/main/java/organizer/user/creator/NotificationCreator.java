@@ -1,4 +1,4 @@
-package organizer.user.Creator;
+package organizer.user.creator;
 
 import organizer.user.dtos.NotificationDTO;
 
