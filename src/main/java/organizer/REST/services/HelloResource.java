@@ -2,8 +2,10 @@ package organizer.REST.services;
 
 
 //import org.springframework.beans.factory.annotation.Autowired;
+
 import organizer.group.daos.GroupDAO;
 import organizer.group.dtos.GroupDTO;
+import organizer.group.dtos.GroupList;
 import organizer.user.beans.UserBean;
 import organizer.user.dtos.UserDTO;
 
@@ -13,6 +15,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -27,28 +30,31 @@ public class HelloResource implements Serializable {
     UserBean userBean;
 
 
-
-
     @GET
     @Path("/get")
     @Produces(MediaType.APPLICATION_XML)
     public UserDTO getSelf() {
-      //  System.out.println(this.getHeadersInfo());
+        //  System.out.println(this.getHeadersInfo());
         System.out.println("called");
         if (userBean.getDto().getUserID() == null) {
             return null;
         }
 
 
-        return  userBean.getDto();
+        return userBean.getDto();
     }
 
     @GET
     @Path("/get/groups")
     @Produces(MediaType.APPLICATION_XML)
-    public List<GroupDTO> getUserGroups(){
+    public GroupList getUserGroups() {
 
-        return new GroupDAO().selectByUser(userBean.getDto());
+        GroupList toReturn = new GroupList();
+        toReturn.setGroup(new GroupDAO().selectByUser(userBean.getDto()));
+
+
+        toReturn.getGroup().removeIf(dto -> !dto.isAccepted());
+        return toReturn;
     }
 /*
     @Autowired

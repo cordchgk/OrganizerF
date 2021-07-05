@@ -1,19 +1,24 @@
 package organizer.group.dtos;
 
 
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 import java.io.Serializable;
 
 /**
  * Created by cord on 07.06.16.
  */
+
+@XmlRootElement(name = "group")
 public class GroupDTO implements Serializable {
 
     private static final long serialVersionUID = 3461340127831352062L;
 
-private String name;
-private int gID;
-private boolean accepted;
-private boolean groupAdmin;
+    private String name;
+    private int gID;
+    private boolean accepted;
+    private boolean groupAdmin;
 
     public boolean isGroupAdmin() {
         return groupAdmin;
@@ -31,6 +36,7 @@ private boolean groupAdmin;
         this.name = name;
     }
 
+    @XmlAttribute
     public int getgID() {
         return gID;
     }
@@ -39,6 +45,8 @@ private boolean groupAdmin;
         this.gID = gID;
     }
 
+
+    @XmlTransient
     public boolean isAccepted() {
         return accepted;
     }
