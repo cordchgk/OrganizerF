@@ -25,6 +25,7 @@
           <element id="library" level="project" name="Maven: javax.json:javax.json-api:1.1.4" />
           <element id="library" level="project" name="Maven: org.glassfish:javax.json:1.1.4" />
           <element id="library" level="project" name="Maven: javax.ws.rs:javax.ws.rs-api:2.1.1" />
+          <element id="library" level="project" name="Maven: javax.servlet:servlet-api:2.5" />
           <element id="library" level="project" name="Maven: org.glassfish.jersey.containers:jersey-container-servlet:2.34" />
           <element id="library" level="project" name="Maven: org.glassfish.jersey.core:jersey-server:2.34" />
           <element id="library" level="project" name="Maven: org.glassfish.jersey.core:jersey-client:2.34" />

@@ -78,6 +78,7 @@
     <orderEntry type="library" name="Maven: javax.json:javax.json-api:1.1.4" level="project" />
     <orderEntry type="library" name="Maven: org.glassfish:javax.json:1.1.4" level="project" />
     <orderEntry type="library" name="Maven: javax.ws.rs:javax.ws.rs-api:2.1.1" level="project" />
+    <orderEntry type="library" name="Maven: javax.servlet:servlet-api:2.5" level="project" />
     <orderEntry type="library" name="Maven: org.glassfish.jersey.containers:jersey-container-servlet:2.34" level="project" />
     <orderEntry type="library" name="Maven: org.glassfish.jersey.core:jersey-server:2.34" level="project" />
     <orderEntry type="library" name="Maven: org.glassfish.jersey.core:jersey-client:2.34" level="project" />
