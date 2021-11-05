@@ -4,11 +4,10 @@ import organizer.group.daos.GroupDAO;
 import organizer.group.dtos.GroupDTO;
 import organizer.product.dtos.ProductDTO;
 import organizer.system.ConnectionPool;
-
 import organizer.system.exceptions.DatabaseException;
 import organizer.system.exceptions.DuplicateException;
-import organizer.user.creator.NotificationCreator;
 import organizer.user.beans.UserBean;
+import organizer.user.creator.NotificationCreator;
 import organizer.user.daos.NotifcationDAO;
 import organizer.user.daos.UserDAO;
 import organizer.user.dtos.NotificationDTO;
@@ -25,7 +24,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
-
 public class ProductDAO {
 
 
@@ -34,9 +32,6 @@ public class ProductDAO {
     public static ProductDAO getInstance() {
         return instance;
     }
-
-
-
 
 
     public List<ProductDTO> selectByDTO(GroupDTO groupDTO) throws DatabaseException {
@@ -79,9 +74,6 @@ public class ProductDAO {
         pool.releaseConnection(conn);
         return productDTOS;
     }
-
-
-
 
 
     public boolean update(ProductDTO dto)
@@ -220,7 +212,7 @@ public class ProductDAO {
 
     }
 
-    private List<Integer> getUserIds(int gID) {
+    public List<Integer> getUserIds(int gID) {
         ConnectionPool pool = ConnectionPool.getInstance();
         ArrayList<Integer> users = new ArrayList<>();
 
@@ -237,6 +229,38 @@ public class ProductDAO {
         }
         try {
             statement.setInt(1, gID);
+            result = statement.executeQuery();
+            while (result.next()) {
+                users.add(result.getInt(1));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(GroupDAO.class.getName())
+                    .log(Level.SEVERE, null, ex);
+            pool.releaseConnection(conn);
+        }
+        pool.releaseConnection(conn);
+        return users;
+    }
+
+
+    public List<Integer> getUserIdsByProductDTO(ProductDTO dto) {
+        ConnectionPool pool = ConnectionPool.getInstance();
+        ArrayList<Integer> users = new ArrayList<>();
+
+        Connection conn = pool.getConnection();
+        String query = "SELECT memberofgroup.uid FROM postgres.public.memberofgroup,postgres.public.productof WHERE " +
+                "memberofgroup.gid = productof.gid AND productof.pid = ? ";
+        PreparedStatement statement = null;
+        ResultSet result;
+        try {
+            statement = conn.prepareStatement(query);
+        } catch (SQLException ex) {
+            Logger.getLogger(GroupDAO.class.getName())
+                    .log(Level.SEVERE, null, ex);
+            pool.releaseConnection(conn);
+        }
+        try {
+            statement.setInt(1, dto.getpID());
             result = statement.executeQuery();
             while (result.next()) {
                 users.add(result.getInt(1));

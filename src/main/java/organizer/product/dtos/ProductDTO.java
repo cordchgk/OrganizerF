@@ -1,11 +1,14 @@
 package organizer.product.dtos;
 
 
+import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 
 /**
  * Created by cord on 07.06.16.
  */
+
+@XmlRootElement(name = "product")
 public class ProductDTO implements Serializable {
 
     private static final long serialVersionUID = 3461340127831352062L;

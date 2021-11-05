@@ -5,7 +5,7 @@ import organizer.user.daos.UserDAO;
 import organizer.user.dtos.UserDTO;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.core.Context;
+import javax.ws.rs.WebApplicationException;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Enumeration;
@@ -40,16 +40,16 @@ public class AuthenticationService {
         String[] auth = authorization.split(" ");
         String username = auth[0];
         String password = auth[1];
-        System.out.println(username);
-        System.out.println(password);
+
 
         UserDTO userDTO = new UserDTO();
         userDTO.setEmail(username);
         userDTO.setPasswordHash(HashConverter.sha384(password));
-        System.out.println(new UserDAO().selectByDto(userDTO).size());
+
         List<UserDTO> users = new UserDAO().selectByDto(userDTO);
-        if (users.size() == 0){
-            return null;
+        if (users.size() == 0) {
+
+            throw new WebApplicationException(401);
         }
         return users.get(0);
 

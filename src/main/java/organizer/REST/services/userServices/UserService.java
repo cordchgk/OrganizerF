@@ -1,4 +1,4 @@
-package organizer.REST.services;
+package organizer.REST.services.userServices;
 
 
 //import org.springframework.beans.factory.annotation.Autowired;
@@ -10,17 +10,15 @@ import organizer.user.dtos.UserDTO;
 
 import javax.enterprise.context.RequestScoped;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
-import java.util.*;
+import java.util.List;
 
 @Path("/user")
 @RequestScoped
@@ -37,6 +35,7 @@ public class UserService implements Serializable {
             this.userDTO = AuthenticationService.assignUser(request);
 
 
+
         } catch (UnsupportedEncodingException | NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
@@ -46,13 +45,10 @@ public class UserService implements Serializable {
     @GET
     @Path("/get")
     @Produces(MediaType.APPLICATION_XML)
-    public UserDTO getSelf(@Context final HttpServletResponse response) {
+    public UserDTO getSelf() {
 
         this.init();
-if (this.userDTO == null){
-    response.setStatus(501);
-    return null;
-}
+
         return this.userDTO;
     }
 
@@ -62,7 +58,7 @@ if (this.userDTO == null){
     public List<GroupDTO> getUserGroups() {
 
         this.init();
-        System.out.println(this.userDTO.getUserID());
+
 
         return new GroupDAO().selectByUser(this.userDTO);
     }
