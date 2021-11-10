@@ -1,12 +1,18 @@
 package organizer.diet.meal.dtos;
 
-import organizer.diet.ingredient.dtos.IngredientDTO;
+import organizer.diet.ingredient.dtos.IngredientVolume;
 
-import java.util.HashMap;
+import java.util.List;
 
 
 public class MealDTO {
-    HashMap<IngredientDTO, Float> mealIngredients;
+    private List<IngredientVolume> mealIngredients;
 
+    public List<IngredientVolume> getMealIngredients() {
+        return mealIngredients;
+    }
 
+    public void setMealIngredients(List<IngredientVolume> mealIngredients) {
+        this.mealIngredients = mealIngredients;
+    }
 }
