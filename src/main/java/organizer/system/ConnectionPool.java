@@ -1,8 +1,5 @@
 package organizer.system;
 
-import organizer.system.Events.UserEventBean;
-import organizer.user.beans.UserBean;
-
 import organizer.system.exceptions.DatabaseException;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -30,7 +27,7 @@ public class ConnectionPool implements Serializable {
     private static final Logger LOGGER =
             Logger.getLogger(ConnectionPool.class.getName());
 
-    private static ConnectionPool instance = new ConnectionPool();
+    private static final ConnectionPool instance = new ConnectionPool();
     private final String dbUsername;
     private final String dbPassword;
     private final String dbDriver;
@@ -402,6 +399,61 @@ public class ConnectionPool implements Serializable {
                     "message varchar," +
                     "time varchar)";
 
+
+            stmt.executeUpdate(query);
+            stmt.close();
+        } catch (SQLException ex) {
+            LOGGER.log(Level.SEVERE, null, ex);
+        }
+        try {
+            Statement stmt = connection.createStatement();
+            String query = "CREATE TABLE IF NOT EXISTS ingredient ("
+                    + "iID SERIAL PRIMARY KEY," +
+                    "name varchar," +
+                    "fat float," +
+                    "protein float," +
+                    "carbs float," +
+                    "calories float," +
+                    "manufacturer varchar," +
+                    "categorie varchar," +
+                    "co varchar)";
+            stmt.executeUpdate(query);
+            stmt.close();
+        } catch (SQLException ex) {
+            LOGGER.log(Level.SEVERE, null, ex);
+        }
+
+
+        try {
+            Statement stmt = connection.createStatement();
+            String query = "CREATE TABLE IF NOT EXISTS meal ("
+                    + "mID SERIAL PRIMARY KEY," +
+                    "name varchar," +
+                    "owner smallint)";
+
+            stmt.executeUpdate(query);
+            stmt.close();
+        } catch (SQLException ex) {
+            LOGGER.log(Level.SEVERE, null, ex);
+        }
+
+        try {
+            Statement stmt = connection.createStatement();
+            String query = "CREATE TABLE IF NOT EXISTS mealingredients ("
+                    + "mID smallint," +
+                    "iID smallint," +
+                    "amount float)";
+
+            stmt.executeUpdate(query);
+            stmt.close();
+        } catch (SQLException ex) {
+            LOGGER.log(Level.SEVERE, null, ex);
+        }
+
+        try {
+            Statement stmt = connection.createStatement();
+            String query = "CREATE TABLE IF NOT EXISTS TRIE ("
+                    + "currentTrie varchar)";
 
             stmt.executeUpdate(query);
             stmt.close();

@@ -5,6 +5,20 @@
     transition: all .3s
 }
 
+
+.columnNP {
+
+    width: 30%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.columnNI {
+    width: 15%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
 html, body {
     width: 100%;
     height: 100%;
@@ -1595,13 +1609,6 @@ select:disabled {
     margin-right: auto;
 }
 
-.columnNP {
-
-    width: 30%;
-    margin-left: auto;
-    margin-right: auto;
-}
-
 
 #content input[disabled] {
     color: #DCDAD1;
@@ -1624,10 +1631,13 @@ select:disabled {
     outline: medium none;
     padding: 0px;
     width: 90%;
+
 }
 
 .column_notificationsFirst {
-    overflow-wrap: break-word;word-wrap: break-word;hyphens: auto;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    hyphens: auto;
     width: 20%;
     float: left;
     text-align: left;
@@ -1640,7 +1650,9 @@ select:disabled {
 }
 
 .column_notificationsSecond {
-    overflow-wrap: break-word;word-wrap: break-word;hyphens: auto;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    hyphens: auto;
     width: 20%;
     float: left;
     text-align: left;
@@ -1653,7 +1665,9 @@ select:disabled {
 }
 
 .column_notificationsThird {
-    overflow-wrap: break-word;word-wrap: break-word;hyphens: auto;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    hyphens: auto;
     width: 60%;
     border-left: 1px black;
     float: left;
@@ -1662,7 +1676,7 @@ select:disabled {
     margin-right: auto;
     margin-top: 1em;
     height: auto;
-max-width: fit-content;
+    max-width: fit-content;
 
 }
 
@@ -1736,9 +1750,26 @@ max-width: fit-content;
 }
 
 
-.chat_text{
+.chat_text {
     text-align: left;
-    overflow-wrap: break-word;word-wrap: break-word;hyphens: auto;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    hyphens: auto;
 }
 
+
+.totalMacros {
+    text-align: center;
+    width: 25%;
+    display: inline-block;
+    float: left;
+}
+
+
+.createMeal {
+    text-align: center;
+
+    display: inline-block;
+    float: left;
+}
 

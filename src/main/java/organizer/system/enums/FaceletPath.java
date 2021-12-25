@@ -1,8 +1,8 @@
 package organizer.system.enums;
 
-import organizer.system.Messages;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.Nullable;
+import organizer.system.Messages;
 
 
 /**
@@ -25,16 +25,20 @@ public enum FaceletPath {
     @NonNls SMTP_SETTINGS("/user/smtp-settings.xhtml"),
     @NonNls NOT_FOUND("/info/404.xhtml"),
     @NonNls ABOUT("/info/about.xhtml"),
+    @NonNls MEAL("/diet/meal/meal.xhtml"),
+    @NonNls MEALS("/diet/meals.xhtml"),
     @NonNls CONTACT("/info/contact.xhtml"),
     @NonNls FAQ_PAGE("/info/faq.xhtml"),
     @NonNls PRIVACY("/info/privacy.xhtml"),
     @NonNls TERMS("/info/terms.xhtml");
-    @NonNls private static final String FACES_REDIRECT_TRUE =
+    @NonNls
+    private static final String FACES_REDIRECT_TRUE =
             "?faces-redirect=true";
     /**
      * Represents the path to the facelet.
      */
-    @NonNls private final String path;
+    @NonNls
+    private final String path;
 
     /**
      * Constructor for this enum.
