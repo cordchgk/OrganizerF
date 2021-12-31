@@ -1,0 +1,136 @@
+<ui:composition template="/resources/templates/commonLayout.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core" xmlns:p="http://java.sun.com/jsf/html">
+
+    <f:metadata>
+        <f:viewParam name="gID" value="#{group.ID}"/>
+    </f:metadata>
+
+    <ui:define name="title">Products</ui:define>
+    <ui:define name="content">
+        <f:event listener="#{product.isAllowed()}" type="preRenderView"/>
+        <div class="login card-no-hover" style="width: 50%;position: fixed" id="form_div">
+
+
+            <h:panelGroup style="width: 100%" rendered="#{user.isAuthenticated() }">
+
+
+                <h:form id="form">
+                    <h:dataTable id="table" columnClasses="column" style="width: 100%;margin: auto"
+                                 var="p" width="100" value="#{product.productModel}">
+                        <h:column>
+                            <f:facet name="header">Name</f:facet>
+                            #{p.name}
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">Stock</f:facet>
+                            #{p.count}
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">Decrease</f:facet>
+                            <h:commandButton immediate="true" rendered="#{product.rendered()}" value="-"
+                                             action="#{product.dec()}">
+                                <f:ajax execute="@form" render="@form"/>
+                            </h:commandButton>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="">Name</f:facet>
+                            <h:inputText validator="#{product.validate}"
+                                         onkeypress="if (event.keyCode === 13){event.preventDefault()}" id="input"
+                                         size="2"
+                                         value="#{p.diff}" converterMessage="Must be an Integer!">
+                                <f:ajax listener="#{product.namedChanged}" render="input"/>
+
+                            </h:inputText>
+                            <h:message for="input"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">Increase</f:facet>
+                            <h:commandButton immediate="true" value="+" action="#{product.inc()}">
+                                <f:ajax execute="@form" render="@form"/>
+                            </h:commandButton>
+                        </h:column>
+                        <h:column>
+
+                            <f:facet name="header">Already Ordered?
+                            </f:facet>
+                            <h:selectBooleanCheckbox disabled="#{!product.isGroupAdmin()}" value="#{p.ordered}"/>
+                        </h:column>
+                        <h:column rendered="#{!product.isEmpty()}">
+                            <f:facet name="header">DELETE?</f:facet>
+                            <h:commandButton value="DELETE" disabled="#{!product.isGroupAdmin()}"
+                                             action="#{product.delete()}">
+                                <f:ajax execute="form" render="form"/>
+                            </h:commandButton>
+                        </h:column>
+
+                    </h:dataTable>
+
+                    <h:commandButton style="margin-top: 20px" id="save" value="Save" action="#{product.save()}"
+                                     binding="#{product.saveButton}">
+                        <f:ajax execute="@form" render="@form"/>
+
+                    </h:commandButton>
+
+
+                </h:form>
+                <h:message for="save"/>
+            </h:panelGroup>
+            <h:panelGroup style="width: 100%" rendered="#{product.isGroupAdmin()}">
+
+                <h:form style="border-top: black 1px solid;margin-top: 10px;margin-bottom: 20px">
+                    <h:outputText style="font-weight: bold" value="Create new Product:">
+
+                    </h:outputText>
+
+                    <h:dataTable columnClasses="column" value="#{product.newProductModel}" var="nP"
+                                 style="width: 100%;margin: auto;margin-top:20px"
+
+                    >
+                        <h:column>
+                            <f:facet name="header">Name
+                            </f:facet>
+                            <h:inputText styleClass="ui-inputfield" value="#{nP.name}" id="createName"
+                            >
+
+                            </h:inputText>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">Description
+                            </f:facet>
+                            <h:inputText styleClass="ui-inputfield" value="#{nP.description}" id="createDescription"
+                            >
+
+                            </h:inputText>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">Stock
+                            </f:facet>
+                            <h:inputText styleClass="ui-inputfield" value="#{nP.count}" id="createStock"
+                            >
+
+                            </h:inputText>
+                        </h:column>
+
+
+                    </h:dataTable>
+                    <h:commandButton style="margin-bottom: 10px;margin-top:20px" value="Create"
+                                     action="#{product.createProduct()}">
+                       <f:ajax render="form" execute="@form"/>
+                        <f:param name="gID" value="#{product.groupDTO.gID}"/>
+                    </h:commandButton>
+
+                    <h:panelGroup>
+
+
+                    </h:panelGroup>
+
+
+                </h:form>
+            </h:panelGroup>
+
+        </div>
+    </ui:define>
+</ui:composition>

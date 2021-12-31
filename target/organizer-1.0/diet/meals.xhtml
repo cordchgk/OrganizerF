@@ -1,0 +1,119 @@
+<ui:composition template="/resources/templates/commonLayout.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+
+    <ui:define name="title">Products</ui:define>
+    <ui:define name="content">
+
+
+        <div class="card-no-hover"
+             style="display:table;width: 70%;height:auto;margin: 0 auto;margin-top: 10%;text-align: center">
+            <h:form id="mealForm">
+                <div id="pDIV" style="display: inline-block;vertical-align: top;height: auto;width: 70%">
+
+
+                    <h:dataTable id="table" columnClasses="column" style="width: 100%"
+                                 rendered="#{userMealBean.isEmpty()}"
+                                 var="m" width="100" value="#{userMealBean.mealDataModel}">
+
+                        <h:column>
+                            <f:facet name="header">Name</f:facet>
+
+                            <h:outputLink value="#{userMealBean.select()}">
+
+                                #{m.name}
+                            </h:outputLink>
+
+
+                        </h:column>
+
+                        <h:column>
+                            <f:facet name="header">Fats</f:facet>
+                            <div style="text-align: center">
+                                #{m.fats}
+                            </div>
+
+
+                        </h:column>
+
+                        <h:column>
+                            <f:facet name="header">Protein</f:facet>
+                            <div style="text-align: center">
+                                #{m.protein}
+                            </div>
+
+
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">Carbs</f:facet>
+                            <div style="text-align: center">
+                                #{m.carbs}
+                            </div>
+
+
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">Calories</f:facet>
+                            <div style="text-align: center">
+                                #{m.calories}
+                            </div>
+
+
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">Delete</f:facet>
+                            <div style="text-align: center">
+                                <h:commandButton value="Delete" action="#{userMealBean.delete()}">
+                                    <f:ajax render="mealForm" execute="mealForm"/>
+                                </h:commandButton>
+
+                            </div>
+
+
+                        </h:column>
+
+
+                    </h:dataTable>
+
+                </div>
+            </h:form>
+            <h:form id="createForm">
+                <div style="margin-top: 10%;display: inline-block;vertical-align: top;width:100%; height:
+                auto;border-top: #1e2021 1px">
+
+
+                    <h:panelGroup style="width: 100%">
+
+
+                        <div class="createMeal" style="width: 70%">
+                            <h:inputText id="input" style="width:100%;" value="#{userMealBean.newMealDTO.name}"
+                                         onclick="this.value=''"
+                                         autocomplete="off"
+                            >
+
+                            </h:inputText>
+
+
+                        </div>
+                        <div class="createMeal" style="width: 25%">
+
+                            <h:commandButton id="createBtn" value="Create" action="#{userMealBean.create()}">
+                                <f:ajax render="mealForm" execute="createForm"/>
+                            </h:commandButton>
+
+                        </div>
+
+
+                    </h:panelGroup>
+
+
+                </div>
+            </h:form>
+        </div>
+
+    </ui:define>
+
+</ui:composition>

@@ -1,0 +1,290 @@
+<ui:composition template="/resources/templates/commonLayout.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <f:metadata>
+        <f:viewParam name="gID" value="#{group.ID}"/>
+    </f:metadata>
+
+
+    <ui:define name="title">Products</ui:define>
+    <ui:define name="content">
+        <f:event listener="#{product.isAllowed()}" type="preRenderView"/>
+
+
+        <div class="card-no-hover"
+             style="display:table;width: 70%;height:auto;margin: 0 auto;margin-top: 10%;text-align: center">
+
+            <div id="pDIV" style="display: inline-block;vertical-align: top;height: auto;width: 70%">
+                <h:form id="form">
+                    <h:dataTable id="table" columnClasses="column" style="width: 100%"
+                                 var="p" width="100" value="#{product.productModel}">
+                        <h:column>
+                            <f:facet name="header">Name</f:facet>
+                            <div style="text-align: center">
+                                #{p.name}
+                            </div>
+
+
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">Stock</f:facet>
+                            <div style="text-align: center">
+                                #{p.count}
+                            </div>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">Decrease</f:facet>
+                            <div style="text-align: center">
+                                <h:commandButton rendered="#{product.rendered()}" value="-"
+                                                 action="#{product.dec()}">
+                                    <f:ajax execute="form" render="form"/>
+                                </h:commandButton>
+                            </div>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="">Name</f:facet>
+                            <div style="text-align: center">
+                                <h:inputText validator="#{product.validate}"
+                                             onkeypress="if (event.keyCode === 13){event.preventDefault()}" id="input"
+                                             size="2"
+                                             value="#{p.diff}" converterMessage="Must be an Integer!">
+                                    <f:ajax listener="#{product.namedChanged}" render="input"/>
+
+                                </h:inputText>
+                            </div>
+                            <h:message for="input"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">Increase</f:facet>
+                            <div style="text-align: center">
+                                <h:commandButton value="+" action="#{product.inc()}">
+                                    <f:ajax execute="form" render="form"/>
+                                </h:commandButton>
+                            </div>
+                        </h:column>
+                        <h:column>
+
+                            <f:facet name="header">Already Ordered?
+                            </f:facet>
+                            <div style="text-align: center">
+                                <h:selectBooleanCheckbox disabled="#{!product.isGroupAdmin()}" value="#{p.ordered}"/>
+                            </div>
+                        </h:column>
+                        <h:column rendered="#{!product.isEmpty()}">
+                            <f:facet name="header">DELETE?</f:facet>
+                            <div style="text-align: center">
+                                <h:commandButton value="DELETE" disabled="#{!product.isGroupAdmin()}"
+                                                 action="#{product.delete()}">
+                                    <f:ajax execute="form" render="form"/>
+                                </h:commandButton>
+                            </div>
+                        </h:column>
+
+                    </h:dataTable>
+                    <div style="margin-top: 5%;margin-bottom: 5%;text-align: center">
+                        <h:commandButton id="save" value="Save" action="#{product.save()}"
+                                         binding="#{product.saveButton}">
+                            <f:ajax execute="@form" render="@form"/>
+
+                        </h:commandButton>
+                    </div>
+
+
+                </h:form>
+                <h:message for="save"/>
+
+
+                <h:form style="border-top: black 1px solid;margin-top: 10%">
+                    <div style="text-align: center">
+                        <h:outputText style="font-weight: bold" value="Create new Product:">
+
+                        </h:outputText>
+
+
+                    </div>
+
+                    <h:dataTable columnClasses="columnNP" value="#{product.newProductModel}" var="nP"
+                                 style="width: 100%;margin: auto;margin-top:20px;"
+
+                    >
+                        <h:column>
+                            <f:facet name="header">Name
+                            </f:facet>
+                            <div style="text-align: center">
+                                <h:inputText styleClass="ui-inputfield" value="#{nP.name}" id="createName"
+                                >
+
+                                </h:inputText>
+                            </div>
+                        </h:column>
+
+                        <h:column>
+                            <f:facet name="header">Description
+                            </f:facet>
+                            <div style="text-align: center">
+                                <h:inputText styleClass="ui-inputfield" value="#{nP.description}" id="createDescription"
+                                >
+
+                                </h:inputText>
+                            </div>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">Stock
+                            </f:facet>
+                            <div style="text-align: center">
+                                <h:inputText styleClass="ui-inputfield" value="#{nP.count}" id="createStock"
+                                >
+
+                                </h:inputText>
+                            </div>
+                        </h:column>
+
+
+                    </h:dataTable>
+                    <div style="margin-top: 1%;text-align: center">
+                        <h:commandButton style="margin-bottom: 1%" value="Create"
+                                         action="#{product.createProduct()}">
+                            <f:ajax render="form mDIV" execute="@form"/>
+                            <f:param name="gID" value="#{product.groupDTO.gID}"/>
+                        </h:commandButton>
+
+                    </div>
+                </h:form>
+                <h:form>
+
+
+                    <h:outputLink value="#{product.toGroupManager()}" rendered="#{product.isGroupAdmin()}"
+                                  style="margin-bottom: 5px;margin-left: 5px">
+                        Manage Group
+                    </h:outputLink>
+                </h:form>
+
+            </div>
+
+
+            <script type="text/javascript">
+
+
+                function groupMessagesListener(message, channel, event) {
+                    console.log("Test");
+                    console.log(message);
+
+
+                    let l = document.getElementById("j_idt97:groupMessages");
+                    console.log(l);
+                    addRow('j_idt97:groupMessages', message);
+
+                }
+
+                function addRow(tableID, message) {
+                    var name = message["user"];
+                    var time = message["time"];
+                    var m = message["message"];
+                    // Beschaffe eine Referenz auf die Tabelle
+                    let tableRef = document.getElementById(tableID);
+
+                    // Füge am Ende der Tabelle eine neue Zeile an
+                    let newRow = tableRef.insertRow(-1);
+
+                    // Erstelle in der Zeile eine Zelle am Index 0
+                    let newCellTime = newRow.insertCell(0);
+                    newCellTime.className = "column_notificationsFirst"
+                    let newCellName = newRow.insertCell(1);
+                    newCellName.className = "column_notificationsSecond";
+                    let newCellMessage = newRow.insertCell(2);
+                    newCellMessage.className = "column_notificationsThird";
+
+
+                    // Füge der Zelle einen textnode hinzu
+                    let newTextTime = document.createTextNode(time);
+                    newTextTime.className = "chat_text";
+                    let newTextUser = document.createTextNode(name);
+                    newTextUser.className = "chat_text";
+                    let newTextMessage = document.createTextNode(m);
+                    newTextMessage.className = "chat_text";
+                    newCellTime.appendChild(newTextTime);
+                    newCellName.appendChild(newTextUser);
+                    newCellMessage.appendChild(newTextMessage);
+                    // To scroll to the bottom of a div
+                    const theElement = document.getElementById('mDIV');
+
+                    const scrollToBottom = (node) => {
+                        node.scrollTop = node.scrollHeight;
+                    }
+
+                    scrollToBottom(theElement);
+                }
+
+
+            </script>
+            <f:websocket channel="groupMessageChannel" user="#{product.groupUserHash}"
+                         onmessage="groupMessagesListener"/>
+
+
+            <div id="mDIV"
+                 style="float:right;display: inline-block;vertical-align: top;height: 500px;width:30%;overflow: hidden;overflow-y: scroll">
+
+                <h:panelGroup>
+
+
+                    <h:form>
+
+                        <h:dataTable id="groupMessages"
+                                     style="width: 100%;height:100%;"
+                                     columnClasses="column_notificationsFirst,column_notificationsSecond,column_notificationsThird"
+                                     value="#{product.messagesDataModel}"
+                                     var="groupMessagesList">
+                            <h:column>
+                                <h:outputText styleClass="chat_text"
+                                              value="#{groupMessagesList.time}"/>
+                            </h:column>
+                            <h:column>
+                                <h:outputText styleClass="chat_text"
+                                              value="#{groupMessagesList.user}"/>
+                            </h:column>
+                            <h:column>
+                                <h:outputText styleClass="chat_text"
+                                              value="#{groupMessagesList.message}"/>
+                            </h:column>
+                        </h:dataTable>
+                        <h:inputText style="width: 100%" value="#{product.newDTO.message}" id="newMessageInput">
+
+                        </h:inputText>
+                        <div style="text-align: center">
+                            <h:commandButton value="Send!" action="#{product.sendMessage()}">
+                                <f:ajax render="newMessageInput" execute="@form"/>
+
+                            </h:commandButton>
+                        </div>
+
+                    </h:form>
+                </h:panelGroup>
+
+            </div>
+
+        </div>
+
+        <script type="text/javascript">
+            var mHeight = document.getElementById("mDIV").style.height;
+            var pHeight = $("#pDIV").height();
+            if (pHeight > mHeight) {
+                document.getElementById("pDIV").style.height = "500px";
+            }
+            console.log("mHeight: " + mHeight);
+            console.log("pHeight: " + pHeight);
+
+            // To scroll to the bottom of a div
+            const theElement = document.getElementById('mDIV');
+
+            const scrollToBottom = (node) => {
+                node.scrollTop = node.scrollHeight;
+            }
+
+            scrollToBottom(theElement);
+
+        </script>
+    </ui:define>
+</ui:composition>

@@ -1,0 +1,33 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:composite="http://java.sun.com/jsf/composite">
+<composite:interface>
+    <composite:attribute name="ListBean"
+                         type="tablemate.beans.ExtendedListLogic"/>
+</composite:interface>
+
+<composite:implementation>
+
+    <h:form rendered="#{cc.attrs.ListBean.getLastPageNumber() > 1}">
+        <ul class="pagination">
+            <li><h:commandButton value="1"
+                                 action="#{cc.attrs.ListBean.first()}"/>
+            </li>
+            <li><h:commandButton value="&lt;&lt;"
+                                 action="#{cc.attrs.ListBean.previous()}"/>
+            </li>
+            <li><b><h:commandButton
+                    value="#{cc.attrs.ListBean.getCurrentPageNumber()}"/></b>
+            </li>
+            <li><h:commandButton value="&gt;&gt;"
+                                 action="#{cc.attrs.ListBean.next()}"/>
+            </li>
+            <li><h:commandButton
+                    value="#{cc.attrs.ListBean.getLastPageNumber()}"
+                    action="#{cc.attrs.ListBean.last()}"/>
+            </li>
+        </ul>
+    </h:form>
+
+</composite:implementation>
+</html>

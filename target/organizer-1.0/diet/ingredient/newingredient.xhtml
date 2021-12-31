@@ -1,0 +1,137 @@
+<ui:composition template="/resources/templates/commonLayout.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+
+    <ui:define name="title"></ui:define>
+    <ui:define name="content">
+
+
+        <div class="card-no-hover"
+             style="display:table;width: 70%;height:auto;margin: 0 auto;margin-top: 5%;text-align: center">
+
+            <h:form id="form">
+                <div id="mealDIV" style="display: inline-block;vertical-align: top;height: auto;width: 100%">
+
+                    <h:dataTable style="width: 100%" value="#{newIngredientBean.ingredientDataModel}" var="i"
+                                 columnClasses="columnNI">
+
+                        <h:column>
+                            <f:facet name="header">Name:
+                            </f:facet>
+                            <div style="text-align: center">
+                                <h:inputText styleClass="ui-inputfield" value="#{i.name}"
+                                             id="createName"
+                                >
+
+                                </h:inputText>
+                            </div>
+                        </h:column>
+
+                        <h:column>
+                            <f:facet name="header">Brand:
+                            </f:facet>
+                            <div style="text-align: center">
+                                <h:inputText styleClass="ui-inputfield" value="#{i.brand}" onfocus="this.value =''"
+                                             id="createBrand"
+                                >
+
+                                </h:inputText>
+                            </div>
+                        </h:column>
+
+
+                        <h:column>
+                            <f:facet name="header">Fats:
+                            </f:facet>
+                            <div style="text-align: center">
+                                <h:inputText styleClass="ui-inputfield" value="#{i.macroDTO.fatDTO.amount}"
+                                             onfocus="this.value =''"
+                                             id="createFats"
+                                >
+
+                                </h:inputText>
+                            </div>
+                        </h:column>
+
+                        <h:column>
+                            <f:facet name="header">Protein:
+                            </f:facet>
+                            <div style="text-align: center">
+                                <h:inputText styleClass="ui-inputfield" value="#{i.macroDTO.proteinDTO.amount}"
+                                             onfocus="this.value =''"
+                                             id="createProtein"
+                                >
+
+                                </h:inputText>
+                            </div>
+                        </h:column>
+
+                        <h:column>
+                            <f:facet name="header">Carbs:
+                            </f:facet>
+                            <div style="text-align: center">
+                                <h:inputText styleClass="ui-inputfield" value="#{i.macroDTO.carbDTO.amount}"
+                                             onfocus="this.value =''"
+                                             id="createCarbs"
+                                >
+
+                                </h:inputText>
+                            </div>
+                        </h:column>
+
+
+                        <h:column>
+                            <f:facet name="header">Calories:
+                            </f:facet>
+                            <div style="text-align: center">
+                                <h:inputText styleClass="ui-inputfield" value="#{i.calories}" onfocus="this.value =''"
+                                             id="createCalories"
+                                >
+
+                                </h:inputText>
+                            </div>
+                        </h:column>
+
+                    </h:dataTable>
+                    <div style="margin-top: 1%;text-align: center">
+                        <h:commandButton style="margin-bottom: 1%" value="Create"
+                                         action="#{newIngredientBean.create()}">
+
+
+                        </h:commandButton>
+
+                    </div>
+
+                </div>
+
+                <div style="display: inline-block;vertical-align: top;height: auto;width: 70%;border-top: #1e2021 1px">
+
+
+                    <div>
+
+                        <div>
+
+                            <h:dataTable
+                            >
+                                <h:column>
+                                </h:column>
+
+                            </h:dataTable>
+
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+            </h:form>
+
+        </div>
+
+
+    </ui:define>
+</ui:composition>
