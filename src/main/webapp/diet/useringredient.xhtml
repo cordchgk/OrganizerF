@@ -1,0 +1,134 @@
+<ui:composition template="/resources/templates/commonLayout.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <f:metadata>
+        <f:viewParam name="mID"/>
+    </f:metadata>
+
+    <ui:define name="title"></ui:define>
+    <ui:define name="content">
+
+
+        <div class="card-no-hover"
+             style="display:table;width: 70%;height:auto;margin: 0 auto;margin-top: 5%;text-align: center">
+
+            <h:form id="form">
+                <div id="mDIV" style="display: inline-block;vertical-align: top;height: auto;width: 100%">
+
+                    <h:dataTable id="mealIngredientsTable" columnClasses="column" style="width: 100%"
+                                 var="i" width="100" value="#{userIngredientBean.userIngredientsDataModel}">
+
+                        <h:column>
+
+                            <f:facet name="header">Amount:</f:facet>
+                            <div style="text-align: center">
+                                <h:inputText id="change" value="#{i.amount}" autocomplete="off"
+                                             onkeypress="if (event.keyCode == 13) {onchange(event); return false; }"
+                                             onchange="return event.keyCode !== undefined">
+
+
+                                </h:inputText>
+                            </div>
+
+                        </h:column>
+
+                        <h:column>
+                            <f:facet name="header">Name</f:facet>
+                            <div style="text-align: center">
+                                #{i.name}
+                            </div>
+
+
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">Brand</f:facet>
+                            <div style="text-align: center">
+                                #{i.brand}
+                            </div>
+
+
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">Fats</f:facet>
+                            <div style="text-align: center;width: 100%;">
+                                <div style="width: 30%;display: inline-block;text-align: center">
+                                    <h:outputText value="#{i.actualFats()}" style="width: 100%">
+
+                                    </h:outputText>
+
+                                </div>
+                                <div style="color: rgba(0,0,0,0.3);width: 30%;display: inline-block;text-align: center">
+                                    <h:outputText value="(#{i.getFats()})" style="width: 100%;">
+
+                                    </h:outputText>
+
+                                </div>
+
+                            </div>
+
+
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">Protein</f:facet>
+                            <div style="text-align: center;width: 100%;">
+                                <div style="width: 30%;display: inline-block;text-align: center">
+                                    <h:outputText value="#{i.actualProtein()}" style="width: 100%">
+
+                                    </h:outputText>
+
+                                </div>
+                                <div style="color: rgba(0,0,0,0.3);width: 30%;display: inline-block;text-align: center">
+                                    <h:outputText value="(#{i.getProtein()})" style="width: 100%;">
+
+                                    </h:outputText>
+
+                                </div>
+
+                            </div>
+
+
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">Carbs</f:facet>
+                            <div style="text-align: center;width: 100%;">
+                                <div style="width: 30%;display: inline-block;text-align: center">
+                                    <h:outputText value="#{i.actualCarbs()}" style="width: 100%">
+
+                                    </h:outputText>
+
+                                </div>
+                                <div style="color: rgba(0,0,0,0.3);width: 30%;display: inline-block;text-align: center">
+                                    <h:outputText value="(#{i.getCarbs()})" style="width: 100%;">
+
+                                    </h:outputText>
+
+                                </div>
+
+                            </div>
+
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">Calories</f:facet>
+                            <div style="text-align: center">
+                                #{i.actualCalories()}
+                            </div>
+
+
+                        </h:column>
+
+
+                    </h:dataTable>
+
+                </div>
+
+
+            </h:form>
+
+
+        </div>
+
+
+    </ui:define>
+</ui:composition>

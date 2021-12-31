@@ -30,7 +30,13 @@ public enum FaceletPath {
     @NonNls CONTACT("/info/contact.xhtml"),
     @NonNls FAQ_PAGE("/info/faq.xhtml"),
     @NonNls PRIVACY("/info/privacy.xhtml"),
-    @NonNls TERMS("/info/terms.xhtml");
+    @NonNls TERMS("/info/terms.xhtml"),
+    @NonNls USERINGREDIENTS("/diet/useringredient.xhtml");
+
+
+
+
+
     @NonNls
     private static final String FACES_REDIRECT_TRUE =
             "?faces-redirect=true";

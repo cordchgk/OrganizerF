@@ -25,7 +25,6 @@ public class HeaderBean implements Serializable {
     public void init() {
         this.url = Utility.getURL();
 
-
     }
 
 

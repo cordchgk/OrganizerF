@@ -114,13 +114,16 @@ public class IngredientDAO {
 
 
         Connection conn = pool.getConnection();
-        String query = "SELECT ingredient.iid,ingredient.name,useringredients.amount FROM ingredient,useringredients WHERE " +
+        String query = "SELECT ingredient.iid,ingredient.name,useringredients.amount,ingredient.manufacturer," +
+                "ingredient.fat,ingredient.protein,ingredient.carbs,ingredient.calories FROM ingredient,useringredients WHERE " +
                 "useringredients.uid = ? AND ingredient.iid = useringredients.iid";
         PreparedStatement statement = null;
         ResultSet result;
         try {
-            statement.setInt(1, userDTO.getUserID());
             statement = conn.prepareStatement(query);
+
+            statement.setInt(1, userDTO.getUserID());
+
         } catch (SQLException ex) {
             Logger.getLogger(UserDAO.class.getName())
                     .log(Level.SEVERE, null, ex);
@@ -135,6 +138,11 @@ public class IngredientDAO {
                 toAdd.setiID(result.getInt(1));
                 toAdd.setName(result.getString(2));
                 toAdd.setAmount(result.getFloat(3));
+                toAdd.setBrand(result.getString(4));
+                toAdd.setFats(result.getFloat(5));
+                toAdd.setProtein(result.getFloat(6));
+                toAdd.setCarbs(result.getFloat(7));
+                toAdd.setCalories(result.getFloat(8));
                 toReturn.add(toAdd);
             }
         } catch (SQLException ex) {
