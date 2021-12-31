@@ -9,19 +9,41 @@
 
     <ui:define name="title"></ui:define>
     <ui:define name="content">
+        <f:event listener="#{mealBean.isAllowed()}" type="preRenderView"/>
+
 
         <div class="card-no-hover"
              style="width: 70%;height:auto;margin: 0 auto;text-align: center">
-            <h1>#{meal.dto.name}</h1>
+            <h1>#{mealBean
+                    .mealDTO.name}</h1>
         </div>
         <div class="card-no-hover"
              style="display:table;width: 70%;height:auto;margin: 0 auto;margin-top: 5%;text-align: center">
 
             <h:form id="form">
-                <div id="mDIV" style="display: inline-block;vertical-align: top;height: auto;width: 70%">
+                <div id="mDIV" style="display: inline-block;vertical-align: top;height: auto;width: 100%">
 
-                    <h:dataTable id="table" columnClasses="column" style="width: 100%"
-                                 var="m" width="100" value="#{meal.ingredientsDataModel}">
+                    <h:dataTable id="mealIngredientsTable" columnClasses="column" style="width: 100%"
+                                 var="m" width="100" value="#{mealBean
+                                 .ingredientsDataModel}">
+
+                        <h:column>
+
+                            <f:facet name="header">Amount:</f:facet>
+                            <div style="text-align: center">
+                                <h:inputText id="change" value="#{m.amount}" autocomplete="off"
+                                             onkeypress="if (event.keyCode == 13) {onchange(event); return false; }"
+                                             onchange="return event.keyCode !== undefined"
+                                >
+                                    <f:ajax listener="#{mealBean
+                                .updateIngredientAmount()}" render="form">
+
+                                    </f:ajax>
+
+                                </h:inputText>
+                            </div>
+
+                        </h:column>
 
                         <h:column>
                             <f:facet name="header">Name</f:facet>
@@ -33,35 +55,80 @@
                         </h:column>
                         <h:column>
                             <f:facet name="header">Fats</f:facet>
-                            <div style="text-align: center">
-                                #{m.macroDTO.fatDTO.amount}
+                            <div style="text-align: center;width: 100%;">
+                                <div style="width: 30%;display: inline-block;text-align: center">
+                                    <h:outputText value="#{m.actualFats()}" style="width: 100%">
+
+                                    </h:outputText>
+
+                                </div>
+                                <div style="color: rgba(0,0,0,0.3);width: 30%;display: inline-block;text-align: center">
+                                    <h:outputText value="(#{m.getFats()})" style="width: 100%;">
+
+                                    </h:outputText>
+
+                                </div>
+
                             </div>
 
 
                         </h:column>
                         <h:column>
                             <f:facet name="header">Protein</f:facet>
-                            <div style="text-align: center">
-                                #{m.macroDTO.proteinDTO.amount}
+                            <div style="text-align: center;width: 100%;">
+                                <div style="width: 30%;display: inline-block;text-align: center">
+                                    <h:outputText value="#{m.actualProtein()}" style="width: 100%">
+
+                                    </h:outputText>
+
+                                </div>
+                                <div style="color: rgba(0,0,0,0.3);width: 30%;display: inline-block;text-align: center">
+                                    <h:outputText value="(#{m.getProtein()})" style="width: 100%;">
+
+                                    </h:outputText>
+
+                                </div>
+
                             </div>
 
 
                         </h:column>
                         <h:column>
                             <f:facet name="header">Carbs</f:facet>
-                            <div style="text-align: center">
-                                #{m.macroDTO.carbDTO.amount}
-                            </div>
+                            <div style="text-align: center;width: 100%;">
+                                <div style="width: 30%;display: inline-block;text-align: center">
+                                    <h:outputText value="#{m.actualCarbs()}" style="width: 100%">
 
+                                    </h:outputText>
+
+                                </div>
+                                <div style="color: rgba(0,0,0,0.3);width: 30%;display: inline-block;text-align: center">
+                                    <h:outputText value="(#{m.getCarbs()})" style="width: 100%;">
+
+                                    </h:outputText>
+
+                                </div>
+
+                            </div>
 
                         </h:column>
                         <h:column>
                             <f:facet name="header">Calories</f:facet>
                             <div style="text-align: center">
-                                #{m.calories}
+                                #{m.actualCalories()}
                             </div>
 
 
+                        </h:column>
+
+                        <h:column>
+                            <f:facet name="header">Remove</f:facet>
+                            <div>
+                                <h:commandButton value="Remove" action="#{mealBean
+                                    .removeIngredient()}">
+                                    <f:ajax render="form" execute="@form"/>
+                                </h:commandButton>
+                            </div>
                         </h:column>
 
 
@@ -73,20 +140,66 @@
 
 
                     <div>
-                        <div>
 
-                            <h:inputText id="search" value="#{meal.word}" autocomplete="off"
+
+                        <div style="margin-top: 10%;display: inline-block;vertical-align: top;width:100%; height: auto;border-top: #1e2021 1px">
+
+
+                            <h:panelGroup style="width: 100%">
+
+
+                                <div class="totalMacros">
+                                    <h:outputText style="width: 100%;" value="Total Fats: #{mealBean
+                                .mealDTO.fats}">
+
+                                    </h:outputText>
+
+                                </div>
+
+                                <div class="totalMacros">
+                                    <h:outputText style="width: 100%;" value="Total Protein: #{mealBean
+                                .mealDTO.protein}">
+
+                                    </h:outputText>
+
+                                </div>
+                                <div class="totalMacros">
+                                    <h:outputText style="width: 100%;" value="Total Carbs: #{mealBean
+                                .mealDTO.carbs}">
+
+                                    </h:outputText>
+
+                                </div>
+                                <div class="totalMacros">
+                                    <h:outputText style="width: 100%;" value="Total Calories: #{mealBean
+                                .mealDTO.calories}">
+
+                                    </h:outputText>
+
+                                </div>
+
+
+                            </h:panelGroup>
+
+
+                        </div>
+                        <div style="margin-top: 5%">
+
+                            <h:inputText id="search" value="#{mealBean
+                            .searchWord}" autocomplete="off"
                                          onkeypress="if (event.keyCode == 13) {onchange(event); return false; }"
                                          onchange="return event.keyCode !== undefined"
                             >
-                                <f:ajax listener="#{meal.search()}" render="searchresults"/>
+                                <f:ajax listener="#{mealBean
+                                .search()}" render="searchresults"/>
                             </h:inputText>
 
                         </div>
                         <div>
 
                             <h:dataTable id="searchresults" columnClasses="column" style="width: 100%"
-                                         var="i" width="100" value="#{meal.resultDataModel}">
+                                         var="i" width="100" value="#{mealBean
+                                         .resultDataModel}">
                                 <h:column>
                                     <div style="text-align: center">
                                         #{i.name}
@@ -99,58 +212,21 @@
                                 </h:column>
 
                                 <h:column>
-                                    <h:commandButton value="Add" action="#{meal.add()}">
+                                    <h:commandButton value="Add" action="#{mealBean
+                                    .add()}">
                                         <f:ajax render="form" execute="@form"/>
                                     </h:commandButton>
                                 </h:column>
 
                             </h:dataTable>
-                            <h:outputText id="messages">
-
-                            </h:outputText>
+                            <h:messages id="messages" style="color: #cc2222"/>
                         </div>
-
-
-                    </div>
-                    <div style="margin-top: 10%;display: inline-block;vertical-align: top;width:100%; height: auto;border-top: #1e2021 1px">
-
-
-                        <h:panelGroup style="width: 100%">
-
-
-                            <div class="totalMacros">
-                                <h:outputText style="width: 100%;" value="Total Fats: #{meal.dto.fats}">
-
-                                </h:outputText>
-
-                            </div>
-
-                            <div class="totalMacros">
-                                <h:outputText style="width: 100%;" value="Total Protein: #{meal.dto.protein}">
-
-                                </h:outputText>
-
-                            </div>
-                            <div class="totalMacros">
-                                <h:outputText style="width: 100%;" value="Total Carbs: #{meal.dto.carbs}">
-
-                                </h:outputText>
-
-                            </div>
-                            <div class="totalMacros">
-                                <h:outputText style="width: 100%;" value="Total Calories: #{meal.dto.calories}">
-
-                                </h:outputText>
-
-                            </div>
-
-
-                        </h:panelGroup>
 
 
                     </div>
                 </div>
             </h:form>
+
 
         </div>
 

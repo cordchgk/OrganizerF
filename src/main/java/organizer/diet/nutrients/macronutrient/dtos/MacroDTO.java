@@ -1,18 +1,17 @@
 package organizer.diet.nutrients.macronutrient.dtos;
 
 public class MacroDTO {
-    private ProteinDTO proteinDTO;
     private FatDTO fatDTO;
+    private ProteinDTO proteinDTO;
     private CarbDTO carbDTO;
 
 
-    public ProteinDTO getProteinDTO() {
-        return proteinDTO;
+    public MacroDTO() {
+        this.fatDTO = new FatDTO();
+        this.proteinDTO = new ProteinDTO();
+        this.carbDTO = new CarbDTO();
     }
 
-    public void setProteinDTO(ProteinDTO proteinDTO) {
-        this.proteinDTO = proteinDTO;
-    }
 
     public FatDTO getFatDTO() {
         return fatDTO;
@@ -20,6 +19,14 @@ public class MacroDTO {
 
     public void setFatDTO(FatDTO fatDTO) {
         this.fatDTO = fatDTO;
+    }
+
+    public ProteinDTO getProteinDTO() {
+        return proteinDTO;
+    }
+
+    public void setProteinDTO(ProteinDTO proteinDTO) {
+        this.proteinDTO = proteinDTO;
     }
 
     public CarbDTO getCarbDTO() {

@@ -17,7 +17,6 @@ import organizer.user.beans.UserBean;
 import javax.annotation.PostConstruct;
 import javax.faces.application.ConfigurableNavigationHandler;
 import javax.faces.application.FacesMessage;
-
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIInput;
 import javax.faces.context.FacesContext;
@@ -31,10 +30,7 @@ import javax.faces.validator.ValidatorException;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
-
-
 import java.io.Serializable;
-
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
@@ -61,10 +57,12 @@ public class ProductsBean implements Serializable, Validator {
     private UIComponent dTable;
     ProductDTO newProduct;
     GroupDTO groupDTO;
+    private boolean isAllowed;
 
     private List<GroupMessageDTO> dtos;
 
     private DataModel messagesDataModel;
+
 
     public String getGroupUserHash() {
         return GroupUserHash;

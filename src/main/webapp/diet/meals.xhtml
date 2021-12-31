@@ -4,7 +4,7 @@
                 xmlns:h="http://java.sun.com/jsf/html"
                 xmlns:f="http://xmlns.jcp.org/jsf/core">
 
-    <script></script>
+
     <ui:define name="title">Products</ui:define>
     <ui:define name="content">
 
@@ -16,13 +16,14 @@
 
 
                     <h:dataTable id="table" columnClasses="column" style="width: 100%"
-                                 rendered="#{usermeals.isEmpty()}"
-                                 var="m" width="100" value="#{usermeals.mealDataModel}">
+                                 rendered="#{userMealBean.isEmpty()}"
+                                 var="m" width="100" value="#{userMealBean.mealDataModel}">
 
                         <h:column>
                             <f:facet name="header">Name</f:facet>
 
-                            <h:outputLink value="#{usermeals.select()}">
+                            <h:outputLink value="#{userMealBean.select()}">
+
                                 #{m.name}
                             </h:outputLink>
 
@@ -65,7 +66,7 @@
                         <h:column>
                             <f:facet name="header">Delete</f:facet>
                             <div style="text-align: center">
-                                <h:commandButton value="Delete" action="#{usermeals.delete()}">
+                                <h:commandButton value="Delete" action="#{userMealBean.delete()}">
                                     <f:ajax render="mealForm" execute="mealForm"/>
                                 </h:commandButton>
 
@@ -88,7 +89,7 @@
 
 
                         <div class="createMeal" style="width: 70%">
-                            <h:inputText id="input" style="width:100%;" value="#{usermeals.newMealDTO.name}"
+                            <h:inputText id="input" style="width:100%;" value="#{userMealBean.newMealDTO.name}"
                                          onclick="this.value=''"
                                          autocomplete="off"
                             >
@@ -99,7 +100,7 @@
                         </div>
                         <div class="createMeal" style="width: 25%">
 
-                            <h:commandButton id="createBtn" value="Create" action="#{usermeals.create()}">
+                            <h:commandButton id="createBtn" value="Create" action="#{userMealBean.create()}">
                                 <f:ajax render="mealForm" execute="createForm"/>
                             </h:commandButton>
 

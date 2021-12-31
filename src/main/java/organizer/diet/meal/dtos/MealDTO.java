@@ -2,7 +2,6 @@ package organizer.diet.meal.dtos;
 
 import organizer.diet.ingredient.dtos.IngredientDTO;
 
-import javax.annotation.PostConstruct;
 import java.util.List;
 
 
@@ -17,10 +16,6 @@ public class MealDTO {
     private float protein;
     private float carbs;
 
-    @PostConstruct
-    public void init() {
-
-    }
 
 
     public void calculateCalories() {

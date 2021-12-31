@@ -6,30 +6,7 @@
       xmlns:p="http://primefaces.org/ui">
 
 <ui:composition>
-    <script type="text/javascript">
-
-        function myFunction() {
-
-            var popup = document.getElementById("myPopup");
-            document.getElementById('myPopup').contentWindow.location.reload(true);
-
-            popup.focus();
-            popup.classList.toggle("show");
-            resetCommand();
-            document.getElementById('nots').innerHTML = 0;
-
-        }
-
-        function socketListener(message, channel, event) {
-
-
-            document.getElementById('nots').innerHTML = message;
-
-
-        }
-
-
-    </script>
+    <h:outputScript name="/js/common.js"/>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <header style="background-color: #8a6642 " class="ci">
@@ -60,17 +37,17 @@
 
 
                     </f:websocket>
-                    <p:outputLabel id="nots" value="#{headerB.notifications}" binding="#{headerB.uiComponent}">
+                    <p:outputLabel id="nots" value="#{headerBean.notifications}" binding="#{headerBean.uiComponent}">
 
                     </p:outputLabel>
 
                 </li>
                 <li>
                     <p:remoteCommand name="resetCommand" action="#{user.reset()}"/>
-                    <div class="popup" onclick="myFunction()">Notifications
+                    <div class="popup" onclick="notificationPopUp()">Notifications
 
                         <iframe allowtransparency="false" id="myPopup" class="popuptext login card-no-hover"
-                                src="#{headerB.url}/user/notifications.xhtml"
+                                src="#{headerBean.url}/user/notifications.xhtml"
                                 height="600"
                                 style="width: 500px" name="Notifications">
 
@@ -94,7 +71,7 @@
                 <li>
                     <h:link styleClass="profile waves-effect btn-flat"
                             value="New Ingredient"
-                            outcome="/diet/ingredient/ningredient.xhtml"/>
+                            outcome="/diet/ingredient/newingredient.xhtml"/>
 
                 </li>
                 <li>

@@ -9,6 +9,7 @@ import organizer.system.exceptions.DuplicateException;
 import organizer.user.beans.UserBean;
 
 import javax.annotation.PostConstruct;
+import javax.faces.application.ConfigurableNavigationHandler;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.model.DataModel;
@@ -18,44 +19,117 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
 
-@Named("meal")
+@Named("mealBean")
 @ViewScoped
 public class MealBean implements Serializable {
+    private boolean isAllowed = false;
+
+    private String searchWord;
+
+    private MealDTO mealDTO;
+
+    private List<IngredientDTO> results;
+
+    private DataModel<IngredientDTO> ingredientsDataModel;
+    private DataModel<IngredientDTO> resultDataModel;
+
     @Inject
     UserBean userBean;
-    private MealDTO dto;
-    private DataModel<IngredientDTO> ingredientsDataModel;
-    private String word;
-    private List<IngredientDTO> results;
-    private DataModel<IngredientDTO> resultDataModel;
 
     @PostConstruct
     public void init() {
         Map<String, String> parameter = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
-        int mID = Integer.parseInt(parameter.get("mID"));
-        this.dto = new MealDTO();
-        this.dto.setmID(mID);
+
+        this.isAllowed = true;
+
+        this.mealDTO = new MealDTO();
+
+        this.mealDTO.setmID(Integer.parseInt(parameter.get("mID")));
+
         MealDAO dao = new MealDAO();
-        this.dto = dao.returnMealDTO(dto);
+        this.mealDTO = dao.getMealDTO(mealDTO);
+
+        this.mealDTO.calculateCalories();
+
+        Collections.sort(this.mealDTO.getMealIngredients());
+
+        this.ingredientsDataModel = new ListDataModel<>(this.mealDTO.getMealIngredients());
+
+    }
+
+    public void add() {
+
+        IngredientDTO toAdd = this.resultDataModel.getRowData();
+
+        toAdd.setAmount(100);
+
+        if (!this.contains(toAdd)) {
+
+            IngredientDAO dao = new IngredientDAO();
+            try {
+                dao.addIngredientToMeal(this.mealDTO, toAdd);
+            } catch (DuplicateException e) {
+                e.printStackTrace();
+            }
+            MealDAO mealDAO = new MealDAO();
 
 
-        this.dto.calculateCalories();
+            this.mealDTO = mealDAO.getMealDTO(mealDTO);
+
+            this.mealDTO.calculateCalories();
+
+            this.ingredientsDataModel = new ListDataModel<>(this.mealDTO.getMealIngredients());
+
+        } else {
+
+            FacesMessage facesMessage = new FacesMessage("Already in Meal!");
+            FacesContext.getCurrentInstance().addMessage("messages", facesMessage);
+
+        }
 
 
-        this.ingredientsDataModel = new ListDataModel<>(this.dto.getMealIngredients());
+    }
+
+    public void updateIngredientAmount() {
+        MealDAO mealDAO = new MealDAO();
+        mealDAO.updateIngredientAmount(this.mealDTO, ingredientsDataModel.getRowData());
+
+        this.mealDTO = mealDAO.getMealDTO(this.mealDTO);
+
+        this.mealDTO.calculateCalories();
+
+        Collections.sort(this.mealDTO.getMealIngredients());
+
+        this.ingredientsDataModel = new ListDataModel<>(this.mealDTO.getMealIngredients());
+
 
     }
 
 
-    public void search() {
-        this.resultDataModel = new ListDataModel<>(this.results);
-        this.results = new ArrayList<>();
+    public void removeIngredient() {
+        MealDAO mealDAO = new MealDAO();
 
-        List<Integer> ids = IngredientSearch.getInstance().search(word);
+        mealDAO.deleteIngredientFromMeal(this.mealDTO, ingredientsDataModel.getRowData());
+
+        this.mealDTO = mealDAO.getMealDTO(this.mealDTO);
+
+        this.mealDTO.calculateCalories();
+
+        this.ingredientsDataModel = new ListDataModel<>(this.mealDTO.getMealIngredients());
+
+    }
+
+    public void search() {
+
+        this.results = new ArrayList<>();
+        this.resultDataModel = new ListDataModel<>(this.results);
+
+        List<Integer> ids = IngredientSearch.getInstance().search(searchWord);
 
 
         if (!ids.isEmpty()) {
@@ -73,59 +147,59 @@ public class MealBean implements Serializable {
 
     }
 
-    public void add() {
 
-        IngredientDTO toAdd = this.resultDataModel.getRowData();
+    public void isAllowed() {
+
+        if (!this.isAllowed) {
+            Map<String, String> parameter = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
+            System.out.println(parameter.get("mID"));
 
 
-        toAdd.setAmount(100);
-
-        if (!this.contains(toAdd)) {
-
-            IngredientDAO dao = new IngredientDAO();
-            try {
-                dao.addIngredientToMeal(this.dto, toAdd);
-            } catch (DuplicateException e) {
-                e.printStackTrace();
-            }
             MealDAO mealDAO = new MealDAO();
+            List<Integer> mealDTOS = mealDAO.getIDsForAccess(this.userBean.getDto());
 
 
-            this.dto = mealDAO.returnMealDTO(dto);
+            if (!mealDTOS.contains(Integer.parseInt(parameter.get("mID")))) {
+                ConfigurableNavigationHandler nav = (ConfigurableNavigationHandler) FacesContext.getCurrentInstance().getApplication()
+                        .getNavigationHandler();
+                nav.performNavigation("/access/access-denied.xhtml");
+            }
 
-
-            this.dto.calculateCalories();
-
-
-            this.ingredientsDataModel = new ListDataModel<>(this.dto.getMealIngredients());
-
-        } else {
-
-            FacesMessage facesMessage = new FacesMessage("Already in Meal!");
-            FacesContext.getCurrentInstance().addMessage("messages", facesMessage);
         }
 
 
     }
 
+    private boolean contains(IngredientDTO ingredientDTO) {
 
-    private boolean contains(IngredientDTO dto) {
 
-
-        for (IngredientDTO dto1 : this.dto.getMealIngredients()) {
-            if (dto.getiID() == dto1.getiID()) {
+        for (IngredientDTO dto : this.mealDTO.getMealIngredients()) {
+            if (ingredientDTO.getiID() == dto.getiID()) {
                 return true;
             }
         }
         return false;
     }
 
-    public String getWord() {
-        return word;
+
+    public void setAllowed(boolean allowed) {
+        isAllowed = allowed;
     }
 
-    public void setWord(String word) {
-        this.word = word;
+    public String getSearchWord() {
+        return searchWord;
+    }
+
+    public void setSearchWord(String searchWord) {
+        this.searchWord = searchWord;
+    }
+
+    public MealDTO getMealDTO() {
+        return mealDTO;
+    }
+
+    public void setMealDTO(MealDTO mealDTO) {
+        this.mealDTO = mealDTO;
     }
 
     public List<IngredientDTO> getResults() {
@@ -136,23 +210,6 @@ public class MealBean implements Serializable {
         this.results = results;
     }
 
-    public DataModel<IngredientDTO> getResultDataModel() {
-        return resultDataModel;
-    }
-
-    public void setResultDataModel(DataModel<IngredientDTO> resultDataModel) {
-        this.resultDataModel = resultDataModel;
-    }
-
-
-    public MealDTO getDto() {
-        return dto;
-    }
-
-    public void setDto(MealDTO dto) {
-        this.dto = dto;
-    }
-
     public DataModel<IngredientDTO> getIngredientsDataModel() {
         return ingredientsDataModel;
     }
@@ -161,5 +218,11 @@ public class MealBean implements Serializable {
         this.ingredientsDataModel = ingredientsDataModel;
     }
 
+    public DataModel<IngredientDTO> getResultDataModel() {
+        return resultDataModel;
+    }
 
+    public void setResultDataModel(DataModel<IngredientDTO> resultDataModel) {
+        this.resultDataModel = resultDataModel;
+    }
 }

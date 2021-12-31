@@ -452,6 +452,19 @@ public class ConnectionPool implements Serializable {
 
         try {
             Statement stmt = connection.createStatement();
+            String query = "CREATE TABLE IF NOT EXISTS useringredients ("
+                    + "uID smallint," +
+                    "iID smallint," +
+                    "amount float)";
+
+            stmt.executeUpdate(query);
+            stmt.close();
+        } catch (SQLException ex) {
+            LOGGER.log(Level.SEVERE, null, ex);
+        }
+
+        try {
+            Statement stmt = connection.createStatement();
             String query = "CREATE TABLE IF NOT EXISTS TRIE ("
                     + "currentTrie varchar)";
 

@@ -15,7 +15,7 @@
             <h:form id="form">
                 <div id="mealDIV" style="display: inline-block;vertical-align: top;height: auto;width: 100%">
 
-                    <h:dataTable style="width: 100%" value="#{newIngredient.ingredientDataModel}" var="i"
+                    <h:dataTable style="width: 100%" value="#{newIngredientBean.ingredientDataModel}" var="i"
                                  columnClasses="columnNI">
 
                         <h:column>
@@ -98,7 +98,7 @@
                     </h:dataTable>
                     <div style="margin-top: 1%;text-align: center">
                         <h:commandButton style="margin-bottom: 1%" value="Create"
-                                         action="#{newIngredient.create()}">
+                                         action="#{newIngredientBean.create()}">
 
 
                         </h:commandButton>

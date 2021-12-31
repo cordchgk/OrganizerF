@@ -3,7 +3,9 @@
   <component name="WebContextManager">
     <option name="state">
       <map>
+        <entry key="file://$PROJECT_DIR$/src/main/webapp/access/access-denied.xhtml" value="file://$PROJECT_DIR$/src/main/webapp/access" />
         <entry key="file://$PROJECT_DIR$/src/main/webapp/diet/meal/meal.xhtml" value="file://$PROJECT_DIR$/src/main/webapp/diet/meal" />
+        <entry key="file://$PROJECT_DIR$/src/main/webapp/resources/templates/commonHeader.xhtml" value="file://$PROJECT_DIR$/src/main/webapp/resources/templates" />
       </map>
     </option>
   </component>

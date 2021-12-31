@@ -3,10 +3,6 @@ package organizer.diet.ingredient.beans;
 
 import organizer.diet.ingredient.daos.IngredientDAO;
 import organizer.diet.ingredient.dtos.IngredientDTO;
-import organizer.diet.nutrients.macronutrient.dtos.CarbDTO;
-import organizer.diet.nutrients.macronutrient.dtos.FatDTO;
-import organizer.diet.nutrients.macronutrient.dtos.MacroDTO;
-import organizer.diet.nutrients.macronutrient.dtos.ProteinDTO;
 import organizer.diet.system.IngredientSearch;
 import organizer.system.exceptions.DuplicateException;
 
@@ -19,61 +15,48 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-@Named("newIngredient")
+@Named("newIngredientBean")
 @ViewScoped
 public class NewIngredientBean implements Serializable {
-    private IngredientDTO dto;
+    private IngredientDTO ingredientDTO;
     private List<IngredientDTO> ingredientDTOList;
     private DataModel<IngredientDTO> ingredientDataModel;
 
 
     @PostConstruct
     public void init() {
-        this.dto = new IngredientDTO();
+        this.ingredientDTO = new IngredientDTO();
         this.ingredientDTOList = new ArrayList<>();
-        this.ingredientDTOList.add(this.dto);
-        MacroDTO macroDTO = new MacroDTO();
-
-        FatDTO fatDTO = new FatDTO();
-        ProteinDTO proteinDTO = new ProteinDTO();
-        CarbDTO carbDTO = new CarbDTO();
-
-        macroDTO.setFatDTO(fatDTO);
-        macroDTO.setProteinDTO(proteinDTO);
-        macroDTO.setCarbDTO(carbDTO);
-
-        dto.setMacroDTO(macroDTO);
-
+        this.ingredientDTOList.add(this.ingredientDTO);
         this.ingredientDataModel = new ListDataModel<>(this.ingredientDTOList);
     }
 
     public void create() {
-        IngredientDAO dao = new IngredientDAO();
-        for (IngredientDTO dto : this.ingredientDTOList) {
+        IngredientDAO ingredientDAO = new IngredientDAO();
+        for (IngredientDTO pointerDTO : this.ingredientDTOList) {
 
             try {
-                dao.createNewIngredient(dto);
+                ingredientDAO.createNewIngredient(pointerDTO);
 
 
             } catch (DuplicateException e) {
                 e.printStackTrace();
             }
 
-            IngredientSearch.getInstance().add(dto.getName(), dto.getiID());
-            IngredientSearch.getInstance().addToList(dto.getName(), dto.getiID());
+            IngredientSearch.getInstance().add(pointerDTO.getName(), pointerDTO.getiID());
+
         }
         this.init();
     }
 
 
-    public IngredientDTO getDto() {
-        return dto;
+    public IngredientDTO getIngredientDTO() {
+        return ingredientDTO;
     }
 
-    public void setDto(IngredientDTO dto) {
-        this.dto = dto;
+    public void setIngredientDTO(IngredientDTO ingredientDTO) {
+        this.ingredientDTO = ingredientDTO;
     }
-
 
     public List<IngredientDTO> getIngredientDTOList() {
         return ingredientDTOList;
