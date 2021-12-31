@@ -2,26 +2,20 @@ package organizer.user.beans;
 
 
 import organizer.group.dtos.GroupDTO;
-import organizer.system.ConnectionPool;
+import organizer.system.enums.FaceletPath;
 import organizer.system.exceptions.DuplicateException;
 import organizer.user.daos.UserDAO;
 import organizer.user.dtos.UserDTO;
-import organizer.system.enums.FaceletPath;
 
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.ConfigurableNavigationHandler;
-
 import javax.faces.context.FacesContext;
 import javax.faces.event.ComponentSystemEvent;
 import javax.faces.push.Push;
 import javax.faces.push.PushContext;
 import javax.inject.Inject;
 import javax.inject.Named;
-
-import java.io.IOException;
 import java.io.Serializable;
-
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -98,7 +92,7 @@ public class UserBean implements Serializable {
             dto = list.get(0);
 
             if (dto.isStatus()) {
-                return FaceletPath.GROUPS.getRedirectionPath();
+                return FaceletPath.MEALS.getRedirectionPath();
             } else {
                 return FaceletPath.VERIFICATION.getRedirectionPath();
             }

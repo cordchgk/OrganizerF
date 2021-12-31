@@ -7,7 +7,7 @@
     <groupId>Organizer</groupId>
     <artifactId>organizer</artifactId>
     <version>1.0</version>
-    <name>Organizer</name>
+    <name>organizer</name>
     <url></url>
     <packaging>war</packaging>
 
