@@ -474,6 +474,56 @@ public class ConnectionPool implements Serializable {
             LOGGER.log(Level.SEVERE, null, ex);
         }
 
+
+        try {
+            Statement stmt = connection.createStatement();
+            String query = "CREATE TABLE IF NOT EXISTS  event(" +
+                    "eID SERIAL," +
+                    "name varchar," +
+                    "starttime timestamptz," +
+                    "endtime timestamptz," +
+                    "date date)";
+            stmt.executeUpdate(query);
+            stmt.close();
+        } catch (SQLException ex) {
+            LOGGER.log(Level.SEVERE, null, ex);
+        }
+
+        try {
+            Statement stmt = connection.createStatement();
+            String query = "CREATE TABLE IF NOT EXISTS  eventusers(" +
+                    "eID smallint," +
+                    "uID smallint)";
+            stmt.executeUpdate(query);
+            stmt.close();
+        } catch (SQLException ex) {
+            LOGGER.log(Level.SEVERE, null, ex);
+        }
+
+
+        try {
+            Statement stmt = connection.createStatement();
+            String query = "CREATE TABLE IF NOT EXISTS  eventmeals(" +
+                    "eID smallint," +
+                    "mID smallint)";
+            stmt.executeUpdate(query);
+            stmt.close();
+        } catch (SQLException ex) {
+            LOGGER.log(Level.SEVERE, null, ex);
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
         Statement stmt = null;
         try {
             stmt = connection.createStatement();

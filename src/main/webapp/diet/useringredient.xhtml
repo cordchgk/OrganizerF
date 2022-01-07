@@ -27,7 +27,7 @@
                                 <h:inputText id="change" value="#{i.amount}" autocomplete="off"
                                              onkeypress="if (event.keyCode == 13) {onchange(event); return false; }"
                                              onchange="return event.keyCode !== undefined">
-
+                                    <f:ajax render="form" listener="#{userIngredientBean.changeAmount()}"/>
 
                                 </h:inputText>
                             </div>
@@ -54,17 +54,12 @@
                             <f:facet name="header">Fats</f:facet>
                             <div style="text-align: center;width: 100%;">
                                 <div style="width: 30%;display: inline-block;text-align: center">
-                                    <h:outputText value="#{i.actualFats()}" style="width: 100%">
+                                    <h:outputText value="#{i.getFats()}" style="width: 100%">
 
                                     </h:outputText>
 
                                 </div>
-                                <div style="color: rgba(0,0,0,0.3);width: 30%;display: inline-block;text-align: center">
-                                    <h:outputText value="(#{i.getFats()})" style="width: 100%;">
 
-                                    </h:outputText>
-
-                                </div>
 
                             </div>
 
@@ -74,13 +69,7 @@
                             <f:facet name="header">Protein</f:facet>
                             <div style="text-align: center;width: 100%;">
                                 <div style="width: 30%;display: inline-block;text-align: center">
-                                    <h:outputText value="#{i.actualProtein()}" style="width: 100%">
-
-                                    </h:outputText>
-
-                                </div>
-                                <div style="color: rgba(0,0,0,0.3);width: 30%;display: inline-block;text-align: center">
-                                    <h:outputText value="(#{i.getProtein()})" style="width: 100%;">
+                                    <h:outputText value="#{i.getProtein()}" style="width: 100%">
 
                                     </h:outputText>
 
@@ -94,17 +83,12 @@
                             <f:facet name="header">Carbs</f:facet>
                             <div style="text-align: center;width: 100%;">
                                 <div style="width: 30%;display: inline-block;text-align: center">
-                                    <h:outputText value="#{i.actualCarbs()}" style="width: 100%">
+                                    <h:outputText value="#{i.getCarbs()}" style="width: 100%">
 
                                     </h:outputText>
 
                                 </div>
-                                <div style="color: rgba(0,0,0,0.3);width: 30%;display: inline-block;text-align: center">
-                                    <h:outputText value="(#{i.getCarbs()})" style="width: 100%;">
 
-                                    </h:outputText>
-
-                                </div>
 
                             </div>
 
@@ -112,7 +96,7 @@
                         <h:column>
                             <f:facet name="header">Calories</f:facet>
                             <div style="text-align: center">
-                                #{i.actualCalories()}
+                                #{i.getCalories()}
                             </div>
 
 

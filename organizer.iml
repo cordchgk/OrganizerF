@@ -70,7 +70,7 @@
     <orderEntry type="library" scope="PROVIDED" name="Maven: javax:javaee-api:8.0.1" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: com.sun.mail:javax.mail:1.6.2" level="project" />
     <orderEntry type="library" name="Maven: org.jetbrains:annotations:20.1.0" level="project" />
-    <orderEntry type="library" name="Maven: org.primefaces:primefaces:10.0.0" level="project" />
+    <orderEntry type="library" name="Maven: org.primefaces:primefaces:11.0.0" level="project" />
     <orderEntry type="library" name="Maven: org.glassfish:javax.faces:2.4.0" level="project" />
     <orderEntry type="library" name="Maven: javax.el:javax.el-api:3.0.1-b04" level="project" />
     <orderEntry type="library" name="Maven: org.glassfish:javax.el:3.0.1-b04" level="project" />

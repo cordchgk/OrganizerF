@@ -33,6 +33,15 @@ public class UserIngredientsBean implements Serializable {
     }
 
 
+    public void changeAmount() {
+        IngredientDTO ingredientDTO = (IngredientDTO) this.userIngredientsDataModel.getRowData();
+        IngredientDAO ingredientDAO = new IngredientDAO();
+        ingredientDAO.updateUserIngredientAmount(this.userBean.getDto(), ingredientDTO);
+        this.userIngredients = ingredientDAO.getUserIngredients(this.userBean.getDto());
+        this.userIngredientsDataModel = new ListDataModel(this.userIngredients);
+    }
+
+
     public List<IngredientDTO> getUserIngredients() {
         return userIngredients;
     }
@@ -57,4 +66,6 @@ public class UserIngredientsBean implements Serializable {
     public void setUserIngredientsDataModel(DataModel userIngredientsDataModel) {
         this.userIngredientsDataModel = userIngredientsDataModel;
     }
+
+
 }
