@@ -1,9 +1,13 @@
 package organizer.schedule.event.dtos;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.primefaces.model.ScheduleEvent;
 import organizer.diet.meal.dtos.MealDTO;
+import organizer.schedule.event.daos.EventDAO;
 import organizer.user.dtos.UserDTO;
 
+import javax.annotation.PostConstruct;
 import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -11,6 +15,9 @@ import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 
+
+@Getter
+@Setter
 public class EventDTO {
 
     private int eID;
@@ -26,44 +33,6 @@ public class EventDTO {
     LocalDateTime start;
     LocalDateTime end;
     private LocalDate date;
-
-
-    public LocalDate getDate() {
-        return date;
-    }
-
-    public void setDate(LocalDate date) {
-        this.date = date;
-    }
-
-    public List<UserDTO> getUserDTOList() {
-        return userDTOList;
-    }
-
-    public void setUserDTOList(List<UserDTO> userDTOList) {
-        this.userDTOList = userDTOList;
-    }
-
-    public List<MealDTO> getMealDTOList() {
-        return mealDTOList;
-    }
-
-    public void setMealDTOList(List<MealDTO> mealDTOList) {
-        this.mealDTOList = mealDTOList;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public LocalDateTime getStart() {
-
-        return this.start;
-    }
 
 
     public void setStart(LocalDateTime start) {
@@ -103,6 +72,11 @@ public class EventDTO {
         toReturn.setStart(scheduleEvent.getStartDate());
         toReturn.setEnd(scheduleEvent.getEndDate());
 
+
+        EventDAO eventDAO = new EventDAO();
+        toReturn.setMealDTOList(eventDAO.selectMealsByEventDTO(toReturn));
+
+        System.out.println("size: " + toReturn.mealDTOList.size());
 
         return toReturn;
     }

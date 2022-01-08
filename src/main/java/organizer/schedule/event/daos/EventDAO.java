@@ -1,5 +1,9 @@
 package organizer.schedule.event.daos;
 
+import organizer.diet.meal.daos.MealDAO;
+import organizer.diet.meal.dtos.MealDTO;
+import organizer.group.daos.GroupDAO;
+import organizer.group.dtos.GroupDTO;
 import organizer.product.dtos.ProductDTO;
 import organizer.schedule.event.dtos.EventDTO;
 import organizer.system.ConnectionPool;
@@ -40,16 +44,6 @@ public class EventDAO {
             pool.releaseConnection(conn);
         }
         try {
-
-
-            /**
-             * DATE == NULL vollidiot
-             *
-             *
-             *
-             *
-             *
-             */
 
             result = statement.executeQuery();
             while (result.next()) {
@@ -205,4 +199,44 @@ public class EventDAO {
     }
 
 
+    public List<MealDTO> selectMealsByEventDTO(EventDTO eventDTO) throws DatabaseException {
+
+        List<MealDTO> toReturn = new ArrayList<>();
+
+
+        Connection conn = pool.getConnection();
+        String query = "SELECT meal.mid,meal.name FROM event,eventmeals,meal WHERE event.eid = eventmeals.eid AND eventmeals.mid = meal.mid AND event.eid = ?";
+        PreparedStatement statement = null;
+        ResultSet result;
+        try {
+
+            statement = conn.prepareStatement(query);
+            statement.setInt(1, eventDTO.geteID());
+        } catch (SQLException ex) {
+            Logger.getLogger(UserDAO.class.getName())
+                    .log(Level.SEVERE, null, ex);
+            pool.releaseConnection(conn);
+        }
+        try {
+
+            result = statement.executeQuery();
+            while (result.next()) {
+                MealDTO toAdd = new MealDTO();
+                toAdd.setmID(result.getInt(1));
+                toAdd.setName(result.getString(2));
+                toAdd.setMealIngredients(new MealDAO().getIngredientByMealDTO(toAdd));
+
+
+
+                toReturn.add(toAdd);
+
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(UserDAO.class.getName())
+                    .log(Level.SEVERE, null, ex);
+            pool.releaseConnection(conn);
+        }
+        pool.releaseConnection(conn);
+        return toReturn;
+    }
 }
