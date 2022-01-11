@@ -1,0 +1,73 @@
+<ui:composition template="/resources/templates/commonLayout.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <f:metadata>
+        <f:viewParam name="mID"/>
+    </f:metadata>
+
+    <ui:define name="title"></ui:define>
+    <ui:define name="content">
+
+        <div class="card-no-hover"
+             style="width: 70%;height:auto;margin: 0 auto;text-align: center">
+
+        </div>
+        <div class="card-no-hover"
+             style="display:table;width: 70%;height:auto;margin: 0 auto;margin-top: 5%;text-align: center">
+
+            <h:form id="form">
+                <div id="mDIV" style="display: inline-block;vertical-align: top;height: auto;width: 70%">
+
+                    <h:dataTable value="#{shoppingListBean.shoppingListDTO.ingredientDTOS}" var="s">
+
+                        <h:column>
+                            <f:facet name="header">Ingredient</f:facet>
+                            <div style="text-align: center">
+                                #{s.name}
+                            </div>
+
+
+                        </h:column>
+
+                        <h:column>
+                            <f:facet name="header">Amount</f:facet>
+                            <div style="text-align: center">
+                                #{s.amount}
+                            </div>
+
+
+                        </h:column>
+                    </h:dataTable>
+
+                </div>
+
+                <div style="display: inline-block;vertical-align: top;height: auto;width: 70%;border-top: #1e2021 1px">
+
+
+                    <div>
+
+                        <div>
+
+                            <h:dataTable
+                            >
+                                <h:column>
+                                </h:column>
+
+                            </h:dataTable>
+
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+            </h:form>
+
+        </div>
+
+
+    </ui:define>
+</ui:composition>

@@ -1,0 +1,64 @@
+<ui:composition template="/resources/templates/commonLayout.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core" xmlns:p="http://java.sun.com/jsf/html">
+
+    <f:metadata>
+        <f:viewParam name="gID" value="#{group.ID}"/>
+    </f:metadata>
+
+    <ui:define name="title">Profile</ui:define>
+    <ui:define name="content">
+        <f:event listener="#{product.isAllowed()}" type="preRenderView" />
+        <h:panelGroup styleClass="login card-no-hover" rendered="#{user.isAuthenticated() }">
+
+
+            <h:form  id="form">
+                <h:dataTable id="table" cellspacing=" 10"
+                             var="p" width="100" value="#{product.productModel}">
+                    <h:column>
+                        #{p.name}
+                    </h:column>
+                    <h:column>
+                        #{p.count}
+                    </h:column>
+                    <h:column>
+                        <h:commandButton immediate="true" rendered="#{product.rendered()}" value="-"
+                                         action="#{p.dec()}">
+                            <f:ajax execute="@form" render="@form"/>
+                        </h:commandButton>
+                    </h:column>
+                    <h:column>
+
+                        <h:inputText validator="#{product.validate}"
+                                     onkeypress="if (event.keyCode === 13){event.preventDefault()}" id="input" size="2"
+                                     value="#{p.diff}" converterMessage="Must be an Integer!">
+                            <f:ajax listener="#{product.namedChanged}" render="input"/>
+
+                        </h:inputText>
+                        <h:message for="input"/>
+                    </h:column>
+                    <h:column>
+                        <h:commandButton immediate="true" value="+" action="#{p.inc()}">
+                            <f:ajax execute="@form" render="@form"/>
+                        </h:commandButton>
+                    </h:column>
+                    <h:column>
+                        <h:selectBooleanCheckbox value="#{p.ordered}"/>
+                    </h:column>
+
+                </h:dataTable>
+
+                <h:commandButton id="save" value="Save" action="#{product.save()}" binding="#{product.saveButton}">
+
+                </h:commandButton>
+
+
+            </h:form>
+            <h:message for="save"/>
+        </h:panelGroup>
+
+
+    </ui:define>
+</ui:composition>
