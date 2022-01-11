@@ -31,8 +31,8 @@ public enum FaceletPath {
     @NonNls FAQ_PAGE("/info/faq.xhtml"),
     @NonNls PRIVACY("/info/privacy.xhtml"),
     @NonNls TERMS("/info/terms.xhtml"),
-    @NonNls USERINGREDIENTS("/diet/useringredient.xhtml");
-
+    @NonNls USERINGREDIENTS("/diet/useringredient.xhtml"),
+    @NonNls SHOPPINGLIST("/shopping/shoppinglist.xhtml");
 
 
 

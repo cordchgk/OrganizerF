@@ -30,6 +30,17 @@ public class UserBean implements Serializable {
     private int notifications = 0;
     private List<GroupDTO> gDTONotAccepted;
 
+    private String currentEventId;
+
+
+    public String getCurrentEventId() {
+        return currentEventId;
+    }
+
+    public void setCurrentEventId(String currentEventId) {
+        this.currentEventId = currentEventId;
+    }
+
     public int getNotifications() {
         return notifications;
     }

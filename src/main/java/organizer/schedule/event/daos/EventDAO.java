@@ -52,7 +52,7 @@ public class EventDAO {
                 toADD.setStart(result.getTime(2).toLocalTime().atDate(result.getDate(4).toLocalDate()));
                 toADD.setEnd(result.getTime(3).toLocalTime().atDate(result.getDate(4).toLocalDate()));
                 toADD.seteID(result.getInt(5));
-
+                toADD.setMealDTOList(this.selectMealsByEventDTO(toADD));
                 toReturn.add(toADD);
             }
         } catch (SQLException ex) {
@@ -226,6 +226,7 @@ public class EventDAO {
                 toAdd.setName(result.getString(2));
                 toAdd.setMealIngredients(new MealDAO().getIngredientByMealDTO(toAdd));
 
+                toAdd.calculateCalories();
 
 
                 toReturn.add(toAdd);
@@ -238,5 +239,66 @@ public class EventDAO {
         }
         pool.releaseConnection(conn);
         return toReturn;
+    }
+
+
+    public void deleteMealFromEvent(EventDTO eventDTO, MealDTO mealDTO) {
+
+
+        Connection conn = pool.getConnection();
+        String query = "DELETE FROM eventmeals WHERE eventmeals.eid = ? AND eventmeals.mid = ?";
+        PreparedStatement statement = null;
+
+        try {
+            statement = conn.prepareStatement(query);
+        } catch (SQLException ex) {
+            Logger.getLogger(GroupDAO.class.getName())
+                    .log(Level.SEVERE, null, ex);
+            pool.releaseConnection(conn);
+        }
+        try {
+            statement.setInt(1, eventDTO.geteID());
+            statement.setInt(2, mealDTO.getmID());
+            statement.executeUpdate();
+
+        } catch (SQLException ex) {
+            Logger.getLogger(GroupDAO.class.getName())
+                    .log(Level.SEVERE, null, ex);
+            pool.releaseConnection(conn);
+        }
+        pool.releaseConnection(conn);
+
+    }
+
+
+    public void addMealToEvent(EventDTO eventDTO, MealDTO mealDTO)
+            throws DatabaseException, DuplicateException {
+
+        Connection conn = pool.getConnection();
+        String query = "INSERT INTO eventmeals (eid, mid) VALUES (?,?)";
+        PreparedStatement statement = null;
+
+        try {
+            statement = conn.prepareStatement(query);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
+        try {
+
+            statement.setInt(1, eventDTO.geteID());
+            statement.setInt(2, mealDTO.getmID());
+            statement.execute();
+
+        } catch (SQLException ex) {
+            Logger.getLogger(UserDAO.class.getName())
+                    .log(Level.SEVERE, null, ex);
+            pool.releaseConnection(conn);
+
+        }
+
+
+        pool.releaseConnection(conn);
+
     }
 }

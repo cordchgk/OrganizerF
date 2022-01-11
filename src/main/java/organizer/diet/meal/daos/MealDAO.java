@@ -2,6 +2,7 @@ package organizer.diet.meal.daos;
 
 import organizer.diet.ingredient.dtos.IngredientDTO;
 import organizer.diet.meal.dtos.MealDTO;
+import organizer.shopping.list.dtos.ShoppingListDTO;
 import organizer.system.ConnectionPool;
 import organizer.system.exceptions.DatabaseException;
 import organizer.user.daos.UserDAO;
@@ -61,6 +62,45 @@ public class MealDAO {
 
         return toReturn;
     }
+
+
+    public List<MealDTO> getMealsByUserDTOForShoppingList(UserDTO dto, ShoppingListDTO shoppingListDTO) throws DatabaseException {
+
+        List<MealDTO> toReturn = new ArrayList<>();
+
+        Connection conn = pool.getConnection();
+        String query = "SELECT meal.name,meal.mid"
+                + " FROM meal,eventmeals,event WHERE meal.owner = ?";
+        PreparedStatement statement = null;
+        ResultSet result;
+        try {
+            statement = conn.prepareStatement(query);
+        } catch (SQLException ex) {
+            Logger.getLogger(UserDAO.class.getName())
+                    .log(Level.SEVERE, null, ex);
+            pool.releaseConnection(conn);
+        }
+        try {
+            statement.setInt(1, dto.getUserID());
+            result = statement.executeQuery();
+            while (result.next()) {
+                MealDTO toAdd = new MealDTO();
+                toAdd.setName(result.getString(1));
+                toAdd.setmID(result.getInt(2));
+                toAdd.setMealIngredients(this.getIngredientByMealDTO(toAdd));
+                toAdd.calculateCalories();
+                toReturn.add(toAdd);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(UserDAO.class.getName())
+                    .log(Level.SEVERE, null, ex);
+            pool.releaseConnection(conn);
+        }
+        pool.releaseConnection(conn);
+
+        return toReturn;
+    }
+
 
     public List<Integer> getIDsForAccess(UserDTO dto) throws DatabaseException {
 

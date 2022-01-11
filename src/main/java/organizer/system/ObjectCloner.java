@@ -28,7 +28,7 @@ public final class ObjectCloner {
         oos.writeObject(oldObj);
 
         oos.flush();
-        System.out.println(Arrays.toString(bos.toByteArray()));
+
         ByteArrayInputStream bin =
                 new ByteArrayInputStream(bos.toByteArray());
         ObjectInputStream ois = new ObjectInputStream(bin);

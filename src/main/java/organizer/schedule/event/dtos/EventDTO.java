@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.primefaces.model.ScheduleEvent;
 import organizer.diet.meal.dtos.MealDTO;
+import organizer.diet.nutrients.macronutrient.dtos.MacroDTO;
 import organizer.schedule.event.daos.EventDAO;
 import organizer.user.dtos.UserDTO;
 
@@ -76,10 +77,10 @@ public class EventDTO {
         EventDAO eventDAO = new EventDAO();
         toReturn.setMealDTOList(eventDAO.selectMealsByEventDTO(toReturn));
 
-        System.out.println("size: " + toReturn.mealDTOList.size());
-
         return toReturn;
     }
+
+
 
 
     @Override
@@ -96,4 +97,6 @@ public class EventDTO {
         return stringBuilder.toString();
 
     }
+
+
 }

@@ -129,7 +129,7 @@ public class GroupManagerBean implements Serializable {
         this.newGroupUser.setgID(this.dto.getgID());
         GroupManagerDAO dao = new GroupManagerDAO();
         if (!dao.addToGroup(this.newGroupUser)) {
-            System.out.println("user does not exist");
+
         }
 
 

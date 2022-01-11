@@ -152,7 +152,7 @@ public class MealBean implements Serializable {
 
         if (!this.isAllowed) {
             Map<String, String> parameter = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
-            System.out.println(parameter.get("mID"));
+
 
 
             MealDAO mealDAO = new MealDAO();

@@ -23,10 +23,13 @@ package organizer.schedule.schedule.beans;/*
  */
 
 
+import org.primefaces.PrimeFaces;
 import org.primefaces.event.ScheduleEntryMoveEvent;
 import org.primefaces.event.ScheduleEntryResizeEvent;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.model.*;
+import organizer.diet.meal.daos.MealDAO;
+import organizer.diet.meal.dtos.MealDTO;
 import organizer.schedule.event.daos.EventDAO;
 import organizer.schedule.event.dtos.EventDTO;
 import organizer.schedule.schedule.service.ExtenderService;
@@ -39,6 +42,8 @@ import javax.faces.application.ConfigurableNavigationHandler;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
+import javax.faces.model.DataModel;
+import javax.faces.model.ListDataModel;
 import javax.faces.model.SelectItem;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
@@ -47,10 +52,7 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static organizer.schedule.event.dtos.EventDTO.getFromScheduleEvent;
@@ -107,6 +109,14 @@ public class ScheduleBean implements Serializable {
 
     private Map<String, ExtenderService.ExtenderExample> extenderExamples;
 
+    private List<MealDTO> userMeals;
+
+    private DataModel userMealDataModel;
+
+    private List<MealDTO> eventMeals;
+
+    private DataModel eventMealsDataModel;
+
 
     @Inject
     private UserBean userBean;
@@ -115,15 +125,15 @@ public class ScheduleBean implements Serializable {
     @PostConstruct
     public void init() {
         eventModel = new DefaultScheduleModel();
-        UserDTO testDTO = new UserDTO();
-        testDTO.setUserID(1);
 
-        List<EventDTO> userEvents = new EventDAO().selectByUserDto(testDTO);
+
+        List<EventDTO> userEvents = new EventDAO().selectByUserDto(userBean.getDto());
 
 
         for (EventDTO eventDTO : userEvents) {
 
             event = DefaultScheduleEvent.builder()
+                    .editable(true)
                     .id(String.valueOf(eventDTO.geteID()))
                     .title(eventDTO.getName())
                     .startDate(eventDTO.getStart())
@@ -131,15 +141,125 @@ public class ScheduleBean implements Serializable {
                     .description(eventDTO.getName())
                     .overlapAllowed(true)
                     .borderColor("#CB4335")
+                    .data(eventDTO.getMealDTOList())
                     .build();
-            eventModel.addEvent(event);
-            System.out.println(event.getId());
 
+            eventModel.addEvent(event);
+
+        }
+        HashMap<LocalDate, List<ScheduleEvent>> hashMap = new HashMap();
+
+        for (ScheduleEvent event : this.eventModel.getEvents()) {
+
+            if (hashMap.containsKey(event.getStartDate().toLocalDate())) {
+                hashMap.get(event.getStartDate().toLocalDate()).add(event);
+            } else {
+
+                hashMap.put(event.getStartDate().toLocalDate(), new ArrayList<>());
+                hashMap.get(event.getStartDate().toLocalDate()).add(event);
+            }
+
+        }
+
+        for (LocalDate localDate : hashMap.keySet()) {
+            ScheduleEvent e = createAllEvent(hashMap.get(localDate));
+
+            eventModel.addEvent(e);
+        }
+
+
+        MealDAO mealDAO = new MealDAO();
+        this.userMeals = mealDAO.getMealsByUserDTO(this.userBean.getDto());
+        this.userMealDataModel = new ListDataModel(this.userMeals);
+
+
+
+
+        this.event = this.eventModel.getEvent(this.userBean.getCurrentEventId());
+
+        EventDAO eventDAO = new EventDAO();
+        EventDTO eventDTO = new EventDTO();
+        if (this.userBean.getCurrentEventId() != null){
+            eventDTO.seteID(Integer.parseInt(this.userBean.getCurrentEventId()));
+
+            this.eventMeals = eventDAO.selectMealsByEventDTO(eventDTO);
+            this.eventMealsDataModel = new ListDataModel(this.eventMeals);
 
         }
 
 
         extenderExamples = extenderService.createExtenderExamples();
+    }
+
+
+    private void newStuff() {
+
+    }
+
+    private static ScheduleEvent createAllEvent(List<ScheduleEvent> scheduleEvents) {
+
+        List<MealDTO> allMealsOfDay = new ArrayList<>();
+
+        for (ScheduleEvent event : scheduleEvents) {
+            List<MealDTO> mealsOfEvent = (List<MealDTO>) event.getData();
+            MealDTO all = createTotal(mealsOfEvent);
+            allMealsOfDay.add(all);
+        }
+
+        MealDTO all = createTotal(allMealsOfDay);
+
+        ScheduleEvent toReturn = DefaultScheduleEvent.builder()
+
+                .title("Total: " + all.getFats() + "F, " + all.getProtein() + "P, " + all.getCarbs() + "C, " + all.getCalories() + "Calories")
+                .startDate(scheduleEvents.get(0).getStartDate())
+                .endDate(scheduleEvents.get(0).getStartDate())
+                .draggable(false)
+                .resizable(false)
+                .editable(false)
+                .overlapAllowed(true)
+                .allDay(true)
+                .borderColor("#CB4335")
+
+                .build();
+
+
+        return toReturn;
+    }
+
+
+    private static MealDTO createTotal(List<MealDTO> mealDTOList) {
+        MealDTO toReturn = new MealDTO();
+        float fats = 0;
+        float protein = 0;
+        float carbs = 0;
+        float calories = 0;
+        if (mealDTOList != null) {
+            for (MealDTO mealDTO : mealDTOList) {
+                fats += mealDTO.getFats();
+                protein += mealDTO.getProtein();
+                carbs += mealDTO.getCarbs();
+                calories += mealDTO.getCalories();
+
+            }
+        }
+
+
+        toReturn.setName("Total");
+        toReturn.setFats(fats);
+        toReturn.setProtein(protein);
+        toReturn.setCarbs(carbs);
+        toReturn.setCalories(calories);
+
+        return toReturn;
+    }
+
+
+    public DataModel getEventMealsDataModel() {
+        return eventMealsDataModel;
+    }
+
+    public void setEventMealsDataModel(DataModel eventMealsDataModel) {
+        this.eventMealsDataModel = eventMealsDataModel;
     }
 
     public ExtenderService getScheduleExtenderService() {
@@ -164,6 +284,13 @@ public class ScheduleBean implements Serializable {
         return eventModel;
     }
 
+    public DataModel getUserMealDataModel() {
+        return userMealDataModel;
+    }
+
+    public void setUserMealDataModel(DataModel userMealDataModel) {
+        this.userMealDataModel = userMealDataModel;
+    }
 
     private LocalDateTime previousDay8Pm() {
         return LocalDateTime.now().minusDays(1).withHour(20).withMinute(0).withSecond(0).withNano(0);
@@ -250,15 +377,86 @@ public class ScheduleBean implements Serializable {
 
         }
 
+        this.init();
+
 
         event = new DefaultScheduleEvent<>();
     }
 
     public void onEventSelect(SelectEvent selectEvent) {
 
+
         event = (ScheduleEvent) selectEvent.getObject();
-        System.out.println(event.getDescription());
+
+        EventDAO eventDAO = new EventDAO();
+        EventDTO eventDTO = new EventDTO();
+        eventDTO.seteID(Integer.parseInt(this.event.getId()));
+        this.eventMeals = eventDAO.selectMealsByEventDTO(eventDTO);
+        this.eventMealsDataModel = new ListDataModel(this.eventMeals);
+
+
+        MealDAO mealDAO = new MealDAO();
+        this.userMeals = mealDAO.getMealsByUserDTO(this.userBean.getDto());
+        this.userMealDataModel = new ListDataModel(this.userMeals);
+
+        if (event.isEditable()) {
+
+
+            PrimeFaces.current().executeInitScript("showDialog();");
+        }
+        this.userBean.setCurrentEventId(event.getId());
+
+
     }
+
+    public void removeMealFromEvent() {
+        EventDTO eventDTO = new EventDTO();
+        eventDTO.seteID(Integer.parseInt(this.event.getId()));
+
+
+        MealDTO mealDTO = (MealDTO) this.eventMealsDataModel.getRowData();
+
+        System.out.println(mealDTO.getmID());
+        EventDAO eventDAO = new EventDAO();
+
+
+        eventDAO.deleteMealFromEvent(eventDTO, mealDTO);
+
+
+        this.eventMeals = eventDAO.selectMealsByEventDTO(eventDTO);
+        this.eventMealsDataModel = new ListDataModel(this.eventMeals);
+
+
+        this.userBean.setCurrentEventId(event.getId());
+
+    }
+
+    public void addMealToEvent() {
+
+        EventDTO eventDTO = new EventDTO();
+        eventDTO.seteID(Integer.parseInt(this.event.getId()));
+
+        MealDTO mealDTO = (MealDTO) this.userMealDataModel.getRowData();
+
+        EventDAO eventDAO = new EventDAO();
+
+        try {
+            eventDAO.addMealToEvent(eventDTO, mealDTO);
+        } catch (DuplicateException e) {
+            e.printStackTrace();
+        }
+
+
+        this.eventMeals = eventDAO.selectMealsByEventDTO(eventDTO);
+        this.eventMealsDataModel = new ListDataModel(this.eventMeals);
+
+
+        MealDAO mealDAO = new MealDAO();
+        this.userMeals = mealDAO.getMealsByUserDTO(this.userBean.getDto());
+        this.userMealDataModel = new ListDataModel(this.userMeals);
+
+    }
+
 
     public void onViewChange(SelectEvent<String> selectEvent) {
         view = selectEvent.getObject();
@@ -267,14 +465,48 @@ public class ScheduleBean implements Serializable {
     }
 
 
-    public void onDateSelect(SelectEvent<LocalDateTime> selectEvent) {
-        System.out.println("selected: " + selectEvent.getObject());
-        event = DefaultScheduleEvent.builder()
-                .startDate(selectEvent.getObject())
-                .endDate(selectEvent.getObject().plusHours(1))
-                .build();
+    public ExtenderService getExtenderService() {
+        return extenderService;
     }
 
+    public void setExtenderService(ExtenderService extenderService) {
+        this.extenderService = extenderService;
+    }
+
+    public void setEventModel(ScheduleModel eventModel) {
+        this.eventModel = eventModel;
+    }
+
+    public void setExtenderExamples(Map<String, ExtenderService.ExtenderExample> extenderExamples) {
+        this.extenderExamples = extenderExamples;
+    }
+
+    public List<MealDTO> getUserMeals() {
+        return userMeals;
+    }
+
+    public void setUserMeals(List<MealDTO> userMeals) {
+        this.userMeals = userMeals;
+    }
+
+    public void onDateSelect(SelectEvent<LocalDateTime> selectEvent) {
+
+        event = DefaultScheduleEvent.builder()
+                .editable(true)
+                .startDate(selectEvent.getObject())
+                .endDate(selectEvent.getObject().plusHours(1))
+                .data(new ArrayList<MealDTO>())
+                .build();
+
+    }
+
+    public List<MealDTO> getEventMeals() {
+        return eventMeals;
+    }
+
+    public void setEventMeals(List<MealDTO> eventMeals) {
+        this.eventMeals = eventMeals;
+    }
 
     public void onEventMove(ScheduleEntryMoveEvent event) {
         FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Event moved",
