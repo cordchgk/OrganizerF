@@ -204,7 +204,7 @@ public class MealDAO {
                 toAdd.setCarbs(result.getFloat(4));
                 toAdd.setCalories(result.getFloat(5));
                 toAdd.setName(result.getString(6));
-                toAdd.setiID(result.getInt(7));
+                toAdd.setIID(result.getInt(7));
 
 
                 toReturn.add(toAdd);
@@ -280,7 +280,7 @@ public class MealDAO {
 
         try {
             PreparedStatement statement = conn.prepareStatement(query);
-            statement.setInt(1, ingredientDTO.getiID());
+            statement.setInt(1, ingredientDTO.getIID());
             statement.setInt(2, mealDTO.getmID());
 
             statement.execute();
@@ -307,7 +307,7 @@ public class MealDAO {
 
             statement.setFloat(1, ingredientDTO.getAmount());
             statement.setInt(2, mealDTO.getmID());
-            statement.setInt(3, ingredientDTO.getiID());
+            statement.setInt(3, ingredientDTO.getIID());
 
             statement.execute();
 

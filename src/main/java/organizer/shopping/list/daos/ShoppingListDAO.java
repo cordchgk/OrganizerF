@@ -1,6 +1,7 @@
 package organizer.shopping.list.daos;
 
 import organizer.diet.ingredient.dtos.IngredientDTO;
+import organizer.diet.ingredient.dtos.ShoppingListIngredientDTO;
 import organizer.diet.meal.daos.MealDAO;
 import organizer.diet.meal.dtos.MealDTO;
 import organizer.shopping.list.dtos.ShoppingListDTO;
@@ -16,7 +17,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class ShoppingListDAO {
-    private ConnectionPool pool = ConnectionPool.getInstance();
+    private final ConnectionPool pool = ConnectionPool.getInstance();
 
 
     public List<IngredientDTO> getIngredientssByUserDTO(UserDTO dto, ShoppingListDTO shoppingListDTO) throws DatabaseException {
@@ -63,5 +64,116 @@ public class ShoppingListDAO {
         return toReturn;
     }
 
+    public void addToShoppingList(UserDTO userDTO, IngredientDTO ingredientDTO) {
+
+        Connection conn = pool.getConnection();
+        String query =
+                "INSERT INTO shoppinglist (uid, iid, amount) VALUES (?,?,?)";
+
+        try {
+            PreparedStatement statement = conn.prepareStatement(query);
+            statement.setInt(1, userDTO.getUserID());
+            statement.setInt(2, ingredientDTO.getIID());
+            statement.setFloat(3, ingredientDTO.getAmount());
+            statement.execute();
+
+        } catch (SQLException ex) {
+            Logger.getLogger(UserDAO.class.getName())
+                    .log(Level.SEVERE, null, ex);
+            pool.releaseConnection(conn);
+        }
+        pool.releaseConnection(conn);
+    }
+
+
+    public List<ShoppingListIngredientDTO> getShoppingListIngredients(UserDTO dto) throws DatabaseException {
+
+        List<ShoppingListIngredientDTO> toReturn = new ArrayList<>();
+
+        Connection conn = pool.getConnection();
+        String query = "SELECT shoppinglist.amount,ingredient.name,ingredient.iid FROM shoppinglist,ingredient WHERE " +
+                "shoppinglist.uid = ? AND shoppinglist.iid = ingredient.iid";
+        PreparedStatement statement = null;
+        ResultSet result;
+        try {
+            statement = conn.prepareStatement(query);
+        } catch (SQLException ex) {
+            Logger.getLogger(UserDAO.class.getName())
+                    .log(Level.SEVERE, null, ex);
+            pool.releaseConnection(conn);
+        }
+        try {
+            statement.setInt(1, dto.getUserID());
+
+            result = statement.executeQuery();
+
+            while (result.next()) {
+                ShoppingListIngredientDTO toAdd = new ShoppingListIngredientDTO();
+                toAdd.setAmount(result.getFloat(1));
+                toAdd.setName(result.getString(2));
+                toAdd.setIID(result.getInt(3));
+                toReturn.add(toAdd);
+
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(UserDAO.class.getName())
+                    .log(Level.SEVERE, null, ex);
+            pool.releaseConnection(conn);
+        }
+        pool.releaseConnection(conn);
+
+        return toReturn;
+    }
+
+    public void removeFromShoppingList(UserDTO userDTO, IngredientDTO ingredientDTO) {
+
+        Connection conn = pool.getConnection();
+        String query = "DELETE FROM shoppinglist WHERE shoppinglist.uid = ? AND shoppinglist.iid = ?";
+
+
+        try {
+            PreparedStatement statement = conn.prepareStatement(query);
+            statement.setInt(1, userDTO.getUserID());
+            statement.setInt(2, ingredientDTO.getIID());
+
+            statement.execute();
+
+        } catch (SQLException ex) {
+            Logger.getLogger(UserDAO.class.getName())
+                    .log(Level.SEVERE, null, ex);
+            pool.releaseConnection(conn);
+        }
+
+        pool.releaseConnection(conn);
+
+
+    }
+
+
+    public boolean updateShoppingListAmount(UserDTO userDTO, IngredientDTO ingredientDTO) {
+        Connection conn = pool.getConnection();
+        String query = "UPDATE shoppinglist SET amount = ? WHERE uid = ? AND iid = ?";
+
+
+        try {
+            PreparedStatement statement = conn.prepareStatement(query);
+
+            statement.setFloat(1, ingredientDTO.getAmount());
+            statement.setInt(2, userDTO.getUserID());
+            statement.setInt(3, ingredientDTO.getIID());
+
+            statement.execute();
+
+        } catch (SQLException ex) {
+            Logger.getLogger(UserDAO.class.getName())
+                    .log(Level.SEVERE, null, ex);
+            pool.releaseConnection(conn);
+        }
+
+        pool.releaseConnection(conn);
+
+
+        return true;
+    }
 
 }

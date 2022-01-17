@@ -29,7 +29,10 @@ import org.primefaces.PrimeFaces;
 import org.primefaces.event.ScheduleEntryMoveEvent;
 import org.primefaces.event.ScheduleEntryResizeEvent;
 import org.primefaces.event.SelectEvent;
-import org.primefaces.model.*;
+import org.primefaces.model.DefaultScheduleEvent;
+import org.primefaces.model.DefaultScheduleModel;
+import org.primefaces.model.ScheduleEvent;
+import org.primefaces.model.ScheduleModel;
 import organizer.diet.meal.daos.MealDAO;
 import organizer.diet.meal.dtos.MealDTO;
 import organizer.schedule.event.daos.EventDAO;
@@ -52,7 +55,10 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static organizer.schedule.event.dtos.EventDTO.getFromScheduleEvent;
 
@@ -145,7 +151,6 @@ public class ScheduleBean implements Serializable {
                         .endDate(eventDTO.getEnd())
                         .description(eventDTO.getName())
                         .overlapAllowed(true)
-                        .borderColor("#CB4335")
                         .data(eventDTO.getMealDTOList())
                         .build();
 
@@ -208,14 +213,6 @@ public class ScheduleBean implements Serializable {
         return eventModel;
     }
 
-    public DataModel getUserMealDataModel() {
-        return userMealDataModel;
-    }
-
-    public void setUserMealDataModel(DataModel userMealDataModel) {
-        this.userMealDataModel = userMealDataModel;
-    }
-
 
     public void addEvent() {
 
@@ -256,30 +253,33 @@ public class ScheduleBean implements Serializable {
         event = new DefaultScheduleEvent<>();
     }
 
-    public void onEventSelect(SelectEvent selectEvent) {
+    private static ScheduleEvent createAllEvent(List<ScheduleEvent> scheduleEvents) {
 
+        List<MealDTO> allMealsOfDay = new ArrayList<>();
 
-        event = (ScheduleEvent) selectEvent.getObject();
-
-        EventDAO eventDAO = new EventDAO();
-        EventDTO eventDTO = new EventDTO();
-        eventDTO.seteID(Integer.parseInt(this.event.getId()));
-        this.eventMeals = eventDAO.selectMealsByEventDTO(eventDTO);
-        this.eventMealsDataModel = new ListDataModel(this.eventMeals);
-
-
-        MealDAO mealDAO = new MealDAO();
-        this.userMeals = mealDAO.getMealsByUserDTO(this.userBean.getDto());
-        this.userMealDataModel = new ListDataModel(this.userMeals);
-
-        if (event.isEditable()) {
-
-
-            PrimeFaces.current().executeInitScript("showDialog();");
+        for (ScheduleEvent event : scheduleEvents) {
+            List<MealDTO> mealsOfEvent = (List<MealDTO>) event.getData();
+            MealDTO all = createTotal(mealsOfEvent);
+            allMealsOfDay.add(all);
         }
-        this.userBean.setCurrentEventId(event.getId());
+
+        MealDTO all = createTotal(allMealsOfDay);
+
+        ScheduleEvent toReturn = DefaultScheduleEvent.builder()
+
+                .title("Total: " + all.getFats() + "F, " + all.getProtein() + "P, " + all.getCarbs() + "C, " + all.getCalories() + "Calories")
+                .startDate(scheduleEvents.get(0).getStartDate())
+                .endDate(scheduleEvents.get(0).getStartDate())
+                .draggable(false)
+                .resizable(false)
+                .editable(false)
+                .overlapAllowed(true)
+                .allDay(true)
+                .backgroundColor("#25e712")
+                .build();
 
 
+        return toReturn;
     }
 
     public void removeMealFromEvent() {
@@ -396,35 +396,30 @@ public class ScheduleBean implements Serializable {
 
     }
 
+    public void onEventSelect(SelectEvent<ScheduleEvent> selectEvent) {
+        event = (ScheduleEvent) selectEvent.getObject();
+        if (event.isEditable()) {
 
-    private static ScheduleEvent createAllEvent(List<ScheduleEvent> scheduleEvents) {
 
-        List<MealDTO> allMealsOfDay = new ArrayList<>();
+            EventDAO eventDAO = new EventDAO();
+            EventDTO eventDTO = new EventDTO();
+            eventDTO.seteID(Integer.parseInt(this.event.getId()));
+            this.eventMeals = eventDAO.selectMealsByEventDTO(eventDTO);
+            this.eventMealsDataModel = new ListDataModel(this.eventMeals);
 
-        for (ScheduleEvent event : scheduleEvents) {
-            List<MealDTO> mealsOfEvent = (List<MealDTO>) event.getData();
-            MealDTO all = createTotal(mealsOfEvent);
-            allMealsOfDay.add(all);
+
+            MealDAO mealDAO = new MealDAO();
+            this.userMeals = mealDAO.getMealsByUserDTO(this.userBean.getDto());
+            this.userMealDataModel = new ListDataModel(this.userMeals);
+
+
+            PrimeFaces.current().executeInitScript("showDialog();");
+            this.userBean.setCurrentEventId(event.getId());
+
+
         }
 
-        MealDTO all = createTotal(allMealsOfDay);
 
-        ScheduleEvent toReturn = DefaultScheduleEvent.builder()
-
-                .title("Total: " + all.getFats() + "F, " + all.getProtein() + "P, " + all.getCarbs() + "C, " + all.getCalories() + "Calories")
-                .startDate(scheduleEvents.get(0).getStartDate())
-                .endDate(scheduleEvents.get(0).getStartDate())
-                .draggable(false)
-                .resizable(false)
-                .editable(false)
-                .overlapAllowed(true)
-                .allDay(true)
-                .borderColor("#00FF00")
-
-                .build();
-
-
-        return toReturn;
     }
 
 

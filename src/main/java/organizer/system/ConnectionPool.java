@@ -513,15 +513,17 @@ public class ConnectionPool implements Serializable {
         }
 
 
-
-
-
-
-
-
-
-
-
+        try {
+            Statement stmt = connection.createStatement();
+            String query = "CREATE TABLE IF NOT EXISTS  shoppinglist(" +
+                    "uID smallint," +
+                    "iID smallint," +
+                    "amount float)";
+            stmt.executeUpdate(query);
+            stmt.close();
+        } catch (SQLException ex) {
+            LOGGER.log(Level.SEVERE, null, ex);
+        }
 
 
         Statement stmt = null;

@@ -1,13 +1,18 @@
 package organizer.diet.ingredient.dtos;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
 import organizer.diet.nutrients.macronutrient.dtos.MacroDTO;
 import organizer.diet.nutrients.micronutrient.dtos.MicroDTO;
 import organizer.system.Utility;
 
+@Getter
+@Setter
 public class IngredientDTO implements Comparable {
     private int iID;
 
+    private boolean shoppingListIngredient = false;
 
     private float calories;
     private float amount;
@@ -23,6 +28,14 @@ public class IngredientDTO implements Comparable {
     public IngredientDTO() {
         this.macroDTO = new MacroDTO();
     }
+
+
+    public IngredientDTO(String name, String amount) {
+        this.name = name;
+        this.amount = Float.parseFloat(amount);
+
+    }
+
 
     public float getFats() {
         return this.macroDTO.getFatDTO().getAmount();
@@ -85,80 +98,22 @@ public class IngredientDTO implements Comparable {
 
     }
 
-    public int getiID() {
-        return iID;
-    }
-
-    public void setiID(int iID) {
-        this.iID = iID;
-    }
-
-    public float getCalories() {
-        return calories;
-    }
-
-    public void setCalories(float calories) {
-        this.calories = calories;
-    }
-
-    public float getAmount() {
-        return amount;
-    }
-
-    public void setAmount(float amount) {
-        this.amount = amount;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getBrand() {
-        return brand;
-    }
-
-    public void setBrand(String brand) {
-        this.brand = brand;
-    }
-
-    public MacroDTO getMacroDTO() {
-        return macroDTO;
-    }
-
-    public void setMacroDTO(MacroDTO macroDTO) {
-        this.macroDTO = macroDTO;
-    }
-
-    public MicroDTO getMicroDTO() {
-        return microDTO;
-    }
-
-    public void setMicroDTO(MicroDTO microDTO) {
-        this.microDTO = microDTO;
-    }
-
-    public float getUserAmount() {
-        return userAmount;
-    }
-
-    public void setUserAmount(float userAmount) {
-        this.userAmount = userAmount;
-    }
-
-
     @Override
-    public int hashCode(){
+    public int hashCode() {
         return this.iID;
     }
 
     @Override
-    public boolean equals(Object o){
+    public boolean equals(Object o) {
         IngredientDTO toCompare = (IngredientDTO) o;
         return this.iID == toCompare.iID;
+    }
+
+    public String toCSV() {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(this.name + ", ");
+        stringBuilder.append(this.amount + ", ");
+        return stringBuilder.toString();
     }
 }
 

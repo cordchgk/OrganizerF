@@ -56,9 +56,9 @@ public class IngredientSearch {
 
     private void addAllToTrie(List<IngredientDTO> dtos) {
         for (IngredientDTO dto : dtos) {
-            this.add(dto.getName(), dto.getiID());
+            this.add(dto.getName(), dto.getIID());
 
-            this.add(dto.getBrand(), dto.getiID());
+            this.add(dto.getBrand(), dto.getIID());
         }
     }
 
@@ -74,7 +74,7 @@ public class IngredientSearch {
 
     private void addToList(String word, int value) {
         IngredientDTO toAdd = new IngredientDTO();
-        toAdd.setiID(value);
+        toAdd.setIID(value);
         toAdd.setName(word);
         this.allIngredients.add(toAdd);
     }

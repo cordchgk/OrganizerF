@@ -41,7 +41,7 @@ public class IngredientDAO {
             result = statement.executeQuery();
             while (result.next()) {
                 IngredientDTO toAdd = new IngredientDTO();
-                toAdd.setiID(result.getInt(1));
+                toAdd.setIID(result.getInt(1));
                 toAdd.setName(result.getString(2));
                 toAdd.setBrand(result.getString(3));
                 toReturn.add(toAdd);
@@ -68,7 +68,7 @@ public class IngredientDAO {
         try {
             PreparedStatement statement = conn.prepareStatement(query);
             statement.setInt(1, mealDTO.getmID());
-            statement.setInt(2, ingredientDTO.getiID());
+            statement.setInt(2, ingredientDTO.getIID());
             statement.setFloat(3, ingredientDTO.getAmount());
             statement.execute();
 
@@ -135,7 +135,7 @@ public class IngredientDAO {
             result = statement.executeQuery();
             while (result.next()) {
                 IngredientDTO toAdd = new IngredientDTO();
-                toAdd.setiID(result.getInt(1));
+                toAdd.setIID(result.getInt(1));
                 toAdd.setName(result.getString(2));
                 toAdd.setAmount(result.getFloat(3));
                 toAdd.setBrand(result.getString(4));
@@ -167,8 +167,8 @@ public class IngredientDAO {
         try {
             PreparedStatement statement = conn.prepareStatement(query);
             statement.setInt(1, userDTO.getUserID());
-            statement.setInt(2,ingredientDTO.getiID());
-            statement.setFloat(3,ingredientDTO.getAmount());
+            statement.setInt(2, ingredientDTO.getIID());
+            statement.setFloat(3, ingredientDTO.getAmount());
             statement.execute();
 
         } catch (SQLException ex) {
@@ -190,7 +190,7 @@ public class IngredientDAO {
 
             statement.setFloat(1, ingredientDTO.getAmount());
             statement.setInt(2, userDTO.getUserID());
-            statement.setInt(3, ingredientDTO.getiID());
+            statement.setInt(3, ingredientDTO.getIID());
 
             statement.execute();
 
@@ -213,7 +213,7 @@ public class IngredientDAO {
         ResultSet result;
         try {
             statement.setInt(1, userDTO.getUserID());
-            statement.setInt(2, ingredientDTO.getiID());
+            statement.setInt(2, ingredientDTO.getIID());
             statement = conn.prepareStatement(query);
         } catch (SQLException ex) {
             Logger.getLogger(UserDAO.class.getName())

@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.Setter;
 import organizer.diet.ingredient.daos.IngredientDAO;
 import organizer.diet.ingredient.dtos.IngredientDTO;
-import organizer.diet.meal.daos.MealDAO;
 import organizer.diet.system.IngredientSearch;
 import organizer.system.exceptions.DuplicateException;
 import organizer.user.beans.UserBean;
@@ -60,7 +59,7 @@ public class UserIngredientsBean implements Serializable {
             for (Integer i : ids) {
 
                 for (IngredientDTO dto : IngredientSearch.getInstance().getAllIngredients()) {
-                    if (i == dto.getiID()) {
+                    if (i == dto.getIID()) {
                         this.results.add(dto);
                     }
                 }
@@ -107,7 +106,7 @@ public class UserIngredientsBean implements Serializable {
 
 
         for (IngredientDTO dto : this.userIngredients) {
-            if (ingredientDTO.getiID() == dto.getiID()) {
+            if (ingredientDTO.getIID() == dto.getIID()) {
                 return true;
             }
         }

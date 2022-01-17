@@ -1,5 +1,7 @@
 package organizer.diet.meal.beans;
 
+import lombok.Getter;
+import lombok.Setter;
 import organizer.diet.ingredient.daos.IngredientDAO;
 import organizer.diet.ingredient.dtos.IngredientDTO;
 import organizer.diet.meal.daos.MealDAO;
@@ -26,6 +28,8 @@ import java.util.Map;
 
 @Named("mealBean")
 @ViewScoped
+@Getter
+@Setter
 public class MealBean implements Serializable {
     private boolean isAllowed = false;
 
@@ -136,7 +140,7 @@ public class MealBean implements Serializable {
             for (Integer i : ids) {
 
                 for (IngredientDTO dto : IngredientSearch.getInstance().getAllIngredients()) {
-                    if (i == dto.getiID()) {
+                    if (i == dto.getIID()) {
                         this.results.add(dto);
                     }
                 }
@@ -174,7 +178,7 @@ public class MealBean implements Serializable {
 
 
         for (IngredientDTO dto : this.mealDTO.getMealIngredients()) {
-            if (ingredientDTO.getiID() == dto.getiID()) {
+            if (ingredientDTO.getIID() == dto.getIID()) {
                 return true;
             }
         }
@@ -182,47 +186,4 @@ public class MealBean implements Serializable {
     }
 
 
-    public void setAllowed(boolean allowed) {
-        isAllowed = allowed;
-    }
-
-    public String getSearchWord() {
-        return searchWord;
-    }
-
-    public void setSearchWord(String searchWord) {
-        this.searchWord = searchWord;
-    }
-
-    public MealDTO getMealDTO() {
-        return mealDTO;
-    }
-
-    public void setMealDTO(MealDTO mealDTO) {
-        this.mealDTO = mealDTO;
-    }
-
-    public List<IngredientDTO> getResults() {
-        return results;
-    }
-
-    public void setResults(List<IngredientDTO> results) {
-        this.results = results;
-    }
-
-    public DataModel<IngredientDTO> getIngredientsDataModel() {
-        return ingredientsDataModel;
-    }
-
-    public void setIngredientsDataModel(DataModel<IngredientDTO> ingredientsDataModel) {
-        this.ingredientsDataModel = ingredientsDataModel;
-    }
-
-    public DataModel<IngredientDTO> getResultDataModel() {
-        return resultDataModel;
-    }
-
-    public void setResultDataModel(DataModel<IngredientDTO> resultDataModel) {
-        this.resultDataModel = resultDataModel;
-    }
 }

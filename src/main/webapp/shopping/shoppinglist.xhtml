@@ -20,52 +20,81 @@
             <h:form id="form">
                 <div id="mDIV" style="display: inline-block;vertical-align: top;height: auto;width: 70%">
 
-                    <h:dataTable value="#{shoppingListBean.shoppingListDTO.ingredientDTOS}" var="s">
+                    <h:dataTable value="#{shoppingListBean.shoppingListDataModel}" var="s" columnClasses="column"
+                                 style="width: 100%">
 
                         <h:column>
                             <f:facet name="header">Ingredient</f:facet>
                             <div style="text-align: center">
                                 #{s.name}
                             </div>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">Amount</f:facet>
+                            <h:inputText id="change" value="#{s.amount}" autocomplete="off"
+                                         disabled="#{!s.shoppingListIngredient}"
+                                         onkeypress="if (event.keyCode == 13) {onchange(event); return false; }"
+                                         onchange="return event.keyCode !== undefined"
+                            >
+                                <f:ajax listener="#{shoppingListBean.update()}" render="form">
 
+                                </f:ajax>
+
+                            </h:inputText>
 
                         </h:column>
 
+
                         <h:column>
-                            <f:facet name="header">Amount</f:facet>
-                            <div style="text-align: center">
-                                #{s.amount}
-                            </div>
 
-
+                            <h:commandButton value="Remove" actionListener="#{shoppingListBean.remove()}"
+                                             rendered="#{s.shoppingListIngredient}">
+                                <f:ajax render="@form"/>
+                            </h:commandButton>
                         </h:column>
                     </h:dataTable>
 
                 </div>
 
-                <div style="display: inline-block;vertical-align: top;height: auto;width: 70%;border-top: #1e2021 1px">
+                <div style="margin-top: 5%">
 
-
-                    <div>
-
-                        <div>
-
-                            <h:dataTable
-                            >
-                                <h:column>
-                                </h:column>
-
-                            </h:dataTable>
-
-
-                        </div>
-
-
-                    </div>
+                    <h:inputText id="search" value="#{shoppingListBean
+                            .searchWord}" autocomplete="off"
+                                 onkeypress="if (event.keyCode == 13) {onchange(event); return false; }"
+                                 onchange="return event.keyCode !== undefined"
+                    >
+                        <f:ajax listener="#{shoppingListBean
+                                .search()}" render="searchresults"/>
+                    </h:inputText>
 
                 </div>
-            </h:form>
+                <div>
 
+                    <h:dataTable id="searchresults" columnClasses="column" style="width: 100%"
+                                 var="i" width="100" value="#{shoppingListBean.resultDataModel}">
+                        <h:column>
+                            <div style="text-align: center">
+                                #{i.name}
+                            </div>
+                        </h:column>
+                        <h:column>
+                            <div style="text-align: center">
+                                #{i.brand}
+                            </div>
+                        </h:column>
+
+                        <h:column>
+                            <h:commandButton value="Add" action="#{shoppingListBean
+                                    .add()}">
+                                <f:ajax render="@form" execute="@form"/>
+                            </h:commandButton>
+                        </h:column>
+
+                    </h:dataTable>
+                    <h:messages id="messages" style="color: #cc2222"/>
+                </div>
+
+            </h:form>
         </div>
 
 
