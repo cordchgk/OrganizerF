@@ -2,7 +2,7 @@
                 xmlns="http://www.w3.org/1999/xhtml"
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
                 xmlns:h="http://java.sun.com/jsf/html"
-                xmlns:f="http://xmlns.jcp.org/jsf/core">
+                xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:p="http://primefaces.org/ui">
 
     <f:metadata>
         <f:viewParam name="gID" value="#{group.ID}"/>
@@ -169,14 +169,18 @@
 
 
                 function groupMessagesListener(message, channel, event) {
-                    console.log("Test");
-                    console.log(message);
+                    updateMessages();
+                    const newMessageText = document.getElementById('newMessageInput');
+                    newMessageText.innerHTML = "";
 
 
-                    let l = document.getElementById("j_idt97:groupMessages");
-                    console.log(l);
-                    addRow('j_idt97:groupMessages', message);
+                    const theElement = document.getElementById('mDIV');
 
+                    const scrollToBottom = (node) => {
+                        node.scrollTop = node.scrollHeight;
+                    }
+
+                    scrollToBottom(theElement);
                 }
 
                 function addRow(tableID, message) {
@@ -209,15 +213,8 @@
                     newCellName.appendChild(newTextUser);
                     newCellMessage.appendChild(newTextMessage);
                     // To scroll to the bottom of a div
-                    const theElement = document.getElementById('mDIV');
 
-                    const scrollToBottom = (node) => {
-                        node.scrollTop = node.scrollHeight;
-                    }
-
-                    scrollToBottom(theElement);
                 }
-
 
             </script>
             <f:websocket channel="groupMessageChannel" user="#{product.groupUserHash}"
@@ -231,29 +228,35 @@
 
 
                     <h:form>
+                        <p:remoteCommand name="updateMessages" actionListener="#{product.refresh()}" update="@form">
 
-                        <h:dataTable id="groupMessages"
-                                     style="width: 100%;height:100%;"
-                                     columnClasses="column_notificationsFirst,column_notificationsSecond,column_notificationsThird"
-                                     value="#{product.messagesDataModel}"
-                                     var="groupMessagesList">
-                            <h:column>
-                                <h:outputText styleClass="chat_text"
-                                              value="#{groupMessagesList.time}"/>
-                            </h:column>
-                            <h:column>
-                                <h:outputText styleClass="chat_text"
-                                              value="#{groupMessagesList.user}"/>
-                            </h:column>
-                            <h:column>
-                                <h:outputText styleClass="chat_text"
-                                              value="#{groupMessagesList.message}"/>
-                            </h:column>
-                        </h:dataTable>
-                        <h:inputText style="width: 100%" value="#{product.newDTO.message}" id="newMessageInput">
+                        </p:remoteCommand>
+                        <div style="height: 90%;position: revert">
+                            <h:dataTable id="groupMessages"
+                                         style="width: 100%;height:100%;"
+                                         columnClasses="column_notificationsFirst,column_notificationsSecond,column_notificationsThird"
+                                         value="#{product.messagesDataModel}"
+                                         var="groupMessagesList">
+                                <h:column>
+                                    <h:outputText styleClass="chat_text"
+                                                  value="#{groupMessagesList.time}"/>
+                                </h:column>
+                                <h:column>
+                                    <h:outputText styleClass="chat_text"
+                                                  value="#{groupMessagesList.user}"/>
+                                </h:column>
+                                <h:column>
+                                    <h:outputText styleClass="chat_text"
+                                                  value="#{groupMessagesList.message}"/>
+                                </h:column>
+                            </h:dataTable>
+                            <h:inputText style="width: 100%" value="#{product.newDTO.message}" id="newMessageInput"
+                                         autocomplete="off">
 
-                        </h:inputText>
-                        <div style="text-align: center">
+                            </h:inputText>
+                        </div>
+
+                        <div style="text-align: center;height: 10%">
                             <h:commandButton value="Send!" action="#{product.sendMessage()}">
                                 <f:ajax render="newMessageInput" execute="@form"/>
 
@@ -273,8 +276,6 @@
             if (pHeight > mHeight) {
                 document.getElementById("pDIV").style.height = "500px";
             }
-            console.log("mHeight: " + mHeight);
-            console.log("pHeight: " + pHeight);
 
             // To scroll to the bottom of a div
             const theElement = document.getElementById('mDIV');

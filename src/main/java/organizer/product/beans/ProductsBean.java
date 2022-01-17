@@ -1,5 +1,7 @@
 package organizer.product.beans;
 
+import lombok.Getter;
+import lombok.Setter;
 import organizer.group.daos.GroupDAO;
 import organizer.group.daos.GroupMessageDAO;
 import organizer.group.daos.GroupUserDAO;
@@ -43,14 +45,15 @@ import java.util.Map;
  * Created by cord on 05.07.16.
  */
 @Named("product")
-
 @ViewScoped
+@Getter
+@Setter
 public class ProductsBean implements Serializable, Validator {
 
 
     private String GroupUserHash;
 
-
+    private UIComponent saveButton;
     private List<ProductDTO> dto;
     private DataModel<ProductDTO> productModel;
     private DataModel<ProductDTO> newProductModel;
@@ -63,92 +66,8 @@ public class ProductsBean implements Serializable, Validator {
 
     private DataModel messagesDataModel;
 
-
-    public String getGroupUserHash() {
-        return GroupUserHash;
-    }
-
-    public void setGroupUserHash(String groupUserHash) {
-        GroupUserHash = groupUserHash;
-    }
-
     private GroupMessageDTO newDTO;
 
-
-    public DataModel<ProductDTO> getNewProductModel() {
-        return newProductModel;
-    }
-
-    public void setNewProductModel(DataModel<ProductDTO> newProductModel) {
-        this.newProductModel = newProductModel;
-    }
-
-    public UIComponent getdTable() {
-        return dTable;
-    }
-
-    public void setdTable(UIComponent dTable) {
-        this.dTable = dTable;
-    }
-
-    public DataModel<ProductDTO> getProductModel() {
-        return productModel;
-    }
-
-    public void setProductModel(DataModel<ProductDTO> productModel) {
-        this.productModel = productModel;
-    }
-
-    public List<ProductDTO> getDto() {
-        return dto;
-    }
-
-    public void setDto(List<ProductDTO> dto) {
-        this.dto = dto;
-    }
-
-    private UIComponent saveButton;
-
-    public List<GroupMessageDTO> getDtos() {
-        return dtos;
-    }
-
-    public void setDtos(List<GroupMessageDTO> dtos) {
-        this.dtos = dtos;
-    }
-
-    public DataModel getMessagesDataModel() {
-        return messagesDataModel;
-    }
-
-    public void setMessagesDataModel(DataModel messagesDataModel) {
-        this.messagesDataModel = messagesDataModel;
-    }
-
-    public GroupMessageDTO getNewDTO() {
-        return newDTO;
-    }
-
-    public void setNewDTO(GroupMessageDTO newDTO) {
-        this.newDTO = newDTO;
-    }
-
-    public UIComponent getSaveButton() {
-        return saveButton;
-    }
-
-    public void setSaveButton(UIComponent saveButton) {
-        this.saveButton = saveButton;
-    }
-
-
-    public GroupDTO getGroupDTO() {
-        return groupDTO;
-    }
-
-    public void setGroupDTO(GroupDTO groupDTO) {
-        this.groupDTO = groupDTO;
-    }
 
     @Inject
     UserBean userBean;
@@ -267,6 +186,14 @@ public class ProductsBean implements Serializable, Validator {
         ) {
             d.setDiff(0);
         }
+    }
+
+    public void refresh() {
+        this.newDTO = new GroupMessageDTO();
+        GroupMessageDAO groupMessageDAO = new GroupMessageDAO();
+        this.dtos = groupMessageDAO.getMessages(this.groupDTO, userBean.getDto());
+        this.messagesDataModel = new ListDataModel(this.dtos);
+
     }
 
 

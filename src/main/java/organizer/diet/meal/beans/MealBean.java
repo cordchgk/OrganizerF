@@ -29,14 +29,14 @@ import java.util.Map;
 public class MealBean implements Serializable {
     private boolean isAllowed = false;
 
-    private String searchWord;
+
 
     private MealDTO mealDTO;
-
+    private String searchWord;
     private List<IngredientDTO> results;
-
-    private DataModel<IngredientDTO> ingredientsDataModel;
     private DataModel<IngredientDTO> resultDataModel;
+    private DataModel<IngredientDTO> ingredientsDataModel;
+
 
     @Inject
     UserBean userBean;

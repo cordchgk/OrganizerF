@@ -27,7 +27,8 @@ public class NewIngredientBean implements Serializable {
     public void init() {
         this.ingredientDTO = new IngredientDTO();
         this.ingredientDTOList = new ArrayList<>();
-        this.ingredientDTOList.add(this.ingredientDTO);
+
+
         this.ingredientDataModel = new ListDataModel<>(this.ingredientDTOList);
     }
 

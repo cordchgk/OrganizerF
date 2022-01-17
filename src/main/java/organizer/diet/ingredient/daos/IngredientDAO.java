@@ -156,6 +156,30 @@ public class IngredientDAO {
     }
 
 
+    public void addToUserIngredients(UserDTO userDTO, IngredientDTO ingredientDTO)
+            throws DatabaseException, DuplicateException {
+
+
+        Connection conn = pool.getConnection();
+        String query =
+                "INSERT INTO useringredients (uid, iid, amount) VALUES (?,?,?)";
+
+        try {
+            PreparedStatement statement = conn.prepareStatement(query);
+            statement.setInt(1, userDTO.getUserID());
+            statement.setInt(2,ingredientDTO.getiID());
+            statement.setFloat(3,ingredientDTO.getAmount());
+            statement.execute();
+
+        } catch (SQLException ex) {
+            Logger.getLogger(UserDAO.class.getName())
+                    .log(Level.SEVERE, null, ex);
+            pool.releaseConnection(conn);
+        }
+        pool.releaseConnection(conn);
+    }
+
+
     public boolean updateUserIngredientAmount(UserDTO userDTO, IngredientDTO ingredientDTO) {
         Connection conn = pool.getConnection();
         String query = "UPDATE useringredients SET amount = ? WHERE uid = ? AND iid = ?";

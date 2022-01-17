@@ -148,5 +148,17 @@ public class IngredientDTO implements Comparable {
     public void setUserAmount(float userAmount) {
         this.userAmount = userAmount;
     }
+
+
+    @Override
+    public int hashCode(){
+        return this.iID;
+    }
+
+    @Override
+    public boolean equals(Object o){
+        IngredientDTO toCompare = (IngredientDTO) o;
+        return this.iID == toCompare.iID;
+    }
 }
 

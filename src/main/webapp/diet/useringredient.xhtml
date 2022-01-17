@@ -106,6 +106,40 @@
                     </h:dataTable>
 
                 </div>
+                <div style="margin-top: 5%">
+
+                    <h:inputText id="search" value="#{userIngredientBean.searchWord}" autocomplete="off"
+                                 onkeypress="if (event.keyCode == 13) {onchange(event); return false; }"
+                                 onchange="return event.keyCode !== undefined"
+                    >
+                        <f:ajax listener="#{userIngredientBean.search()}" render="searchresults"/>
+                    </h:inputText>
+
+                </div>
+                <div>
+
+                    <h:dataTable id="searchresults" columnClasses="column" style="width: 100%"
+                                 var="i" width="100" value="#{userIngredientBean.resultDataModel}">
+                        <h:column>
+                            <div style="text-align: center">
+                                #{i.name}
+                            </div>
+                        </h:column>
+                        <h:column>
+                            <div style="text-align: center">
+                                #{i.brand}
+                            </div>
+                        </h:column>
+
+                        <h:column>
+                            <h:commandButton value="Add" action="#{userIngredientBean.add()}">
+                                <f:ajax render="form" execute="@form"/>
+                            </h:commandButton>
+                        </h:column>
+
+                    </h:dataTable>
+                    <h:messages id="messages" style="color: #cc2222"/>
+                </div>
 
 
             </h:form>
