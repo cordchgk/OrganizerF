@@ -8,10 +8,7 @@ import organizer.system.exceptions.DuplicateException;
 import organizer.user.daos.UserDAO;
 import organizer.user.dtos.UserDTO;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -21,10 +18,11 @@ public class IngredientDAO {
     ConnectionPool pool = ConnectionPool.getInstance();
 
     public List<IngredientDTO> getIngredientsForTrie() {
-        List<IngredientDTO> toReturn = new ArrayList<>();
-
+        List<IngredientDTO> to_Return = new ArrayList<>();
 
         Connection conn = pool.getConnection();
+
+
         String query = "SELECT ingredient.iid,ingredient.name,ingredient.manufacturer FROM ingredient";
         PreparedStatement statement = null;
         ResultSet result;
@@ -40,11 +38,11 @@ public class IngredientDAO {
 
             result = statement.executeQuery();
             while (result.next()) {
-                IngredientDTO toAdd = new IngredientDTO();
-                toAdd.setIID(result.getInt(1));
-                toAdd.setName(result.getString(2));
-                toAdd.setBrand(result.getString(3));
-                toReturn.add(toAdd);
+                IngredientDTO to_Add = new IngredientDTO();
+                to_Add.setIID(result.getInt(1));
+                to_Add.setName(result.getString(2));
+                to_Add.setBrand(result.getString(3));
+                to_Return.add(to_Add);
             }
         } catch (SQLException ex) {
             Logger.getLogger(UserDAO.class.getName())
@@ -52,12 +50,12 @@ public class IngredientDAO {
             pool.releaseConnection(conn);
         }
         pool.releaseConnection(conn);
-        return toReturn;
+        return to_Return;
 
     }
 
 
-    public void addIngredientToMeal(MealDTO mealDTO, IngredientDTO ingredientDTO)
+    public void addIngredientToMeal(MealDTO m_DTO, IngredientDTO i_DTO)
             throws DatabaseException, DuplicateException {
 
 
@@ -67,9 +65,9 @@ public class IngredientDAO {
 
         try {
             PreparedStatement statement = conn.prepareStatement(query);
-            statement.setInt(1, mealDTO.getmID());
-            statement.setInt(2, ingredientDTO.getIID());
-            statement.setFloat(3, ingredientDTO.getAmount());
+            statement.setInt(1, m_DTO.getMID());
+            statement.setInt(2, i_DTO.getIID());
+            statement.setFloat(3, i_DTO.getAmount());
             statement.execute();
 
         } catch (SQLException ex) {
@@ -81,25 +79,32 @@ public class IngredientDAO {
     }
 
 
-    public void createNewIngredient(IngredientDTO ingredientDTO)
+    public int createNewIngredient(IngredientDTO i_DTO)
             throws DatabaseException, DuplicateException {
 
         Connection conn = pool.getConnection();
+
+        ResultSet r_Set;
+        int iD = 0;
+
         String query =
                 "INSERT INTO ingredient (name, fat, protein, carbs, calories, manufacturer, categorie, co) " +
                         "VALUES (?,?,?,?,?,?,?,?)";
 
         try {
-            PreparedStatement statement = conn.prepareStatement(query);
-            statement.setString(1, ingredientDTO.getName());
-            statement.setFloat(2, ingredientDTO.getFats());
-            statement.setFloat(3, ingredientDTO.getProtein());
-            statement.setFloat(4, ingredientDTO.getCarbs());
-            statement.setFloat(5, ingredientDTO.getCalories());
-            statement.setString(6, ingredientDTO.getBrand());
+            PreparedStatement statement = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+            statement.setString(1, i_DTO.getName());
+            statement.setFloat(2, i_DTO.getFats());
+            statement.setFloat(3, i_DTO.getProtein());
+            statement.setFloat(4, i_DTO.getCarbs());
+            statement.setFloat(5, i_DTO.getCalories());
+            statement.setString(6, i_DTO.getBrand());
             statement.setString(7, "");
             statement.setString(8, "");
-            statement.execute();
+            r_Set = statement.executeQuery();
+            while (r_Set.next()) {
+                iD = r_Set.getInt(1);
+            }
 
         } catch (SQLException ex) {
             Logger.getLogger(UserDAO.class.getName())
@@ -107,10 +112,11 @@ public class IngredientDAO {
             pool.releaseConnection(conn);
         }
         pool.releaseConnection(conn);
+        return iD;
     }
 
-    public List<IngredientDTO> getUserIngredients(UserDTO userDTO) {
-        List<IngredientDTO> toReturn = new ArrayList<>();
+    public List<IngredientDTO> getUserIngredients(UserDTO u_DTO) {
+        List<IngredientDTO> to_Return = new ArrayList<>();
 
 
         Connection conn = pool.getConnection();
@@ -122,7 +128,7 @@ public class IngredientDAO {
         try {
             statement = conn.prepareStatement(query);
 
-            statement.setInt(1, userDTO.getUserID());
+            statement.setInt(1, u_DTO.getUserID());
 
         } catch (SQLException ex) {
             Logger.getLogger(UserDAO.class.getName())
@@ -134,16 +140,16 @@ public class IngredientDAO {
 
             result = statement.executeQuery();
             while (result.next()) {
-                IngredientDTO toAdd = new IngredientDTO();
-                toAdd.setIID(result.getInt(1));
-                toAdd.setName(result.getString(2));
-                toAdd.setAmount(result.getFloat(3));
-                toAdd.setBrand(result.getString(4));
-                toAdd.setFats(result.getFloat(5));
-                toAdd.setProtein(result.getFloat(6));
-                toAdd.setCarbs(result.getFloat(7));
-                toAdd.setCalories(result.getFloat(8));
-                toReturn.add(toAdd);
+                IngredientDTO to_Add = new IngredientDTO();
+                to_Add.setIID(result.getInt(1));
+                to_Add.setName(result.getString(2));
+                to_Add.setAmount(result.getFloat(3));
+                to_Add.setBrand(result.getString(4));
+                to_Add.setFats(result.getFloat(5));
+                to_Add.setProtein(result.getFloat(6));
+                to_Add.setCarbs(result.getFloat(7));
+                to_Add.setCalories(result.getFloat(8));
+                to_Return.add(to_Add);
             }
         } catch (SQLException ex) {
             Logger.getLogger(UserDAO.class.getName())
@@ -151,12 +157,12 @@ public class IngredientDAO {
             pool.releaseConnection(conn);
         }
         pool.releaseConnection(conn);
-        return toReturn;
+        return to_Return;
 
     }
 
 
-    public void addToUserIngredients(UserDTO userDTO, IngredientDTO ingredientDTO)
+    public void addToUserIngredients(UserDTO u_DTO, IngredientDTO i_DTO)
             throws DatabaseException, DuplicateException {
 
 
@@ -166,9 +172,9 @@ public class IngredientDAO {
 
         try {
             PreparedStatement statement = conn.prepareStatement(query);
-            statement.setInt(1, userDTO.getUserID());
-            statement.setInt(2, ingredientDTO.getIID());
-            statement.setFloat(3, ingredientDTO.getAmount());
+            statement.setInt(1, u_DTO.getUserID());
+            statement.setInt(2, i_DTO.getIID());
+            statement.setFloat(3, i_DTO.getAmount());
             statement.execute();
 
         } catch (SQLException ex) {
@@ -180,7 +186,7 @@ public class IngredientDAO {
     }
 
 
-    public boolean updateUserIngredientAmount(UserDTO userDTO, IngredientDTO ingredientDTO) {
+    public boolean updateUserIngredientAmount(UserDTO u_DTO, IngredientDTO i_DTO) {
         Connection conn = pool.getConnection();
         String query = "UPDATE useringredients SET amount = ? WHERE uid = ? AND iid = ?";
 
@@ -188,9 +194,9 @@ public class IngredientDAO {
         try {
             PreparedStatement statement = conn.prepareStatement(query);
 
-            statement.setFloat(1, ingredientDTO.getAmount());
-            statement.setInt(2, userDTO.getUserID());
-            statement.setInt(3, ingredientDTO.getIID());
+            statement.setFloat(1, i_DTO.getAmount());
+            statement.setInt(2, u_DTO.getUserID());
+            statement.setInt(3, i_DTO.getIID());
 
             statement.execute();
 
@@ -206,36 +212,6 @@ public class IngredientDAO {
         return true;
     }
 
-    private boolean contains(UserDTO userDTO, IngredientDTO ingredientDTO) {
-        Connection conn = pool.getConnection();
-        String query = "SELECT useringredients.uid,useringredients.iid FROM useringredients WHERE useringredients.uid = ? AND useringredients.iid = ?";
-        PreparedStatement statement = null;
-        ResultSet result;
-        try {
-            statement.setInt(1, userDTO.getUserID());
-            statement.setInt(2, ingredientDTO.getIID());
-            statement = conn.prepareStatement(query);
-        } catch (SQLException ex) {
-            Logger.getLogger(UserDAO.class.getName())
-                    .log(Level.SEVERE, null, ex);
-            pool.releaseConnection(conn);
-        }
-        try {
-
-
-            result = statement.executeQuery();
-            while (result.next()) {
-                return true;
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(UserDAO.class.getName())
-                    .log(Level.SEVERE, null, ex);
-            pool.releaseConnection(conn);
-        }
-        pool.releaseConnection(conn);
-
-        return false;
-    }
 
 
 }

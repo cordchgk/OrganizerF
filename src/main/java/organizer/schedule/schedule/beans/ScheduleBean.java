@@ -37,7 +37,6 @@ import organizer.diet.meal.daos.MealDAO;
 import organizer.diet.meal.dtos.MealDTO;
 import organizer.schedule.event.daos.EventDAO;
 import organizer.schedule.event.dtos.EventDTO;
-import organizer.schedule.schedule.service.ExtenderService;
 import organizer.system.enums.FaceletPath;
 import organizer.system.exceptions.DuplicateException;
 import organizer.user.beans.UserBean;
@@ -58,7 +57,6 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static organizer.schedule.event.dtos.EventDTO.getFromScheduleEvent;
 
@@ -68,179 +66,97 @@ import static organizer.schedule.event.dtos.EventDTO.getFromScheduleEvent;
 @Setter
 public class ScheduleBean implements Serializable {
 
-
-    @Inject
-    private ExtenderService extenderService;
-
-    private ScheduleModel eventModel;
-
-
-    private ScheduleEvent<?> event = new DefaultScheduleEvent<>();
-
-    private boolean slotEventOverlap = true;
-    private boolean showWeekNumbers = false;
-    private boolean showHeader = true;
-    private boolean draggable = true;
-    private boolean resizable = true;
-    private boolean showWeekends = true;
-    private boolean tooltip = true;
-    private boolean allDaySlot = true;
-    private boolean rtl = false;
-
-    private double aspectRatio = Double.MIN_VALUE;
-
-    private String leftHeaderTemplate = "prev,next today";
-    private String centerHeaderTemplate = "title";
-    private String rightHeaderTemplate = "dayGridMonth,timeGridWeek,timeGridDay,listYear";
-    private String nextDayThreshold = "09:00:00";
-    private String weekNumberCalculation = "local";
-    private String weekNumberCalculator = "date.getTime()";
-    private String displayEventEnd;
-    private String timeFormat;
-    private String slotDuration = "00:30:00";
-    private String slotLabelInterval;
-    private String slotLabelFormat;
-    private String scrollTime = "06:00:00";
-    private String minTime = "04:00:00";
-    private String maxTime = "20:00:00";
-    private String locale = "en";
     private String serverTimeZone = ZoneId.systemDefault().toString();
-    private String timeZone = "";
-    private String clientTimeZone = "local";
-    private String columnHeaderFormat = "";
-    private String view = "timeGridWeek";
-    private String height = "auto";
 
-    private String extenderCode = "// Write your code here or select an example from above";
-    private String selectedExtenderExample = "";
 
-    private Map<String, ExtenderService.ExtenderExample> extenderExamples;
+    private ScheduleEvent<?> e;
+    private ScheduleModel s_M;
 
-    private List<MealDTO> userMeals;
+    private List<MealDTO> u_M_L;
+    private DataModel<MealDTO> u_M_DM;
+    private List<MealDTO> e_M_L;
+    private DataModel<MealDTO> e_M_DM;
 
-    private DataModel userMealDataModel;
-
-    private List<MealDTO> eventMeals;
-
-    private DataModel eventMealsDataModel;
-
+    private EventDAO e_DAO;
+    private MealDAO m_DAO;
 
     @Inject
-    private UserBean userBean;
-
+    private UserBean u_Bean;
 
     @PostConstruct
     public void init() {
 
-        if (this.userBean.getDto().getUserID() == null) {
+
+        if (this.u_Bean.getDto().getUserID() == null) {
             this.allowedAndLoggedIn();
         } else {
-            eventModel = new DefaultScheduleModel();
+            this.s_M = new DefaultScheduleModel();
+            this.e = new DefaultScheduleEvent<>();
+
+            this.e_M_L = new ArrayList<>();
+
+            this.e_DAO = new EventDAO();
+            this.m_DAO = new MealDAO();
 
 
-            List<EventDTO> userEvents = new EventDAO().selectByUserDto(userBean.getDto());
+            List<EventDTO> u_E_L = new EventDAO().selectByUserDto(u_Bean.getDto());
 
 
-            for (EventDTO eventDTO : userEvents) {
+            for (EventDTO eventDTO : u_E_L) {
 
-                event = DefaultScheduleEvent.builder()
+                e = DefaultScheduleEvent.builder()
                         .editable(true)
-                        .id(String.valueOf(eventDTO.geteID()))
+                        .id(String.valueOf(eventDTO.getEID()))
                         .title(eventDTO.getName())
                         .startDate(eventDTO.getStart())
                         .endDate(eventDTO.getEnd())
                         .description(eventDTO.getName())
                         .overlapAllowed(true)
-                        .data(eventDTO.getMealDTOList())
+                        .data(eventDTO.getM_DTO_L())
                         .build();
 
-                eventModel.addEvent(event);
+                s_M.addEvent(e);
 
             }
 
             this.createTotals();
 
+            this.buildUserMeals();
+            this.e = this.s_M.getEvent(this.u_Bean.getCurrentEventId());
 
-            MealDAO mealDAO = new MealDAO();
-            this.userMeals = mealDAO.getMealsByUserDTO(this.userBean.getDto());
-            this.userMealDataModel = new ListDataModel(this.userMeals);
+            EventDTO e_DTO = new EventDTO();
+            if (this.u_Bean.getCurrentEventId() != null) {
+                e_DTO.setEID(Integer.parseInt(this.u_Bean.getCurrentEventId()));
 
-
-            this.event = this.eventModel.getEvent(this.userBean.getCurrentEventId());
-
-            EventDAO eventDAO = new EventDAO();
-            EventDTO eventDTO = new EventDTO();
-            if (this.userBean.getCurrentEventId() != null) {
-                eventDTO.seteID(Integer.parseInt(this.userBean.getCurrentEventId()));
-
-                this.eventMeals = eventDAO.selectMealsByEventDTO(eventDTO);
-                this.eventMealsDataModel = new ListDataModel(this.eventMeals);
+                this.buildEventMeals(e_DTO);
 
             }
 
 
-            extenderExamples = extenderService.createExtenderExamples();
         }
 
-    }
-
-    private void createTotals() {
-        HashMap<LocalDate, List<ScheduleEvent>> hashMap = new HashMap();
-
-        for (ScheduleEvent event : this.eventModel.getEvents()) {
-
-            if (!hashMap.containsKey(event.getStartDate().toLocalDate())) {
-
-                hashMap.put(event.getStartDate().toLocalDate(), new ArrayList<>());
-            }
-            hashMap.get(event.getStartDate().toLocalDate()).add(event);
-
-        }
-
-        for (LocalDate localDate : hashMap.keySet()) {
-            ScheduleEvent e = createAllEvent(hashMap.get(localDate));
-            eventModel.addEvent(e);
-        }
-
-    }
-
-
-    public ScheduleModel getEventModel() {
-        if (eventModel == null) {
-            eventModel = new DefaultScheduleModel();
-        }
-
-        return eventModel;
     }
 
 
     public void addEvent() {
 
-        if (event.isAllDay()) {
-            // see https://github.com/primefaces/primefaces/issues/1164
-            if (event.getStartDate().toLocalDate().equals(event.getEndDate().toLocalDate())) {
-                event.setEndDate(event.getEndDate().plusDays(1));
-            }
-        }
-        EventDAO eventDAO = new EventDAO();
-        if (event.getId() == null) {
+        if (e.getId() == null) {
             try {
 
-                EventDTO toAdd = getFromScheduleEvent(event);
-                toAdd.setDate(event.getStartDate().toLocalDate());
-                toAdd.seteID(0);
-
-                eventDAO.createNewEvent(toAdd, this.userBean.getDto());
+                EventDTO t_A = getFromScheduleEvent(e);
+                t_A.setDate(e.getStartDate().toLocalDate());
+                t_A.setEID(0);
+                this.e_DAO.createNewEvent(t_A, this.u_Bean.getDto());
             } catch (DuplicateException e) {
                 e.printStackTrace();
             }
-            eventModel.addEvent(event);
+
 
         } else {
-            eventModel.updateEvent(event);
-            EventDTO toAdd = getFromScheduleEvent(event);
+            s_M.updateEvent(e);
+            EventDTO toAdd = getFromScheduleEvent(e);
             try {
-                eventDAO.updateEvent(toAdd);
+                this.e_DAO.updateEvent(toAdd);
             } catch (DuplicateException e) {
                 e.printStackTrace();
             }
@@ -250,102 +166,51 @@ public class ScheduleBean implements Serializable {
         this.init();
 
 
-        event = new DefaultScheduleEvent<>();
+        e = new DefaultScheduleEvent<>();
     }
 
-    private static ScheduleEvent createAllEvent(List<ScheduleEvent> scheduleEvents) {
-
-        List<MealDTO> allMealsOfDay = new ArrayList<>();
-
-        for (ScheduleEvent event : scheduleEvents) {
-            List<MealDTO> mealsOfEvent = (List<MealDTO>) event.getData();
-            MealDTO all = createTotal(mealsOfEvent);
-            allMealsOfDay.add(all);
-        }
-
-        MealDTO all = createTotal(allMealsOfDay);
-
-        ScheduleEvent toReturn = DefaultScheduleEvent.builder()
-
-                .title("Total: " + all.getFats() + "F, " + all.getProtein() + "P, " + all.getCarbs() + "C, " + all.getCalories() + "Calories")
-                .startDate(scheduleEvents.get(0).getStartDate())
-                .endDate(scheduleEvents.get(0).getStartDate())
-                .draggable(false)
-                .resizable(false)
-                .editable(false)
-                .overlapAllowed(true)
-                .allDay(true)
-                .backgroundColor("#25e712")
-                .build();
-
-
-        return toReturn;
-    }
 
     public void removeMealFromEvent() {
-        EventDTO eventDTO = new EventDTO();
-        eventDTO.seteID(Integer.parseInt(this.event.getId()));
+        EventDTO e_DTO = new EventDTO();
+        e_DTO.setEID(Integer.parseInt(this.e.getId()));
 
 
-        MealDTO mealDTO = (MealDTO) this.eventMealsDataModel.getRowData();
-
-        System.out.println(mealDTO.getmID());
-        EventDAO eventDAO = new EventDAO();
+        MealDTO m_DTO = this.e_M_DM.getRowData();
 
 
-        eventDAO.deleteMealFromEvent(eventDTO, mealDTO);
+        this.e_DAO.deleteMealFromEvent(e_DTO, m_DTO);
 
+        this.buildEventMeals(e_DTO);
 
-        this.eventMeals = eventDAO.selectMealsByEventDTO(eventDTO);
-        this.eventMealsDataModel = new ListDataModel(this.eventMeals);
-
-
-        this.userBean.setCurrentEventId(event.getId());
+        this.u_Bean.setCurrentEventId(e.getId());
 
     }
 
     public void addMealToEvent() {
 
-        EventDTO eventDTO = new EventDTO();
-        eventDTO.seteID(Integer.parseInt(this.event.getId()));
+        EventDTO e_DTO = new EventDTO();
+        e_DTO.setEID(Integer.parseInt(this.e.getId()));
 
-        MealDTO mealDTO = (MealDTO) this.userMealDataModel.getRowData();
+        MealDTO mealDTO = this.u_M_DM.getRowData();
 
         EventDAO eventDAO = new EventDAO();
 
         try {
-            eventDAO.addMealToEvent(eventDTO, mealDTO);
+            eventDAO.addMealToEvent(e_DTO, mealDTO);
         } catch (DuplicateException e) {
             e.printStackTrace();
         }
 
 
-        this.eventMeals = eventDAO.selectMealsByEventDTO(eventDTO);
-        this.eventMealsDataModel = new ListDataModel(this.eventMeals);
+        this.buildEventMeals(e_DTO);
+        this.buildUserMeals();
 
-
-        MealDAO mealDAO = new MealDAO();
-        this.userMeals = mealDAO.getMealsByUserDTO(this.userBean.getDto());
-        this.userMealDataModel = new ListDataModel(this.userMeals);
-
-    }
-
-
-    public void onViewChange(SelectEvent<String> selectEvent) {
-        view = selectEvent.getObject();
-        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "View Changed", "View:" + view);
-        addMessage(message);
-    }
-
-
-    public void setEventModel(ScheduleModel eventModel) {
-        this.eventModel = eventModel;
     }
 
 
     public void onDateSelect(SelectEvent<LocalDateTime> selectEvent) {
 
-        event = DefaultScheduleEvent.builder()
+        e = DefaultScheduleEvent.builder()
                 .editable(true)
                 .startDate(selectEvent.getObject())
                 .endDate(selectEvent.getObject().plusHours(1))
@@ -371,54 +236,36 @@ public class ScheduleBean implements Serializable {
 
     public void onEventDelete() {
         String eventId = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("eventId");
-        if (event != null) {
-            ScheduleEvent<?> event = eventModel.getEvent(eventId);
-            eventModel.deleteEvent(event);
+        if (e != null) {
+            ScheduleEvent<?> event = s_M.getEvent(eventId);
+            s_M.deleteEvent(event);
         }
     }
 
-
-    private void addMessage(FacesMessage message) {
-        FacesContext.getCurrentInstance().addMessage(null, message);
-    }
-
-
-    public void allowedAndLoggedIn() {
-
-        FacesContext fc = FacesContext.getCurrentInstance();
-
-        if (this.userBean.getDto().getUserID() == null) {
-            ConfigurableNavigationHandler nav = (ConfigurableNavigationHandler) fc.getApplication()
-                    .getNavigationHandler();
-            nav.performNavigation(FaceletPath.LOGIN.getPath());
-        }
-
-
-    }
 
     public void onEventSelect(SelectEvent<ScheduleEvent> selectEvent) {
-        event = (ScheduleEvent) selectEvent.getObject();
-        if (event.isEditable()) {
+        e = (ScheduleEvent) selectEvent.getObject();
+        if (e.isEditable()) {
 
 
-            EventDAO eventDAO = new EventDAO();
             EventDTO eventDTO = new EventDTO();
-            eventDTO.seteID(Integer.parseInt(this.event.getId()));
-            this.eventMeals = eventDAO.selectMealsByEventDTO(eventDTO);
-            this.eventMealsDataModel = new ListDataModel(this.eventMeals);
+            eventDTO.setEID(Integer.parseInt(this.e.getId()));
+            this.buildEventMeals(eventDTO);
 
-
-            MealDAO mealDAO = new MealDAO();
-            this.userMeals = mealDAO.getMealsByUserDTO(this.userBean.getDto());
-            this.userMealDataModel = new ListDataModel(this.userMeals);
-
+            this.buildUserMeals();
 
             PrimeFaces.current().executeInitScript("showDialog();");
-            this.userBean.setCurrentEventId(event.getId());
+            this.u_Bean.setCurrentEventId(e.getId());
 
 
         }
 
+
+    }
+
+    private void buildEventMeals(EventDTO e_DTO) {
+        this.e_M_L = this.e_DAO.selectMealsByEventDTO(e_DTO);
+        this.e_M_DM = new ListDataModel(this.e_M_L);
 
     }
 
@@ -449,5 +296,88 @@ public class ScheduleBean implements Serializable {
         return toReturn;
     }
 
+
+    private void createTotals() {
+        HashMap<LocalDate, List<ScheduleEvent>> hashMap = new HashMap();
+
+        for (ScheduleEvent event : this.s_M.getEvents()) {
+
+            if (!hashMap.containsKey(event.getStartDate().toLocalDate())) {
+
+                hashMap.put(event.getStartDate().toLocalDate(), new ArrayList<>());
+            }
+            hashMap.get(event.getStartDate().toLocalDate()).add(event);
+
+        }
+
+        for (LocalDate localDate : hashMap.keySet()) {
+            ScheduleEvent e = createAllEvent(hashMap.get(localDate));
+            s_M.addEvent(e);
+        }
+
+    }
+
+    private void buildUserMeals() {
+        this.u_M_L = this.m_DAO.getMealsByUserDTO(this.u_Bean.getDto());
+        this.u_M_DM = new ListDataModel(this.u_M_L);
+
+    }
+
+
+    private void addMessage(FacesMessage message) {
+        FacesContext.getCurrentInstance().addMessage(null, message);
+    }
+
+
+    public void allowedAndLoggedIn() {
+
+        FacesContext fc = FacesContext.getCurrentInstance();
+
+        if (this.u_Bean.getDto().getUserID() == null) {
+            ConfigurableNavigationHandler nav = (ConfigurableNavigationHandler) fc.getApplication()
+                    .getNavigationHandler();
+            nav.performNavigation(FaceletPath.LOGIN.getPath());
+        }
+
+
+    }
+
+
+    public ScheduleModel getS_M() {
+        if (s_M == null) {
+            s_M = new DefaultScheduleModel();
+        }
+
+        return s_M;
+    }
+
+    private static ScheduleEvent createAllEvent(List<ScheduleEvent> s_E_L) {
+
+        List<MealDTO> allMealsOfDay = new ArrayList<>();
+
+        for (ScheduleEvent event : s_E_L) {
+            List<MealDTO> mealsOfEvent = (List<MealDTO>) event.getData();
+            MealDTO all = createTotal(mealsOfEvent);
+            allMealsOfDay.add(all);
+        }
+
+        MealDTO total = createTotal(allMealsOfDay);
+
+        ScheduleEvent t_R = DefaultScheduleEvent.builder()
+
+                .title("Total: " + total.getFats() + "F, " + total.getProtein() + "P, " + total.getCarbs() + "C, " + total.getCalories() + "Calories")
+                .startDate(s_E_L.get(0).getStartDate())
+                .endDate(s_E_L.get(0).getStartDate())
+                .draggable(false)
+                .resizable(false)
+                .editable(false)
+                .overlapAllowed(true)
+                .allDay(true)
+                .backgroundColor("#25e712")
+                .build();
+
+
+        return t_R;
+    }
 
 }

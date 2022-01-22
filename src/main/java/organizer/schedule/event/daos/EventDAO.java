@@ -3,8 +3,6 @@ package organizer.schedule.event.daos;
 import organizer.diet.meal.daos.MealDAO;
 import organizer.diet.meal.dtos.MealDTO;
 import organizer.group.daos.GroupDAO;
-import organizer.group.dtos.GroupDTO;
-import organizer.product.dtos.ProductDTO;
 import organizer.schedule.event.dtos.EventDTO;
 import organizer.system.ConnectionPool;
 import organizer.system.exceptions.DatabaseException;
@@ -12,7 +10,6 @@ import organizer.system.exceptions.DuplicateException;
 import organizer.user.daos.UserDAO;
 import organizer.user.dtos.UserDTO;
 
-import javax.xml.registry.infomodel.User;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,9 +21,9 @@ public class EventDAO {
     ConnectionPool pool = ConnectionPool.getInstance();
 
 
-    public List<EventDTO> selectByUserDto(UserDTO userDTO) throws DatabaseException {
+    public List<EventDTO> selectByUserDto(UserDTO u_DTO) throws DatabaseException {
 
-        List<EventDTO> toReturn = new ArrayList<>();
+        List<EventDTO> t_R = new ArrayList<>();
 
 
         Connection conn = pool.getConnection();
@@ -37,7 +34,7 @@ public class EventDAO {
         try {
 
             statement = conn.prepareStatement(query);
-            statement.setInt(1, userDTO.getUserID());
+            statement.setInt(1, u_DTO.getUserID());
         } catch (SQLException ex) {
             Logger.getLogger(UserDAO.class.getName())
                     .log(Level.SEVERE, null, ex);
@@ -47,13 +44,13 @@ public class EventDAO {
 
             result = statement.executeQuery();
             while (result.next()) {
-                EventDTO toADD = new EventDTO();
-                toADD.setName(result.getString(1));
-                toADD.setStart(result.getTime(2).toLocalTime().atDate(result.getDate(4).toLocalDate()));
-                toADD.setEnd(result.getTime(3).toLocalTime().atDate(result.getDate(4).toLocalDate()));
-                toADD.seteID(result.getInt(5));
-                toADD.setMealDTOList(this.selectMealsByEventDTO(toADD));
-                toReturn.add(toADD);
+                EventDTO t_A = new EventDTO();
+                t_A.setName(result.getString(1));
+                t_A.setStart(result.getTime(2).toLocalTime().atDate(result.getDate(4).toLocalDate()));
+                t_A.setEnd(result.getTime(3).toLocalTime().atDate(result.getDate(4).toLocalDate()));
+                t_A.setEID(result.getInt(5));
+                t_A.setM_DTO_L(this.selectMealsByEventDTO(t_A));
+                t_R.add(t_A);
             }
         } catch (SQLException ex) {
             Logger.getLogger(UserDAO.class.getName())
@@ -61,11 +58,11 @@ public class EventDAO {
             pool.releaseConnection(conn);
         }
         pool.releaseConnection(conn);
-        return toReturn;
+        return t_R;
     }
 
 
-    public boolean updateEvent(EventDTO eventDTO)
+    public boolean updateEvent(EventDTO e_DTO)
             throws DatabaseException, DuplicateException {
 
         Connection conn = pool.getConnection();
@@ -74,10 +71,10 @@ public class EventDAO {
 
         try {
             PreparedStatement statement = conn.prepareStatement(query);
-            statement.setString(1, eventDTO.getName());
-            statement.setTimestamp(2, Timestamp.valueOf(eventDTO.getStart()));
-            statement.setTimestamp(3, Timestamp.valueOf(eventDTO.getEnd()));
-            statement.setInt(4, eventDTO.geteID());
+            statement.setString(1, e_DTO.getName());
+            statement.setTimestamp(2, Timestamp.valueOf(e_DTO.getStart()));
+            statement.setTimestamp(3, Timestamp.valueOf(e_DTO.getEnd()));
+            statement.setInt(4, e_DTO.getEID());
 
             statement.execute();
 
@@ -92,7 +89,7 @@ public class EventDAO {
     }
 
 
-    public boolean createNewEvent(EventDTO eventDTO, UserDTO userDTO)
+    public boolean createNewEvent(EventDTO e_DTO, UserDTO u_DTO)
             throws DatabaseException, DuplicateException {
 
         Connection conn = pool.getConnection();
@@ -107,10 +104,10 @@ public class EventDAO {
 
         try {
 
-            statement.setString(1, eventDTO.getName());
-            statement.setTimestamp(2, Timestamp.valueOf(eventDTO.getStart()));
-            statement.setTimestamp(3, Timestamp.valueOf(eventDTO.getEnd()));
-            statement.setDate(4, Date.valueOf(eventDTO.getDate()));
+            statement.setString(1, e_DTO.getName());
+            statement.setTimestamp(2, Timestamp.valueOf(e_DTO.getStart()));
+            statement.setTimestamp(3, Timestamp.valueOf(e_DTO.getEnd()));
+            statement.setDate(4, Date.valueOf(e_DTO.getDate()));
 
 
         } catch (SQLException ex) {
@@ -125,8 +122,8 @@ public class EventDAO {
             statement.executeUpdate();
             ResultSet resultSet = statement.getGeneratedKeys();
             while (resultSet.next()) {
-                eventDTO.seteID(resultSet.getInt(1));
-                this.insertIntoEventUsers(eventDTO, userDTO);
+                e_DTO.setEID(resultSet.getInt(1));
+                this.insertIntoEventUsers(e_DTO, u_DTO);
             }
 
         } catch (SQLException ex) {
@@ -141,7 +138,7 @@ public class EventDAO {
     }
 
 
-    private boolean insertIntoEventUsers(EventDTO eventDTO, UserDTO userDTO)
+    private boolean insertIntoEventUsers(EventDTO e_DTO, UserDTO u_DTO)
             throws DatabaseException, DuplicateException {
 
         Connection conn = pool.getConnection();
@@ -150,8 +147,8 @@ public class EventDAO {
 
         try {
             PreparedStatement statement = conn.prepareStatement(query);
-            statement.setInt(1, eventDTO.geteID());
-            statement.setInt(2, userDTO.getUserID());
+            statement.setInt(1, e_DTO.getEID());
+            statement.setInt(2, u_DTO.getUserID());
             statement.execute();
 
         } catch (SQLException ex) {
@@ -165,43 +162,12 @@ public class EventDAO {
     }
 
 
-    private List<UserDTO> selectByEventDTO(EventDTO eventDTO) throws DatabaseException {
-
-        List<UserDTO> toReturn = new ArrayList<>();
 
 
-        Connection conn = pool.getConnection();
-        String query = "SELECT event.name,event.starttime,event.endtime FROM event,eventusers,users WHERE " +
-                "event.eid = eventusers.eid AND eventusers.uid = users.userid AND userid = ?";
-        PreparedStatement statement = null;
-        ResultSet result;
-        try {
-            statement = conn.prepareStatement(query);
-        } catch (SQLException ex) {
-            Logger.getLogger(UserDAO.class.getName())
-                    .log(Level.SEVERE, null, ex);
-            pool.releaseConnection(conn);
-        }
-        try {
 
+    public List<MealDTO> selectMealsByEventDTO(EventDTO e_DTO) throws DatabaseException {
 
-            result = statement.executeQuery();
-            while (result.next()) {
-                EventDTO toADD = new EventDTO();
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(UserDAO.class.getName())
-                    .log(Level.SEVERE, null, ex);
-            pool.releaseConnection(conn);
-        }
-        pool.releaseConnection(conn);
-        return toReturn;
-    }
-
-
-    public List<MealDTO> selectMealsByEventDTO(EventDTO eventDTO) throws DatabaseException {
-
-        List<MealDTO> toReturn = new ArrayList<>();
+        List<MealDTO> t_R = new ArrayList<>();
 
 
         Connection conn = pool.getConnection();
@@ -211,7 +177,7 @@ public class EventDAO {
         try {
 
             statement = conn.prepareStatement(query);
-            statement.setInt(1, eventDTO.geteID());
+            statement.setInt(1, e_DTO.getEID());
         } catch (SQLException ex) {
             Logger.getLogger(UserDAO.class.getName())
                     .log(Level.SEVERE, null, ex);
@@ -221,15 +187,12 @@ public class EventDAO {
 
             result = statement.executeQuery();
             while (result.next()) {
-                MealDTO toAdd = new MealDTO();
-                toAdd.setmID(result.getInt(1));
-                toAdd.setName(result.getString(2));
-                toAdd.setMealIngredients(new MealDAO().getIngredientByMealDTO(toAdd));
-
-                toAdd.calculateCalories();
-
-
-                toReturn.add(toAdd);
+                MealDTO t_A = new MealDTO();
+                t_A.setMID(result.getInt(1));
+                t_A.setName(result.getString(2));
+                t_A.setMealIngredients(new MealDAO().getIngredientByMealDTO(t_A));
+                t_A.calculateCalories();
+                t_R.add(t_A);
 
             }
         } catch (SQLException ex) {
@@ -238,11 +201,11 @@ public class EventDAO {
             pool.releaseConnection(conn);
         }
         pool.releaseConnection(conn);
-        return toReturn;
+        return t_R;
     }
 
 
-    public void deleteMealFromEvent(EventDTO eventDTO, MealDTO mealDTO) {
+    public void deleteMealFromEvent(EventDTO e_DTO, MealDTO m_DTO) {
 
 
         Connection conn = pool.getConnection();
@@ -257,8 +220,8 @@ public class EventDAO {
             pool.releaseConnection(conn);
         }
         try {
-            statement.setInt(1, eventDTO.geteID());
-            statement.setInt(2, mealDTO.getmID());
+            statement.setInt(1, e_DTO.getEID());
+            statement.setInt(2, m_DTO.getMID());
             statement.executeUpdate();
 
         } catch (SQLException ex) {
@@ -271,7 +234,7 @@ public class EventDAO {
     }
 
 
-    public void addMealToEvent(EventDTO eventDTO, MealDTO mealDTO)
+    public void addMealToEvent(EventDTO e_DTO, MealDTO m_DTO)
             throws DatabaseException, DuplicateException {
 
         Connection conn = pool.getConnection();
@@ -286,8 +249,8 @@ public class EventDAO {
 
         try {
 
-            statement.setInt(1, eventDTO.geteID());
-            statement.setInt(2, mealDTO.getmID());
+            statement.setInt(1, e_DTO.getEID());
+            statement.setInt(2, m_DTO.getMID());
             statement.execute();
 
         } catch (SQLException ex) {

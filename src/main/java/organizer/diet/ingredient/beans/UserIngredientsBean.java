@@ -27,12 +27,14 @@ import java.util.List;
 @Setter
 public class UserIngredientsBean implements Serializable {
 
-    private List<IngredientDTO> userIngredients;
-    private DataModel userIngredientsDataModel;
+    private List<IngredientDTO> u_I_L;
+    private DataModel u_I_DM;
 
-    private String searchWord;
-    private List<IngredientDTO> results;
-    private DataModel<IngredientDTO> resultDataModel;
+    private String s_W;
+    private List<IngredientDTO> s_R_L;
+    private DataModel<IngredientDTO> s_R_DM;
+
+    private IngredientDAO i_DAO;
 
 
     @Inject
@@ -41,59 +43,56 @@ public class UserIngredientsBean implements Serializable {
     @PostConstruct
     public void init() {
 
-        IngredientDAO ingredientDAO = new IngredientDAO();
-        this.userIngredients = ingredientDAO.getUserIngredients(this.userBean.getDto());
-        this.userIngredientsDataModel = new ListDataModel(this.userIngredients);
+        this.i_DAO = new IngredientDAO();
+        this.build();
     }
 
 
     public void search() {
 
-        this.results = new ArrayList<>();
-        this.resultDataModel = new ListDataModel<>(this.results);
 
-        List<Integer> ids = IngredientSearch.getInstance().search(searchWord);
+        this.s_R_L = new ArrayList<>();
+        this.s_R_DM = new ListDataModel<>(this.s_R_L);
+
+        List<Integer> ids = IngredientSearch.getInstance().search(s_W);
 
 
         if (!ids.isEmpty()) {
             for (Integer i : ids) {
 
-                for (IngredientDTO dto : IngredientSearch.getInstance().getAllIngredients()) {
-                    if (i == dto.getIID()) {
-                        this.results.add(dto);
+                for (IngredientDTO to_Add : IngredientSearch.getInstance().getI_L()) {
+                    if (i == to_Add.getIID()) {
+                        this.s_R_L.add(to_Add);
                     }
                 }
             }
         }
-        this.resultDataModel = new ListDataModel<>(this.results);
+        this.s_R_DM = new ListDataModel<>(this.s_R_L);
 
 
     }
 
     public void add() {
 
-        IngredientDTO toAdd = this.resultDataModel.getRowData();
+        IngredientDTO to_Add = this.s_R_DM.getRowData();
 
-        toAdd.setAmount(100);
+        to_Add.setAmount(100);
 
-        if (!this.contains(toAdd)) {
-
-            IngredientDAO ingredientDAO = new IngredientDAO();
+        if (!this.contains(to_Add)) {
 
 
             try {
-                ingredientDAO.addToUserIngredients(this.userBean.getDto(), toAdd);
+                i_DAO.addToUserIngredients(this.userBean.getDto(), to_Add);
             } catch (DuplicateException e) {
                 e.printStackTrace();
             }
 
 
-            this.userIngredients = ingredientDAO.getUserIngredients(this.userBean.getDto());
-            this.userIngredientsDataModel = new ListDataModel(this.userIngredients);
+            this.build();
 
         } else {
 
-            FacesMessage facesMessage = new FacesMessage("You already have that in your list!!");
+            FacesMessage facesMessage = new FacesMessage("You already have that in your list!");
             FacesContext.getCurrentInstance().addMessage("messages", facesMessage);
 
         }
@@ -102,11 +101,11 @@ public class UserIngredientsBean implements Serializable {
     }
 
 
-    private boolean contains(IngredientDTO ingredientDTO) {
+    private boolean contains(IngredientDTO i_DTO) {
 
 
-        for (IngredientDTO dto : this.userIngredients) {
-            if (ingredientDTO.getIID() == dto.getIID()) {
+        for (IngredientDTO pointer_DTO : this.u_I_L) {
+            if (i_DTO.getIID() == pointer_DTO.getIID()) {
                 return true;
             }
         }
@@ -114,38 +113,16 @@ public class UserIngredientsBean implements Serializable {
     }
 
     public void changeAmount() {
-        IngredientDTO ingredientDTO = (IngredientDTO) this.userIngredientsDataModel.getRowData();
-        IngredientDAO ingredientDAO = new IngredientDAO();
-        ingredientDAO.updateUserIngredientAmount(this.userBean.getDto(), ingredientDTO);
-        this.userIngredients = ingredientDAO.getUserIngredients(this.userBean.getDto());
-        this.userIngredientsDataModel = new ListDataModel(this.userIngredients);
+        IngredientDTO i_DTO = (IngredientDTO) this.u_I_DM.getRowData();
+
+        i_DAO.updateUserIngredientAmount(this.userBean.getDto(), i_DTO);
+
+        this.build();
     }
 
 
-    public List<IngredientDTO> getUserIngredients() {
-        return userIngredients;
+    private void build() {
+        this.u_I_L = i_DAO.getUserIngredients(this.userBean.getDto());
+        this.u_I_DM = new ListDataModel(this.u_I_L);
     }
-
-    public void setUserIngredients(List<IngredientDTO> userIngredients) {
-        this.userIngredients = userIngredients;
-    }
-
-    public UserBean getUserBean() {
-        return userBean;
-    }
-
-    public void setUserBean(UserBean userBean) {
-        this.userBean = userBean;
-    }
-
-
-    public DataModel getUserIngredientsDataModel() {
-        return userIngredientsDataModel;
-    }
-
-    public void setUserIngredientsDataModel(DataModel userIngredientsDataModel) {
-        this.userIngredientsDataModel = userIngredientsDataModel;
-    }
-
-
 }

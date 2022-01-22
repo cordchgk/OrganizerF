@@ -24,41 +24,68 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-@Named("shoppingListBean")
+@Named("s_L_Bean")
 @ViewScoped
 @Getter
 @Setter
 public class ShoppingListBean implements Serializable {
-    private LocalDate startDate;
-    private LocalDate endDate;
+    private LocalDate s_D;
+    private LocalDate e_D;
 
-    private String searchWord;
 
-    private ShoppingListDTO shoppingListDTO;
-    private ShoppingListDAO shoppingListDAO;
-    private DataModel<IngredientDTO> shoppingListDataModel;
-    private List<IngredientDTO> results;
-    private DataModel<IngredientDTO> resultDataModel;
-    private IngredientDTO newIngredientDTO;
+    private String s_W;
 
-    private List<ShoppingListIngredientDTO> ownAddedIngredients;
+    private ShoppingListDTO s_L_DTO;
+    private ShoppingListDAO s_DAO;
+    private DataModel<IngredientDTO> s_L_DM;
+    private List<IngredientDTO> r_L;
+    private DataModel<IngredientDTO> r_DM;
+    private IngredientDTO n_I_DTO;
 
+    private List<ShoppingListIngredientDTO> o_I_L;
 
     @Inject
-    private UserBean userBean;
+    private UserBean u_Bean;
 
 
     @PostConstruct
     public void init() {
-        this.startDate = LocalDate.now();
-        this.endDate = LocalDate.now().plusDays(7);
 
-        this.newIngredientDTO = new IngredientDTO();
+        this.s_D = LocalDate.now();
+        if (this.e_D == null) {
+            this.e_D = this.s_D.plusDays(7);
+        }
 
-        this.shoppingListDTO = new ShoppingListDTO(this.startDate, this.endDate);
-        this.shoppingListDAO = new ShoppingListDAO();
+
+        this.n_I_DTO = new IngredientDTO();
+        this.s_DAO = new ShoppingListDAO();
+
+
+        this.construct();
+
+
+    }
+
+
+    public void reload() {
+
+        this.construct();
+
+    }
+
+    private void construct() {
+        this.load();
         this.clean();
         this.filter();
+        for (IngredientDTO i_DTO : this.s_L_DTO.getI_DTO_L()) {
+            i_DTO.createImageUrlList();
+        }
+
+    }
+
+
+    public void load() {
+        this.s_L_DTO = new ShoppingListDTO(this.s_D, this.e_D);
 
 
     }
@@ -66,11 +93,11 @@ public class ShoppingListBean implements Serializable {
     public void add() {
 
 
-        IngredientDTO toAdd = this.resultDataModel.getRowData();
+        IngredientDTO t_A = this.r_DM.getRowData();
 
-        if (!this.ownAddedIngredients.contains(toAdd)) {
+        if (!this.o_I_L.contains(t_A)) {
 
-            this.shoppingListDAO.addToShoppingList(this.userBean.getDto(), toAdd);
+            this.s_DAO.addToShoppingList(this.u_Bean.getDto(), t_A);
             this.clean();
             this.filter();
 
@@ -86,88 +113,87 @@ public class ShoppingListBean implements Serializable {
     }
 
     public void update() {
-        IngredientDTO toUpdate = this.shoppingListDataModel.getRowData();
+        IngredientDTO t_U = this.s_L_DM.getRowData();
 
-        this.shoppingListDAO.updateShoppingListAmount(this.userBean.getDto(), toUpdate);
+        this.s_DAO.updateShoppingListAmount(this.u_Bean.getDto(), t_U);
         this.clean();
     }
 
 
     public void remove() {
-        IngredientDTO toRemove = this.shoppingListDataModel.getRowData();
-        this.shoppingListDAO.removeFromShoppingList(this.userBean.getDto(), toRemove);
+        IngredientDTO t_Remove = this.s_L_DM.getRowData();
+        this.s_DAO.removeFromShoppingList(this.u_Bean.getDto(), t_Remove);
         this.clean();
     }
 
     private void filter() {
 
-        List<IngredientDTO> ingredientDTOList = this.shoppingListDTO.getIngredientDTOS();
+        List<IngredientDTO> i_DTO_L = this.s_L_DTO.getI_DTO_L();
 
         HashMap<IngredientDTO, List<Float>> hashMap = new HashMap();
 
 
-        for (IngredientDTO ingredientDTO : ingredientDTOList) {
-            if (!hashMap.containsKey(ingredientDTO)) {
-                hashMap.put(ingredientDTO, new ArrayList<>());
+        for (IngredientDTO i_DTO : i_DTO_L) {
+            if (!hashMap.containsKey(i_DTO)) {
+                hashMap.put(i_DTO, new ArrayList<>());
             }
-            hashMap.get(ingredientDTO).add(ingredientDTO.getAmount());
+            hashMap.get(i_DTO).add(i_DTO.getAmount());
         }
 
 
-        for (IngredientDTO ingredientDTO : hashMap.keySet()) {
-            List<Float> current = hashMap.get(ingredientDTO);
+        for (IngredientDTO i_DTO : hashMap.keySet()) {
+            List<Float> current = hashMap.get(i_DTO);
             float sum = 0;
             for (Float f : current) {
                 sum += f;
             }
-            hashMap.put(ingredientDTO, new ArrayList<>());
-            hashMap.get(ingredientDTO).add(sum);
+            hashMap.put(i_DTO, new ArrayList<>());
+            hashMap.get(i_DTO).add(sum);
 
         }
 
 
         List<IngredientDTO> total = new ArrayList<>();
 
-        for (IngredientDTO ingredientDTO : hashMap.keySet()) {
-            ingredientDTO.setAmount(hashMap.get(ingredientDTO).get(0));
-            total.add(ingredientDTO);
+        for (IngredientDTO i_DTO : hashMap.keySet()) {
+            i_DTO.setAmount(hashMap.get(i_DTO).get(0));
+            total.add(i_DTO);
         }
 
 
-        this.shoppingListDTO.setIngredientDTOS(total);
+        this.s_L_DTO.setI_DTO_L(total);
 
 
     }
 
     private void clean() {
-
-        this.shoppingListDTO.setIngredientDTOS(shoppingListDAO.getIngredientssByUserDTO(this.userBean.getDto(), this.shoppingListDTO));
-
-        this.ownAddedIngredients = shoppingListDAO.getShoppingListIngredients(this.userBean.getDto());
-        this.shoppingListDTO.getIngredientDTOS().addAll(this.ownAddedIngredients);
-        this.shoppingListDataModel = new ListDataModel<>(this.shoppingListDTO.getIngredientDTOS());
+        this.s_L_DTO.setI_DTO_L(s_DAO.getIngredientssByUserDTO(this.u_Bean.getDto(), this.s_L_DTO));
+        this.o_I_L = s_DAO.getShoppingListIngredients(this.u_Bean.getDto());
+        this.s_L_DTO.getI_DTO_L().addAll(this.o_I_L);
+        this.s_L_DM = new ListDataModel<>(this.s_L_DTO.getI_DTO_L());
     }
 
 
     public void search() {
-        this.results = new ArrayList<>();
-        this.resultDataModel = new ListDataModel<>(this.results);
+        this.r_L = new ArrayList<>();
+        this.r_DM = new ListDataModel<>(this.r_L);
 
-        List<Integer> ids = IngredientSearch.getInstance().search(searchWord);
+        List<Integer> ids = IngredientSearch.getInstance().search(s_W);
 
 
         if (!ids.isEmpty()) {
             for (Integer i : ids) {
 
-                for (IngredientDTO dto : IngredientSearch.getInstance().getAllIngredients()) {
+                for (IngredientDTO dto : IngredientSearch.getInstance().getI_L()) {
                     if (i == dto.getIID()) {
-                        this.results.add(dto);
+                        this.r_L.add(dto);
                     }
                 }
             }
         }
-        this.resultDataModel = new ListDataModel<>(this.results);
+        this.r_DM = new ListDataModel<>(this.r_L);
 
     }
+
 
 }

@@ -1,6 +1,8 @@
 package organizer.diet.system;
 
 
+import lombok.Getter;
+import lombok.Setter;
 import organizer.TRIE.Trie;
 import organizer.diet.ingredient.daos.IngredientDAO;
 import organizer.diet.ingredient.dtos.IngredientDTO;
@@ -11,27 +13,29 @@ import java.util.HashSet;
 import java.util.List;
 
 @ApplicationScoped
+@Getter
+@Setter
 public class IngredientSearch {
     private static final IngredientSearch instance = new IngredientSearch();
 
     private Trie trie;
-    private List<IngredientDTO> allIngredients;
-
-    private IngredientSearch() {
-
-        this.trie = new Trie();
-        IngredientDAO ingredientDAO = new IngredientDAO();
-        this.allIngredients = new ArrayList<>(ingredientDAO.getIngredientsForTrie());
-
-        this.addAllToTrie(this.allIngredients);
-
-
-    }
+    private List<IngredientDTO> i_L;
 
     public static IngredientSearch getInstance() {
         return instance;
     }
 
+
+    private IngredientSearch() {
+
+        this.trie = new Trie();
+        IngredientDAO ingredientDAO = new IngredientDAO();
+        this.i_L = new ArrayList<>(ingredientDAO.getIngredientsForTrie());
+
+        this.addAllToTrie(this.i_L);
+
+
+    }
 
 
     private ArrayList<Integer> filter(ArrayList<HashSet<Integer>> allResults) {
@@ -46,13 +50,7 @@ public class IngredientSearch {
         return new ArrayList<>(toReturn);
     }
 
-    public Trie getTrie() {
-        return trie;
-    }
 
-    public void setTrie(Trie trie) {
-        this.trie = trie;
-    }
 
     private void addAllToTrie(List<IngredientDTO> dtos) {
         for (IngredientDTO dto : dtos) {
@@ -76,7 +74,7 @@ public class IngredientSearch {
         IngredientDTO toAdd = new IngredientDTO();
         toAdd.setIID(value);
         toAdd.setName(word);
-        this.allIngredients.add(toAdd);
+        this.i_L.add(toAdd);
     }
 
     public List<Integer> search(String searchWord) {
@@ -99,11 +97,5 @@ public class IngredientSearch {
         return this.trie.toString(this.trie.getRoot(), stringBuilder);
     }
 
-    public List<IngredientDTO> getAllIngredients() {
-        return allIngredients;
-    }
 
-    public void setAllIngredients(List<IngredientDTO> allIngredients) {
-        this.allIngredients = allIngredients;
-    }
 }

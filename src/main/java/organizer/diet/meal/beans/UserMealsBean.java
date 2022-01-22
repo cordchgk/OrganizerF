@@ -1,6 +1,8 @@
 package organizer.diet.meal.beans;
 
 
+import lombok.Getter;
+import lombok.Setter;
 import organizer.diet.meal.daos.MealDAO;
 import organizer.diet.meal.dtos.MealDTO;
 import organizer.system.Utility;
@@ -18,89 +20,60 @@ import java.util.List;
 
 @Named("userMealBean")
 @ViewScoped
+@Getter
+@Setter
 public class UserMealsBean implements Serializable {
-    private MealDTO newMealDTO;
+    private MealDTO n_M_DTO;
+    private MealDAO m_DAO;
 
-    List<MealDTO> mealDTOs;
-    DataModel<MealDTO> mealDataModel;
+    List<MealDTO> m_DTO_L;
+    DataModel<MealDTO> m_DM;
 
     @Inject
-    UserBean userBean;
+    UserBean u_Bean;
 
 
     @PostConstruct
     public void init() {
-        MealDAO mealDAO = new MealDAO();
-        this.newMealDTO = new MealDTO();
-
-        this.mealDTOs = mealDAO.getMealsByUserDTO(this.userBean.getDto());
-        this.mealDataModel = new ListDataModel<>(this.mealDTOs);
+        this.m_DAO = new MealDAO();
+        this.build();
 
 
     }
 
 
     public String select() {
-        return Utility.getURL() + FaceletPath.MEAL.getPath() + "?mID=" + this.mealDataModel.getRowData().getmID();
+        return Utility.getURL() + FaceletPath.MEAL.getPath() + "?mID=" + this.m_DM.getRowData().getMID();
     }
 
     public void create() {
-        MealDAO mealDAO = new MealDAO();
-        mealDAO.createMeal(this.newMealDTO, this.userBean.getDto());
 
-        this.mealDTOs = mealDAO.getMealsByUserDTO(this.userBean.getDto());
+        m_DAO.createMeal(this.n_M_DTO, this.u_Bean.getDto());
 
-        this.newMealDTO = new MealDTO();
-        this.mealDataModel = new ListDataModel<>(this.mealDTOs);
+        this.build();
     }
 
 
     public void delete() {
-        MealDAO mealDAO = new MealDAO();
 
-        mealDAO.deleteMeal(this.mealDataModel.getRowData());
 
-        this.mealDTOs = mealDAO.getMealsByUserDTO(this.userBean.getDto());
-        this.mealDataModel = new ListDataModel<>(this.mealDTOs);
+        m_DAO.deleteMeal(this.m_DM.getRowData());
+
+        this.build();
 
 
     }
 
 
     public boolean isEmpty() {
-        return !this.mealDTOs.isEmpty();
+        return !this.m_DTO_L.isEmpty();
     }
 
 
-    public MealDTO getNewMealDTO() {
-        return newMealDTO;
+    private void build() {
+        this.n_M_DTO = new MealDTO();
+        this.m_DTO_L = m_DAO.getMealsByUserDTO(this.u_Bean.getDto());
+        this.m_DM = new ListDataModel<>(this.m_DTO_L);
     }
 
-    public void setNewMealDTO(MealDTO newMealDTO) {
-        this.newMealDTO = newMealDTO;
-    }
-
-    public List<MealDTO> getMealDTOs() {
-        return mealDTOs;
-    }
-
-    public void setMealDTOs(List<MealDTO> mealDTOs) {
-        this.mealDTOs = mealDTOs;
-    }
-
-    public DataModel<MealDTO> getMealDataModel() {
-        return mealDataModel;
-    }
-
-    public void setMealDataModel(DataModel<MealDTO> mealDataModel) {
-        this.mealDataModel = mealDataModel;
-    }
-
-    public UserBean getUserBean() {
-        return userBean;
-    }
-
-    public void setUserBean(UserBean userBean) {
-        this.userBean = userBean;
-    }
 }

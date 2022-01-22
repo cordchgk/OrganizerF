@@ -1,6 +1,8 @@
 package organizer.commons.beans;
 
 
+import lombok.Getter;
+import lombok.Setter;
 import organizer.system.Utility;
 import organizer.user.beans.UserBean;
 
@@ -14,12 +16,18 @@ import java.io.Serializable;
 
 @Named("headerBean")
 @ViewScoped
+@Getter
+@Setter
 public class HeaderBean implements Serializable {
-    private UIComponent uiComponent;
-    @Inject
-    UserBean userBean;
+
     private int notifications;
     private String url;
+
+    private UIComponent uiComponent;
+
+
+    @Inject
+    UserBean userBean;
 
     @PostConstruct
     public void init() {
@@ -28,35 +36,4 @@ public class HeaderBean implements Serializable {
     }
 
 
-    public UIComponent getUiComponent() {
-        return uiComponent;
-    }
-
-    public void setUiComponent(UIComponent uiComponent) {
-        this.uiComponent = uiComponent;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
-    public int getNotifications() {
-        return notifications;
-    }
-
-    public void setNotifications(int notifications) {
-        this.notifications = notifications;
-    }
-
-    public UserBean getUserBean() {
-        return userBean;
-    }
-
-    public void setUserBean(UserBean userBean) {
-        this.userBean = userBean;
-    }
 }

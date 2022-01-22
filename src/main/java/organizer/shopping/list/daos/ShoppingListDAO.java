@@ -20,9 +20,9 @@ public class ShoppingListDAO {
     private final ConnectionPool pool = ConnectionPool.getInstance();
 
 
-    public List<IngredientDTO> getIngredientssByUserDTO(UserDTO dto, ShoppingListDTO shoppingListDTO) throws DatabaseException {
+    public List<IngredientDTO> getIngredientssByUserDTO(UserDTO u_DTO, ShoppingListDTO s_L_DTO) throws DatabaseException {
 
-        List<IngredientDTO> toReturn = new ArrayList<>();
+        List<IngredientDTO> t_R = new ArrayList<>();
 
         Connection conn = pool.getConnection();
         String query = "SELECT meal.name, meal.mid, event.date FROM meal, eventmeals, event " +
@@ -38,18 +38,19 @@ public class ShoppingListDAO {
             pool.releaseConnection(conn);
         }
         try {
-            statement.setInt(1, dto.getUserID());
-            statement.setDate(2, Date.valueOf(shoppingListDTO.getStartDate()));
-            statement.setDate(3, Date.valueOf(shoppingListDTO.getEndDate()));
+            statement.setInt(1, u_DTO.getUserID());
+            statement.setDate(2, Date.valueOf(s_L_DTO.getS_D()));
+            statement.setDate(3, Date.valueOf(s_L_DTO.getE_D()));
             result = statement.executeQuery();
-            MealDAO mealDAO = new MealDAO();
+            MealDAO m_DAO = new MealDAO();
             while (result.next()) {
-                MealDTO toAdd = new MealDTO();
+                MealDTO t_A = new MealDTO();
+                t_A.setMID(result.getInt(2));
+                t_A.setMealIngredients(m_DAO.getIngredientByMealDTO(t_A));
+                for (IngredientDTO ingredientDTO : t_A.getMealIngredients()) {
+                    ingredientDTO.createImageUrlList();
+                    t_R.add(ingredientDTO);
 
-                toAdd.setmID(result.getInt(2));
-                toAdd.setMealIngredients(mealDAO.getIngredientByMealDTO(toAdd));
-                for (IngredientDTO ingredientDTO : toAdd.getMealIngredients()) {
-                    toReturn.add(ingredientDTO);
                 }
 
 
@@ -61,10 +62,10 @@ public class ShoppingListDAO {
         }
         pool.releaseConnection(conn);
 
-        return toReturn;
+        return t_R;
     }
 
-    public void addToShoppingList(UserDTO userDTO, IngredientDTO ingredientDTO) {
+    public void addToShoppingList(UserDTO u_DTO, IngredientDTO i_DTO) {
 
         Connection conn = pool.getConnection();
         String query =
@@ -72,9 +73,9 @@ public class ShoppingListDAO {
 
         try {
             PreparedStatement statement = conn.prepareStatement(query);
-            statement.setInt(1, userDTO.getUserID());
-            statement.setInt(2, ingredientDTO.getIID());
-            statement.setFloat(3, ingredientDTO.getAmount());
+            statement.setInt(1, u_DTO.getUserID());
+            statement.setInt(2, i_DTO.getIID());
+            statement.setFloat(3, i_DTO.getAmount());
             statement.execute();
 
         } catch (SQLException ex) {
@@ -86,9 +87,9 @@ public class ShoppingListDAO {
     }
 
 
-    public List<ShoppingListIngredientDTO> getShoppingListIngredients(UserDTO dto) throws DatabaseException {
+    public List<ShoppingListIngredientDTO> getShoppingListIngredients(UserDTO u_DTO) throws DatabaseException {
 
-        List<ShoppingListIngredientDTO> toReturn = new ArrayList<>();
+        List<ShoppingListIngredientDTO> t_R = new ArrayList<>();
 
         Connection conn = pool.getConnection();
         String query = "SELECT shoppinglist.amount,ingredient.name,ingredient.iid FROM shoppinglist,ingredient WHERE " +
@@ -103,16 +104,16 @@ public class ShoppingListDAO {
             pool.releaseConnection(conn);
         }
         try {
-            statement.setInt(1, dto.getUserID());
+            statement.setInt(1, u_DTO.getUserID());
 
             result = statement.executeQuery();
 
             while (result.next()) {
-                ShoppingListIngredientDTO toAdd = new ShoppingListIngredientDTO();
-                toAdd.setAmount(result.getFloat(1));
-                toAdd.setName(result.getString(2));
-                toAdd.setIID(result.getInt(3));
-                toReturn.add(toAdd);
+                ShoppingListIngredientDTO t_A = new ShoppingListIngredientDTO();
+                t_A.setAmount(result.getFloat(1));
+                t_A.setName(result.getString(2));
+                t_A.setIID(result.getInt(3));
+                t_R.add(t_A);
 
             }
         } catch (SQLException ex) {
@@ -122,10 +123,10 @@ public class ShoppingListDAO {
         }
         pool.releaseConnection(conn);
 
-        return toReturn;
+        return t_R;
     }
 
-    public void removeFromShoppingList(UserDTO userDTO, IngredientDTO ingredientDTO) {
+    public void removeFromShoppingList(UserDTO u_DTO, IngredientDTO i_DTO) {
 
         Connection conn = pool.getConnection();
         String query = "DELETE FROM shoppinglist WHERE shoppinglist.uid = ? AND shoppinglist.iid = ?";
@@ -133,8 +134,8 @@ public class ShoppingListDAO {
 
         try {
             PreparedStatement statement = conn.prepareStatement(query);
-            statement.setInt(1, userDTO.getUserID());
-            statement.setInt(2, ingredientDTO.getIID());
+            statement.setInt(1, u_DTO.getUserID());
+            statement.setInt(2, i_DTO.getIID());
 
             statement.execute();
 
@@ -150,7 +151,7 @@ public class ShoppingListDAO {
     }
 
 
-    public boolean updateShoppingListAmount(UserDTO userDTO, IngredientDTO ingredientDTO) {
+    public boolean updateShoppingListAmount(UserDTO u_DTO, IngredientDTO i_DTO) {
         Connection conn = pool.getConnection();
         String query = "UPDATE shoppinglist SET amount = ? WHERE uid = ? AND iid = ?";
 
@@ -158,9 +159,9 @@ public class ShoppingListDAO {
         try {
             PreparedStatement statement = conn.prepareStatement(query);
 
-            statement.setFloat(1, ingredientDTO.getAmount());
-            statement.setInt(2, userDTO.getUserID());
-            statement.setInt(3, ingredientDTO.getIID());
+            statement.setFloat(1, i_DTO.getAmount());
+            statement.setInt(2, u_DTO.getUserID());
+            statement.setInt(3, i_DTO.getIID());
 
             statement.execute();
 

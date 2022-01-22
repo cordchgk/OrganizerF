@@ -117,24 +117,7 @@ public class ProductsBean implements Serializable, Validator {
     }
 
     public void isAllowed() {
-        FacesContext fc = FacesContext.getCurrentInstance();
 
-
-        boolean toReturn = false;
-        for (GroupDTO dto : userBean.getgDTOAccepted()
-        ) {
-            if (dto.getgID() == this.groupDTO.getgID()) {
-                toReturn = true;
-                break;
-            }
-        }
-
-
-        if (!toReturn) {
-            ConfigurableNavigationHandler nav = (ConfigurableNavigationHandler) fc.getApplication()
-                    .getNavigationHandler();
-            nav.performNavigation("/access/access-denied.xhtml");
-        }
 
 
     }

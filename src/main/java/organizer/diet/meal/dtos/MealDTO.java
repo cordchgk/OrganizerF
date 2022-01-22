@@ -1,10 +1,14 @@
 package organizer.diet.meal.dtos;
 
+import lombok.Getter;
+import lombok.Setter;
 import organizer.diet.ingredient.dtos.IngredientDTO;
 
 import java.util.List;
 
 
+@Getter
+@Setter
 public class MealDTO {
     private List<IngredientDTO> mealIngredients;
     private int mID;
@@ -15,7 +19,6 @@ public class MealDTO {
     private float fats;
     private float protein;
     private float carbs;
-
 
 
     public void calculateCalories() {
@@ -37,62 +40,4 @@ public class MealDTO {
 
     }
 
-
-    public float getCalories() {
-        return calories;
-    }
-
-    public void setCalories(float calories) {
-        this.calories = calories;
-    }
-
-
-    public int getmID() {
-        return mID;
-    }
-
-    public void setmID(int mID) {
-        this.mID = mID;
-    }
-
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public List<IngredientDTO> getMealIngredients() {
-        return mealIngredients;
-    }
-
-    public void setMealIngredients(List<IngredientDTO> mealIngredients) {
-        this.mealIngredients = mealIngredients;
-    }
-
-    public float getFats() {
-        return fats;
-    }
-
-    public void setFats(float fats) {
-        this.fats = fats;
-    }
-
-    public float getProtein() {
-        return protein;
-    }
-
-    public void setProtein(float protein) {
-        this.protein = protein;
-    }
-
-    public float getCarbs() {
-        return carbs;
-    }
-
-    public void setCarbs(float carbs) {
-        this.carbs = carbs;
-    }
 }

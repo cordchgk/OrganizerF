@@ -423,6 +423,16 @@ public class ConnectionPool implements Serializable {
             LOGGER.log(Level.SEVERE, null, ex);
         }
 
+        try {
+            Statement stmt = connection.createStatement();
+            String query = "CREATE TABLE IF NOT EXISTS ingredientImages (iID smallint," +
+                    "url varchar)";
+            stmt.executeUpdate(query);
+            stmt.close();
+        } catch (SQLException ex) {
+            LOGGER.log(Level.SEVERE, null, ex);
+        }
+
 
         try {
             Statement stmt = connection.createStatement();
@@ -519,6 +529,17 @@ public class ConnectionPool implements Serializable {
                     "uID smallint," +
                     "iID smallint," +
                     "amount float)";
+            stmt.executeUpdate(query);
+            stmt.close();
+        } catch (SQLException ex) {
+            LOGGER.log(Level.SEVERE, null, ex);
+        }
+
+        try {
+            Statement stmt = connection.createStatement();
+            String query = "CREATE TABLE IF NOT EXISTS  usersettings("+
+                    "uID smallint," +
+                    "language varchar)";
             stmt.executeUpdate(query);
             stmt.close();
         } catch (SQLException ex) {

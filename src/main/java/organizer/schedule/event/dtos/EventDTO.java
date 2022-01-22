@@ -4,16 +4,11 @@ import lombok.Getter;
 import lombok.Setter;
 import org.primefaces.model.ScheduleEvent;
 import organizer.diet.meal.dtos.MealDTO;
-import organizer.diet.nutrients.macronutrient.dtos.MacroDTO;
 import organizer.schedule.event.daos.EventDAO;
 import organizer.user.dtos.UserDTO;
 
-import javax.annotation.PostConstruct;
-import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.Date;
 import java.util.List;
 
 
@@ -24,63 +19,40 @@ public class EventDTO {
     private int eID;
 
 
-    List<UserDTO> userDTOList;
-    List<MealDTO> mealDTOList;
+    private List<UserDTO> u_DTO_L;
+    private List<MealDTO> m_DTO_L;
 
 
-    String name;
+    private String name;
 
 
-    LocalDateTime start;
-    LocalDateTime end;
+    private LocalDateTime start;
+    private LocalDateTime end;
     private LocalDate date;
 
 
-    public void setStart(LocalDateTime start) {
-        this.start = start;
-    }
+    public static EventDTO getFromScheduleEvent(ScheduleEvent s_Event) {
+        EventDTO t_R = new EventDTO();
 
-    public void setEnd(LocalDateTime end) {
-        this.end = end;
-    }
-
-    public LocalDateTime getEnd() {
-        return this.end;
-    }
-
-
-    public int geteID() {
-        return eID;
-    }
-
-    public void seteID(int eID) {
-        this.eID = eID;
-    }
-
-    public static EventDTO getFromScheduleEvent(ScheduleEvent scheduleEvent) {
-        EventDTO toReturn = new EventDTO();
-
-        if (scheduleEvent.getId() != null) {
-            toReturn.seteID(Integer.parseInt(scheduleEvent.getId()));
+        if (s_Event.getId() != null) {
+            t_R.setEID(Integer.parseInt(s_Event.getId()));
 
 
         } else {
-            toReturn.seteID(0);
+            t_R.setEID(0);
         }
 
 
-        toReturn.setName(scheduleEvent.getTitle());
-        toReturn.setStart(scheduleEvent.getStartDate());
-        toReturn.setEnd(scheduleEvent.getEndDate());
+        t_R.setName(s_Event.getTitle());
+        t_R.setStart(s_Event.getStartDate());
+        t_R.setEnd(s_Event.getEndDate());
 
 
         EventDAO eventDAO = new EventDAO();
-        toReturn.setMealDTOList(eventDAO.selectMealsByEventDTO(toReturn));
+        t_R.setM_DTO_L(eventDAO.selectMealsByEventDTO(t_R));
 
-        return toReturn;
+        return t_R;
     }
-
-
 
 
     @Override

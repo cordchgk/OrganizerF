@@ -22,25 +22,23 @@ import java.util.List;
 @Getter
 @Setter
 public class NewIngredientBean implements Serializable {
-    private IngredientDTO ingredientDTO;
-    private List<IngredientDTO> ingredientDTOList;
-    private DataModel<IngredientDTO> ingredientDataModel;
+    private IngredientDTO i_DTO;
+    private List<IngredientDTO> i_DTO_L;
+    private DataModel<IngredientDTO> i_DM;
+    private IngredientDAO i_DAO;
 
 
     @PostConstruct
     public void init() {
-        this.ingredientDTO = new IngredientDTO();
-        this.ingredientDTOList = new ArrayList<>();
-        this.ingredientDTOList.add(ingredientDTO);
-        this.ingredientDataModel = new ListDataModel<>(this.ingredientDTOList);
+        this.build();
     }
 
     public void create() {
-        IngredientDAO ingredientDAO = new IngredientDAO();
-        for (IngredientDTO pointerDTO : this.ingredientDTOList) {
+
+        for (IngredientDTO pointerDTO : this.i_DTO_L) {
 
             try {
-                ingredientDAO.createNewIngredient(pointerDTO);
+                this.i_DAO.createNewIngredient(pointerDTO);
 
 
             } catch (DuplicateException e) {
@@ -50,8 +48,16 @@ public class NewIngredientBean implements Serializable {
             IngredientSearch.getInstance().add(pointerDTO.getName(), pointerDTO.getIID());
 
         }
-        this.init();
+        this.build();
     }
 
+
+    private void build() {
+        this.i_DTO = new IngredientDTO();
+        this.i_DTO_L = new ArrayList<>();
+        this.i_DTO_L.add(i_DTO);
+        this.i_DM = new ListDataModel<>(this.i_DTO_L);
+        this.i_DAO = new IngredientDAO();
+    }
 
 }

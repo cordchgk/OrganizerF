@@ -2,7 +2,8 @@
                 xmlns="http://www.w3.org/1999/xhtml"
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
                 xmlns:h="http://java.sun.com/jsf/html"
-                xmlns:f="http://xmlns.jcp.org/jsf/core">
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui" xmlns:c="http://java.sun.com/jsp/jstl/core">
     <f:metadata>
         <f:viewParam name="mID"/>
     </f:metadata>
@@ -18,10 +19,27 @@
              style="display:table;width: 70%;height:auto;margin: 0 auto;margin-top: 5%;text-align: center">
 
             <h:form id="form">
-                <div id="mDIV" style="display: inline-block;vertical-align: top;height: auto;width: 70%">
+                <script type="text/javascript">
 
-                    <h:dataTable value="#{shoppingListBean.shoppingListDataModel}" var="s" columnClasses="column"
+                    function t() {
+                        console.log('called');
+                        search();
+                    }
+
+
+                </script>
+                <p:remoteCommand name="search" actionListener="#{s_L_Bean.search()}" update="searchresults"/>
+                <div id="mDIV" style="display: inline-block;vertical-align: top;height: auto;width: 70%">
+                    <p:datePicker id="from" validator="#{validationBean.validateDate}"
+                                  value="#{s_L_Bean.e_D}" pattern="dd/MM/yyyy"
+                                  showTime="false" appendTo="@(body)">
+                        <f:ajax listener="#{s_L_Bean.reload()}" render="@form" execute="@form"/>
+                    </p:datePicker>
+
+                    <h:dataTable value="#{s_L_Bean.s_L_DM}" var="s"
+                                 columnClasses="columnSL,columnSL,columnSL,columnSLLast"
                                  style="width: 100%">
+
 
                         <h:column>
                             <f:facet name="header">Ingredient</f:facet>
@@ -32,11 +50,11 @@
                         <h:column>
                             <f:facet name="header">Amount</f:facet>
                             <h:inputText id="change" value="#{s.amount}" autocomplete="off"
-                                         disabled="#{!s.shoppingListIngredient}"
+                                         readonly="#{!s.shoppingListIngredient}"
                                          onkeypress="if (event.keyCode == 13) {onchange(event); return false; }"
                                          onchange="return event.keyCode !== undefined"
                             >
-                                <f:ajax listener="#{shoppingListBean.update()}" render="form">
+                                <f:ajax listener="#{s_L_Bean.update()}" render="form">
 
                                 </f:ajax>
 
@@ -46,11 +64,32 @@
 
 
                         <h:column>
+                            <div style="text-align: center">
+                                <h:commandButton value="Remove" actionListener="#{s_L_Bean.remove()}"
+                                                 rendered="#{s.shoppingListIngredient}">
+                                    <f:ajax render="@form"/>
+                                </h:commandButton>
 
-                            <h:commandButton value="Remove" actionListener="#{shoppingListBean.remove()}"
-                                             rendered="#{s.shoppingListIngredient}">
-                                <f:ajax render="@form"/>
-                            </h:commandButton>
+                            </div>
+
+                        </h:column>
+
+                        <h:column>
+
+                            <p:lightBox id="lighbox1" styleClass="imagebox" rendered="#{!s.i_U_L.isEmpty()}">
+                                <h:outputLink value="#{s.firstImage}">
+                                    <img src="#{s.firstImage}" alt="" style="width: 20%;height: 20%"/>
+
+                                </h:outputLink>
+
+                                <ui:repeat var="i" value="#{s.i_U_L}" varStatus="status" begin="1">
+                                    <a href="#{i}"/>
+
+                                </ui:repeat>
+
+                            </p:lightBox>
+
+
                         </h:column>
                     </h:dataTable>
 
@@ -58,20 +97,19 @@
 
                 <div style="margin-top: 5%">
 
-                    <h:inputText id="search" value="#{shoppingListBean
-                            .searchWord}" autocomplete="off"
-                                 onkeypress="if (event.keyCode == 13) {onchange(event); return false; }"
-                                 onchange="return event.keyCode !== undefined"
+                    <h:inputText id="search" value="#{s_L_Bean.s_W}" autocomplete="off"
+
+                                 onkeyup="t()"
                     >
-                        <f:ajax listener="#{shoppingListBean
-                                .search()}" render="searchresults"/>
+
                     </h:inputText>
+
 
                 </div>
                 <div>
 
                     <h:dataTable id="searchresults" columnClasses="column" style="width: 100%"
-                                 var="i" width="100" value="#{shoppingListBean.resultDataModel}">
+                                 var="i" width="100" value="#{s_L_Bean.r_DM}">
                         <h:column>
                             <div style="text-align: center">
                                 #{i.name}
@@ -84,7 +122,7 @@
                         </h:column>
 
                         <h:column>
-                            <h:commandButton value="Add" action="#{shoppingListBean
+                            <h:commandButton value="Add" action="#{s_L_Bean
                                     .add()}">
                                 <f:ajax render="@form" execute="@form"/>
                             </h:commandButton>

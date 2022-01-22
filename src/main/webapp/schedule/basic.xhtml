@@ -19,7 +19,7 @@
             <h:form>
                 <p:growl id="messages" showDetail="true"/>
 
-                <p:schedule id="schedule" value="#{scheduleBean.eventModel}" widgetVar="myschedule"
+                <p:schedule id="schedule" value="#{scheduleBean.s_M}" widgetVar="myschedule"
                             timeZone="#{scheduleBean.serverTimeZone}"
                             clientTimeZone="#{scheduleBean.serverTimeZone}">
                     <p:ajax event="dateSelect" listener="#{scheduleBean.onDateSelect}" update="eventDetails"
@@ -38,29 +38,29 @@
                 <p:dialog widgetVar="eventDialog" id="eventDialog" header="Event Details">
                     <h:panelGrid id="eventDetails" columns="2" cellpadding="7" style="width: 100%">
                         <p:outputLabel for="title" value="Titles" styleClass="p-text-bold"/>
-                        <p:inputText id="title" value="#{scheduleBean.event.title}" required="true"
+                        <p:inputText id="title" value="#{scheduleBean.e.title}" required="true"
                         />
 
                         <p:outputLabel for="from" value="From" styleClass="p-text-bold"
                         />
                         <p:datePicker id="from"
-                                      value="#{scheduleBean.event.startDate}" pattern="dd/MM/yyyy"
+                                      value="#{scheduleBean.e.startDate}" pattern="dd/MM/yyyy"
                                       showTime="true" appendTo="@(body)"/>
 
                         <p:outputLabel for="to" value="To" styleClass="p-text-bold"
                         />
                         <p:datePicker id="to"
-                                      value="#{scheduleBean.event.endDate}" pattern="dd/MM/yyyy"
+                                      value="#{scheduleBean.e.endDate}" pattern="dd/MM/yyyy"
                                       showTime="true" appendTo="@(body)"/>
 
                         <p:outputLabel for="allDay" value="All Day" styleClass="p-text-bold"
                         />
-                        <h:selectBooleanCheckbox id="allDay" value="#{scheduleBean.event.allDay}"
+                        <h:selectBooleanCheckbox id="allDay" value="#{scheduleBean.e.allDay}"
                         />
                         <div style="width: 100%">
 
                             <div style="width: 100%">
-                                <h:dataTable value="#{scheduleBean.eventMealsDataModel}" var="e" id="eventMeals"
+                                <h:dataTable value="#{scheduleBean.e_M_DM}" var="e" id="eventMeals"
                                 >
 
                                     <h:column>
@@ -82,7 +82,7 @@
 
                             <div style="width: 100%">
 
-                                <h:dataTable value="#{scheduleBean.userMealDataModel}" var="uM">
+                                <h:dataTable value="#{scheduleBean.u_M_DM}" var="uM">
 
                                     <h:column>
                                         <f:facet name="header">Name</f:facet>

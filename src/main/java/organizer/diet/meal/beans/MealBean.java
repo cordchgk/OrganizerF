@@ -11,9 +11,11 @@ import organizer.system.exceptions.DuplicateException;
 import organizer.user.beans.UserBean;
 
 import javax.annotation.PostConstruct;
-import javax.faces.application.ConfigurableNavigationHandler;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
+import javax.faces.event.AbortProcessingException;
+import javax.faces.event.ValueChangeEvent;
+import javax.faces.event.ValueChangeListener;
 import javax.faces.model.DataModel;
 import javax.faces.model.ListDataModel;
 import javax.faces.view.ViewScoped;
@@ -23,7 +25,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 
 @Named("mealBean")
@@ -34,60 +35,47 @@ public class MealBean implements Serializable {
     private boolean isAllowed = false;
 
 
+    private MealDTO m_DTO;
+    private String s_W;
+    private List<IngredientDTO> r_L;
+    private DataModel<IngredientDTO> r_DM;
+    private DataModel<IngredientDTO> i_DM;
 
-    private MealDTO mealDTO;
-    private String searchWord;
-    private List<IngredientDTO> results;
-    private DataModel<IngredientDTO> resultDataModel;
-    private DataModel<IngredientDTO> ingredientsDataModel;
-
+    private MealDAO m_DAO;
 
     @Inject
-    UserBean userBean;
+    UserBean u_Bean;
 
     @PostConstruct
     public void init() {
-        Map<String, String> parameter = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
+        this.m_DTO = new MealDTO();
+        this.m_DAO = new MealDAO();
+        this.s_W = "";
+        this.m_DTO.setMID(Integer.parseInt(FacesContext.getCurrentInstance().getExternalContext()
+                .getRequestParameterMap().get("mID")));
 
         this.isAllowed = true;
 
-        this.mealDTO = new MealDTO();
-
-        this.mealDTO.setmID(Integer.parseInt(parameter.get("mID")));
-
-        MealDAO dao = new MealDAO();
-        this.mealDTO = dao.getMealDTO(mealDTO);
-
-        this.mealDTO.calculateCalories();
-
-        Collections.sort(this.mealDTO.getMealIngredients());
-
-        this.ingredientsDataModel = new ListDataModel<>(this.mealDTO.getMealIngredients());
+        this.build();
 
     }
 
+
     public void add() {
 
-        IngredientDTO toAdd = this.resultDataModel.getRowData();
+        IngredientDTO to_Add = this.r_DM.getRowData();
 
-        toAdd.setAmount(100);
+        to_Add.setAmount(100);
 
-        if (!this.contains(toAdd)) {
+        if (!this.contains(to_Add)) {
 
-            IngredientDAO dao = new IngredientDAO();
+            IngredientDAO i_DAO = new IngredientDAO();
             try {
-                dao.addIngredientToMeal(this.mealDTO, toAdd);
+                i_DAO.addIngredientToMeal(this.m_DTO, to_Add);
             } catch (DuplicateException e) {
                 e.printStackTrace();
             }
-            MealDAO mealDAO = new MealDAO();
-
-
-            this.mealDTO = mealDAO.getMealDTO(mealDTO);
-
-            this.mealDTO.calculateCalories();
-
-            this.ingredientsDataModel = new ListDataModel<>(this.mealDTO.getMealIngredients());
+            this.build();
 
         } else {
 
@@ -100,89 +88,66 @@ public class MealBean implements Serializable {
     }
 
     public void updateIngredientAmount() {
-        MealDAO mealDAO = new MealDAO();
-        mealDAO.updateIngredientAmount(this.mealDTO, ingredientsDataModel.getRowData());
 
-        this.mealDTO = mealDAO.getMealDTO(this.mealDTO);
+        m_DAO.updateIngredientAmount(this.m_DTO, i_DM.getRowData());
 
-        this.mealDTO.calculateCalories();
-
-        Collections.sort(this.mealDTO.getMealIngredients());
-
-        this.ingredientsDataModel = new ListDataModel<>(this.mealDTO.getMealIngredients());
+        this.build();
 
 
     }
 
 
     public void removeIngredient() {
-        MealDAO mealDAO = new MealDAO();
 
-        mealDAO.deleteIngredientFromMeal(this.mealDTO, ingredientsDataModel.getRowData());
 
-        this.mealDTO = mealDAO.getMealDTO(this.mealDTO);
+        m_DAO.deleteIngredientFromMeal(this.m_DTO, i_DM.getRowData());
 
-        this.mealDTO.calculateCalories();
-
-        this.ingredientsDataModel = new ListDataModel<>(this.mealDTO.getMealIngredients());
+        this.build();
 
     }
 
     public void search() {
 
-        this.results = new ArrayList<>();
-        this.resultDataModel = new ListDataModel<>(this.results);
+        this.r_L = new ArrayList<>();
+        this.r_DM = new ListDataModel<>(this.r_L);
 
-        List<Integer> ids = IngredientSearch.getInstance().search(searchWord);
+        List<Integer> ids = IngredientSearch.getInstance().search(s_W);
 
 
         if (!ids.isEmpty()) {
             for (Integer i : ids) {
 
-                for (IngredientDTO dto : IngredientSearch.getInstance().getAllIngredients()) {
+                for (IngredientDTO dto : IngredientSearch.getInstance().getI_L()) {
                     if (i == dto.getIID()) {
-                        this.results.add(dto);
+                        this.r_L.add(dto);
                     }
                 }
             }
         }
-        this.resultDataModel = new ListDataModel<>(this.results);
+        this.r_DM = new ListDataModel<>(this.r_L);
 
 
     }
 
 
-    public void isAllowed() {
-
-        if (!this.isAllowed) {
-            Map<String, String> parameter = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
+    private boolean contains(IngredientDTO i_DTO) {
 
 
-
-            MealDAO mealDAO = new MealDAO();
-            List<Integer> mealDTOS = mealDAO.getIDsForAccess(this.userBean.getDto());
-
-
-            if (!mealDTOS.contains(Integer.parseInt(parameter.get("mID")))) {
-                ConfigurableNavigationHandler nav = (ConfigurableNavigationHandler) FacesContext.getCurrentInstance().getApplication()
-                        .getNavigationHandler();
-                nav.performNavigation("/access/access-denied.xhtml");
-            }
-
-        }
-
-
-    }
-
-    private boolean contains(IngredientDTO ingredientDTO) {
-
-
-        for (IngredientDTO dto : this.mealDTO.getMealIngredients()) {
-            if (ingredientDTO.getIID() == dto.getIID()) {
+        for (IngredientDTO pointer_DTO : this.m_DTO.getMealIngredients()) {
+            if (i_DTO.getIID() == pointer_DTO.getIID()) {
                 return true;
             }
         }
         return false;
+    }
+
+
+    private void build() {
+        this.m_DTO = m_DAO.getMealDTO(m_DTO);
+
+        this.m_DTO.calculateCalories();
+        Collections.sort(this.m_DTO.getMealIngredients());
+        this.i_DM = new ListDataModel<>(this.m_DTO.getMealIngredients());
     }
 
 

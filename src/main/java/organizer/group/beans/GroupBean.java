@@ -105,8 +105,7 @@ public class GroupBean implements Serializable {
                 this.gDTONotAccepted.add(g);
             }
         }
-        userBean.setgDTOAccepted(gDTOAccepted);
-        userBean.setgDTONotAccepted(gDTONotAccepted);
+
         groupModelAccepted = new ListDataModel(gDTOAccepted);
         groupModelNotAccepted = new ListDataModel(gDTONotAccepted);
 

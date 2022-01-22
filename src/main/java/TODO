@@ -1,2 +1,4 @@
-TODO: - own ingredients
-      - price per set amount(buying amount)
+TODO: - no parameter in url
+      - multi language
+      - DAOs getInstance
+      - IngredientSearch and TRIE

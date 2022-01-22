@@ -11,17 +11,18 @@ import java.util.List;
 @Setter
 public class ShoppingListDTO {
 
-    private LocalDate startDate;
-    private LocalDate endDate;
+    private LocalDate s_D;
+    private LocalDate e_D;
 
 
-    private List<IngredientDTO> ingredientDTOS;
+    private List<IngredientDTO> i_DTO_L;
 
 
 
-    public ShoppingListDTO(LocalDate startDate,LocalDate endDate){
-        this.startDate = startDate;
-        this.endDate = endDate;
+    public ShoppingListDTO(LocalDate s_D, LocalDate e_D){
+        this.s_D = s_D;
+        this.e_D = e_D;
+
     }
 
 }

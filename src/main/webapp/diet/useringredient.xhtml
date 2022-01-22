@@ -2,7 +2,7 @@
                 xmlns="http://www.w3.org/1999/xhtml"
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
                 xmlns:h="http://java.sun.com/jsf/html"
-                xmlns:f="http://xmlns.jcp.org/jsf/core">
+                xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:p="http://primefaces.org/ui">
     <f:metadata>
         <f:viewParam name="mID"/>
     </f:metadata>
@@ -15,10 +15,21 @@
              style="display:table;width: 70%;height:auto;margin: 0 auto;margin-top: 5%;text-align: center">
 
             <h:form id="form">
+                <script type="text/javascript">
+
+                    function t() {
+                        console.log('called');
+                        search();
+                    }
+
+
+                </script>
+                <p:remoteCommand name="search" actionListener="#{userIngredientBean.search()}" update="searchresults"/>
+
                 <div id="mDIV" style="display: inline-block;vertical-align: top;height: auto;width: 100%">
 
                     <h:dataTable id="mealIngredientsTable" columnClasses="column" style="width: 100%"
-                                 var="i" width="100" value="#{userIngredientBean.userIngredientsDataModel}">
+                                 var="i" width="100" value="#{userIngredientBean.u_I_DM}">
 
                         <h:column>
 
@@ -108,18 +119,18 @@
                 </div>
                 <div style="margin-top: 5%">
 
-                    <h:inputText id="search" value="#{userIngredientBean.searchWord}" autocomplete="off"
-                                 onkeypress="if (event.keyCode == 13) {onchange(event); return false; }"
-                                 onchange="return event.keyCode !== undefined"
+                    <h:inputText id="search" value="#{userIngredientBean.s_W}" autocomplete="off"
+
+                               onkeyup="t()"
                     >
-                        <f:ajax listener="#{userIngredientBean.search()}" render="searchresults"/>
+
                     </h:inputText>
 
                 </div>
                 <div>
 
                     <h:dataTable id="searchresults" columnClasses="column" style="width: 100%"
-                                 var="i" width="100" value="#{userIngredientBean.resultDataModel}">
+                                 var="i" width="100" value="#{userIngredientBean.s_R_DM}">
                         <h:column>
                             <div style="text-align: center">
                                 #{i.name}

@@ -1,6 +1,8 @@
 package organizer.user.beans;
 
 
+import lombok.Getter;
+import lombok.Setter;
 import organizer.group.dtos.GroupDTO;
 import organizer.system.enums.FaceletPath;
 import organizer.system.exceptions.DuplicateException;
@@ -21,6 +23,8 @@ import java.util.List;
 
 @Named("user")
 @SessionScoped
+@Getter
+@Setter
 public class UserBean implements Serializable {
 
     private Integer userID = null;
@@ -32,72 +36,15 @@ public class UserBean implements Serializable {
 
     private String currentEventId;
 
+    private UserDAO u_DAO = new UserDAO();
 
-    public String getCurrentEventId() {
-        return currentEventId;
-    }
-
-    public void setCurrentEventId(String currentEventId) {
-        this.currentEventId = currentEventId;
-    }
-
-    public int getNotifications() {
-        return notifications;
-    }
-
-    public void setNotifications(int notifications) {
-        this.notifications = notifications;
-    }
-
-    public Integer getUserID() {
-
-        return userID;
-    }
-
-    public void setUserID(Integer userID) {
-        this.userID = userID;
-    }
-
-    public List<GroupDTO> getgDTOAccepted() {
-        return gDTOAccepted;
-    }
-
-    public void setgDTOAccepted(List<GroupDTO> gDTOAccepted) {
-        this.gDTOAccepted = gDTOAccepted;
-    }
-
-    public List<GroupDTO> getgDTONotAccepted() {
-        return gDTONotAccepted;
-    }
-
-    public void setgDTONotAccepted(List<GroupDTO> gDTONotAccepted) {
-        this.gDTONotAccepted = gDTONotAccepted;
-    }
-
-
-    public String getVerificationHash() {
-        return verificationHash;
-    }
-
-    public void setVerificationHash(String verificationHash) {
-        this.verificationHash = verificationHash;
-    }
-
-
-    public UserDTO getDto() {
-        return dto;
-    }
-
-    public void setDto(UserDTO dto) {
-        this.dto = dto;
-    }
 
     public String login() {
 
 
-        UserDAO dao = getDAO();
+
         List<UserDTO> list;
-        list = dao.selectByDto(dto);
+        list = u_DAO.selectByDto(dto);
         if (!list.isEmpty()) {
             userID = list.get(0).getUserID();
             dto = list.get(0);
@@ -125,8 +72,7 @@ public class UserBean implements Serializable {
 
     public String verificate() {
 
-        UserDAO dao = getDAO();
-        dto.setVerificationHash(dao.getVerificationHash(dto));
+        dto.setVerificationHash(u_DAO.getVerificationHash(dto));
 
         if (!verificationHash.equals(dto.getVerificationHash())) {
             userID = null;
@@ -134,7 +80,7 @@ public class UserBean implements Serializable {
         } else {
 
             try {
-                dao.updateStatus(dto.getEmail());
+                u_DAO.updateStatus(dto.getEmail());
                 this.dto.setStatus(true);
             } catch (DuplicateException ex) {
 
@@ -143,11 +89,6 @@ public class UserBean implements Serializable {
         }
 
 
-    }
-
-
-    private UserDAO getDAO() {
-        return UserDAO.getInstance();
     }
 
 

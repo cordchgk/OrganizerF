@@ -6,6 +6,11 @@ import org.jetbrains.annotations.NotNull;
 import organizer.diet.nutrients.macronutrient.dtos.MacroDTO;
 import organizer.diet.nutrients.micronutrient.dtos.MicroDTO;
 import organizer.system.Utility;
+import organizer.system.image.daos.ImageDAO;
+
+import javax.annotation.PostConstruct;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -24,6 +29,10 @@ public class IngredientDTO implements Comparable {
     private MacroDTO macroDTO;
     private MicroDTO microDTO;
 
+    private List<String> i_U_L;
+
+    private String firstImage;
+
 
     public IngredientDTO() {
         this.macroDTO = new MacroDTO();
@@ -33,6 +42,17 @@ public class IngredientDTO implements Comparable {
     public IngredientDTO(String name, String amount) {
         this.name = name;
         this.amount = Float.parseFloat(amount);
+
+    }
+
+
+
+    public void createImageUrlList() {
+
+        this.i_U_L = new ImageDAO().getIngredientImagesUrls(this);
+        if(!this.i_U_L.isEmpty()){
+            this.firstImage = this.i_U_L.get(0);
+        }
 
     }
 
@@ -109,11 +129,7 @@ public class IngredientDTO implements Comparable {
         return this.iID == toCompare.iID;
     }
 
-    public String toCSV() {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(this.name + ", ");
-        stringBuilder.append(this.amount + ", ");
-        return stringBuilder.toString();
-    }
+
+
 }
 

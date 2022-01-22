@@ -18,23 +18,19 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class MealDAO {
-    private static final MealDAO instance = new MealDAO();
+
     ConnectionPool pool = ConnectionPool.getInstance();
 
-    public static MealDAO getInstance() {
-        return instance;
-    }
 
+    public List<MealDTO> getMealsByUserDTO(UserDTO u_DTO) throws DatabaseException {
 
-    public List<MealDTO> getMealsByUserDTO(UserDTO dto) throws DatabaseException {
-
-        List<MealDTO> toReturn = new ArrayList<>();
+        List<MealDTO> to_Return = new ArrayList<>();
 
         Connection conn = pool.getConnection();
         String query = "SELECT meal.name,meal.mid"
                 + " FROM meal WHERE meal.owner = ?";
         PreparedStatement statement = null;
-        ResultSet result;
+        ResultSet r_Set;
         try {
             statement = conn.prepareStatement(query);
         } catch (SQLException ex) {
@@ -43,15 +39,15 @@ public class MealDAO {
             pool.releaseConnection(conn);
         }
         try {
-            statement.setInt(1, dto.getUserID());
-            result = statement.executeQuery();
-            while (result.next()) {
-                MealDTO toAdd = new MealDTO();
-                toAdd.setName(result.getString(1));
-                toAdd.setmID(result.getInt(2));
-                toAdd.setMealIngredients(this.getIngredientByMealDTO(toAdd));
-                toAdd.calculateCalories();
-                toReturn.add(toAdd);
+            statement.setInt(1, u_DTO.getUserID());
+            r_Set = statement.executeQuery();
+            while (r_Set.next()) {
+                MealDTO to_Add = new MealDTO();
+                to_Add.setName(r_Set.getString(1));
+                to_Add.setMID(r_Set.getInt(2));
+                to_Add.setMealIngredients(this.getIngredientByMealDTO(to_Add));
+                to_Add.calculateCalories();
+                to_Return.add(to_Add);
             }
         } catch (SQLException ex) {
             Logger.getLogger(UserDAO.class.getName())
@@ -60,87 +56,15 @@ public class MealDAO {
         }
         pool.releaseConnection(conn);
 
-        return toReturn;
+        return to_Return;
     }
 
 
-    public List<MealDTO> getMealsByUserDTOForShoppingList(UserDTO dto, ShoppingListDTO shoppingListDTO) throws DatabaseException {
-
-        List<MealDTO> toReturn = new ArrayList<>();
-
-        Connection conn = pool.getConnection();
-        String query = "SELECT meal.name,meal.mid"
-                + " FROM meal,eventmeals,event WHERE meal.owner = ?";
-        PreparedStatement statement = null;
-        ResultSet result;
-        try {
-            statement = conn.prepareStatement(query);
-        } catch (SQLException ex) {
-            Logger.getLogger(UserDAO.class.getName())
-                    .log(Level.SEVERE, null, ex);
-            pool.releaseConnection(conn);
-        }
-        try {
-            statement.setInt(1, dto.getUserID());
-            result = statement.executeQuery();
-            while (result.next()) {
-                MealDTO toAdd = new MealDTO();
-                toAdd.setName(result.getString(1));
-                toAdd.setmID(result.getInt(2));
-                toAdd.setMealIngredients(this.getIngredientByMealDTO(toAdd));
-                toAdd.calculateCalories();
-                toReturn.add(toAdd);
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(UserDAO.class.getName())
-                    .log(Level.SEVERE, null, ex);
-            pool.releaseConnection(conn);
-        }
-        pool.releaseConnection(conn);
-
-        return toReturn;
-    }
+    public MealDTO getMealDTO(MealDTO m_DTO) {
 
 
-    public List<Integer> getIDsForAccess(UserDTO dto) throws DatabaseException {
-
-        List<Integer> toReturn = new ArrayList<>();
-
-        Connection conn = pool.getConnection();
-        String query = "SELECT meal.mid"
-                + " FROM meal WHERE meal.owner = ?";
-        PreparedStatement statement = null;
-        ResultSet result;
-        try {
-            statement = conn.prepareStatement(query);
-        } catch (SQLException ex) {
-            Logger.getLogger(UserDAO.class.getName())
-                    .log(Level.SEVERE, null, ex);
-            pool.releaseConnection(conn);
-        }
-        try {
-            statement.setInt(1, dto.getUserID());
-            result = statement.executeQuery();
-            while (result.next()) {
-                toReturn.add(result.getInt(1));
-
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(UserDAO.class.getName())
-                    .log(Level.SEVERE, null, ex);
-            pool.releaseConnection(conn);
-        }
-        pool.releaseConnection(conn);
-
-        return toReturn;
-    }
-
-
-    public MealDTO getMealDTO(MealDTO dto) {
-
-
-        MealDTO toReturn = new MealDTO();
-        toReturn.setmID(dto.getmID());
+        MealDTO t_R = new MealDTO();
+        t_R.setMID(m_DTO.getMID());
 
         Connection conn = pool.getConnection();
         String query = "SELECT name FROM meal WHERE mid = ? ";
@@ -154,11 +78,11 @@ public class MealDAO {
             pool.releaseConnection(conn);
         }
         try {
-            statement.setInt(1, dto.getmID());
+            statement.setInt(1, m_DTO.getMID());
             result = statement.executeQuery();
             while (result.next()) {
-                toReturn.setName(result.getString(1));
-                toReturn.setMealIngredients(this.getIngredientByMealDTO(dto));
+                t_R.setName(result.getString(1));
+                t_R.setMealIngredients(this.getIngredientByMealDTO(m_DTO));
             }
         } catch (SQLException ex) {
             Logger.getLogger(UserDAO.class.getName())
@@ -168,12 +92,12 @@ public class MealDAO {
         pool.releaseConnection(conn);
 
 
-        return toReturn;
+        return t_R;
     }
 
-    public List<IngredientDTO> getIngredientByMealDTO(MealDTO dto) throws DatabaseException {
+    public List<IngredientDTO> getIngredientByMealDTO(MealDTO m_DTO) throws DatabaseException {
 
-        List<IngredientDTO> toReturn = new ArrayList<>();
+        List<IngredientDTO> t_R = new ArrayList<>();
 
         Connection conn = pool.getConnection();
         String query = "SELECT amount, fat, protein, carbs, calories,ingredient.name,ingredient.iid FROM meal," +
@@ -192,22 +116,22 @@ public class MealDAO {
             pool.releaseConnection(conn);
         }
         try {
-            statement.setInt(1, dto.getmID());
+            statement.setInt(1, m_DTO.getMID());
             result = statement.executeQuery();
 
             while (result.next()) {
-                IngredientDTO toAdd = new IngredientDTO();
+                IngredientDTO t_A = new IngredientDTO();
 
-                toAdd.setAmount(result.getFloat(1));
-                toAdd.setFats(result.getFloat(2));
-                toAdd.setProtein(result.getFloat(3));
-                toAdd.setCarbs(result.getFloat(4));
-                toAdd.setCalories(result.getFloat(5));
-                toAdd.setName(result.getString(6));
-                toAdd.setIID(result.getInt(7));
+                t_A.setAmount(result.getFloat(1));
+                t_A.setFats(result.getFloat(2));
+                t_A.setProtein(result.getFloat(3));
+                t_A.setCarbs(result.getFloat(4));
+                t_A.setCalories(result.getFloat(5));
+                t_A.setName(result.getString(6));
+                t_A.setIID(result.getInt(7));
 
 
-                toReturn.add(toAdd);
+                t_R.add(t_A);
             }
         } catch (SQLException ex) {
             Logger.getLogger(UserDAO.class.getName())
@@ -216,11 +140,11 @@ public class MealDAO {
         }
         pool.releaseConnection(conn);
 
-        return toReturn;
+        return t_R;
     }
 
 
-    public boolean createMeal(MealDTO mealDTO, UserDTO userDTO) {
+    public boolean createMeal(MealDTO m_DTO, UserDTO u_DTO) {
 
 
         Connection conn = pool.getConnection();
@@ -230,14 +154,15 @@ public class MealDAO {
         try {
             PreparedStatement statement;
             statement = conn.prepareStatement(query);
-            statement.setString(1, mealDTO.getName());
-            statement.setInt(2, userDTO.getUserID());
+            statement.setString(1, m_DTO.getName());
+            statement.setInt(2, u_DTO.getUserID());
             statement.execute();
 
         } catch (SQLException ex) {
             Logger.getLogger(UserDAO.class.getName())
                     .log(Level.SEVERE, null, ex);
             pool.releaseConnection(conn);
+            return false;
         }
 
         pool.releaseConnection(conn);
@@ -247,7 +172,7 @@ public class MealDAO {
     }
 
 
-    public boolean deleteMeal(MealDTO mealDTO) {
+    public boolean deleteMeal(MealDTO m_DTO) {
 
 
         Connection conn = pool.getConnection();
@@ -257,7 +182,7 @@ public class MealDAO {
         try {
             PreparedStatement statement = conn.prepareStatement(query);
 
-            statement.setInt(1, mealDTO.getmID());
+            statement.setInt(1, m_DTO.getMID());
 
             statement.execute();
 
@@ -273,15 +198,15 @@ public class MealDAO {
         return true;
     }
 
-    public boolean deleteIngredientFromMeal(MealDTO mealDTO, IngredientDTO ingredientDTO) {
+    public boolean deleteIngredientFromMeal(MealDTO m_DTO, IngredientDTO i_DTO) {
         Connection conn = pool.getConnection();
         String query = "DELETE FROM mealingredients WHERE mealingredients.iid = ? AND mealingredients.mid = ?";
 
 
         try {
             PreparedStatement statement = conn.prepareStatement(query);
-            statement.setInt(1, ingredientDTO.getIID());
-            statement.setInt(2, mealDTO.getmID());
+            statement.setInt(1, i_DTO.getIID());
+            statement.setInt(2, m_DTO.getMID());
 
             statement.execute();
 
@@ -297,7 +222,7 @@ public class MealDAO {
         return true;
     }
 
-    public boolean updateIngredientAmount(MealDTO mealDTO, IngredientDTO ingredientDTO) {
+    public boolean updateIngredientAmount(MealDTO m_DTO, IngredientDTO i_DTO) {
         Connection conn = pool.getConnection();
         String query = "UPDATE mealingredients SET amount = ? WHERE mid = ? AND iid = ?";
 
@@ -305,9 +230,9 @@ public class MealDAO {
         try {
             PreparedStatement statement = conn.prepareStatement(query);
 
-            statement.setFloat(1, ingredientDTO.getAmount());
-            statement.setInt(2, mealDTO.getmID());
-            statement.setInt(3, ingredientDTO.getIID());
+            statement.setFloat(1, i_DTO.getAmount());
+            statement.setInt(2, m_DTO.getMID());
+            statement.setInt(3, i_DTO.getIID());
 
             statement.execute();
 
