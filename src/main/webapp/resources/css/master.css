@@ -1129,6 +1129,21 @@ header h1 {
     -webkit-margin-after: 0
 }
 
+.headerselect{
+    position: absolute;
+    left: calc(5.5% - 1rem);
+    top: 50%;
+    -webkit-transform: translate(0%, -47.5%);
+    transform: translate(0%, -47.5%);
+    font-size: 1.4em;
+    display: inline;
+    font-weight: bold;
+    padding: 16px 0;
+    margin: 0;
+    -webkit-margin-before: 0;
+    -webkit-margin-after: 0
+}
+
 header ul {
     position: absolute;
     right: 7.5%;

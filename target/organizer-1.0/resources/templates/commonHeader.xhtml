@@ -10,15 +10,21 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <header style="background-color: #8a6642 " class="ci">
-        <div>
 
-            <h:form>
-                <div>
-                    <h:selectOneMenu value="#{user.dto.userSettingsDTO.locale}">
+
+        <h:form>
+            <div style="width: 10%;height: 100%;margin-left: 5%" >
+                <div class="headerselect">
+                    <h:selectOneMenu value="#{user.dto.userSettingsDTO.locale}" style="height: 90%"
+                                     styleClass="ui-selecton">
                         <f:selectItems value="#{lc.locales}"/>
                         <f:ajax listener="#{headerBean.lang()}"/>
                     </h:selectOneMenu>
                 </div>
+                <div>
+                    <h1><a href="#{facesContext.externalContext.requestContextPath}">Organize It</a></h1>
+                </div>
+
                 <script>
 
                     function showSure() {
@@ -31,28 +37,25 @@
                     }
 
                 </script>
-                <p:dialog id="sure" widgetVar="sure">
-                    <div style="width: 100%">
-                        <h:outputText value="#{lc.getEntry('areyousure')}"/>
-                    </div>
-                    <div style="width: 100%;text-align: center;margin-top: 15px">
-                        <h:outputLink value="#{headerBean.updateUserLanguage()}" styleClass="ui-button"
-                                      style="height: max-content;width: 50%;background-color: #cc2222">
-
-                            #{lc.getEntry('reload')}
-
-                        </h:outputLink>
-
-                    </div>
-
-                </p:dialog>
-            </h:form>
-        </div>
-        <div>
-            <h1><a href="#{facesContext.externalContext.requestContextPath}">Organize It</a></h1>
+            </div>
+        </h:form>
 
 
-        </div>
+        <p:dialog id="sure" widgetVar="sure">
+            <div style="width: 100%">
+                <h:outputText value="#{lc.getEntry('areyousure')}"/>
+            </div>
+            <div style="width: 100%;text-align: center;margin-top: 15px">
+                <h:outputLink value="#{headerBean.updateUserLanguage()}" styleClass="ui-button"
+                              style="height: max-content;width: 50%;background-color: #cc2222">
+
+                    #{lc.getEntry('reload')}
+
+                </h:outputLink>
+
+            </div>
+
+        </p:dialog>
         <ul class="navbar">
 
             <h:panelGroup rendered="#{!user.isAuthenticated()}" style="height: 50%">
@@ -75,7 +78,7 @@
 
 
                     </f:websocket>
-                    <p:outputLabel id="nots" value="#{headerBean.notifications}" binding="#{headerBean.uiComponent}" >
+                    <p:outputLabel id="nots" value="#{headerBean.notifications}" binding="#{headerBean.uiComponent}">
 
                     </p:outputLabel>
 
@@ -111,7 +114,7 @@
                 <li>
                     <h:link styleClass="profile waves-effect btn-flat"
                             value="#{lc.getEntry('myschedule')}"
-                            outcome="/schedule/basic.xhtml"/>
+                            outcome="/schedule/schedule.xhtml"/>
 
                 </li>
 

@@ -7,7 +7,7 @@
         <f:viewParam name="mID"/>
     </f:metadata>
 
-    <ui:define name="title"></ui:define>
+    <ui:define name="title">#{lc.getEntry('mystock')}</ui:define>
     <ui:define name="content">
 
 
@@ -33,7 +33,7 @@
 
                         <h:column>
 
-                            <f:facet name="header">Amount:</f:facet>
+                            <f:facet name="header">#{lc.getEntry('amount')}:</f:facet>
                             <div style="text-align: center">
                                 <h:inputText id="change" value="#{i.amount}" autocomplete="off"
                                              onkeypress="if (event.keyCode == 13) {onchange(event); return false; }"
@@ -46,7 +46,7 @@
                         </h:column>
 
                         <h:column>
-                            <f:facet name="header">Name</f:facet>
+                            <f:facet name="header">#{lc.getEntry('name')}:</f:facet>
                             <div style="text-align: center">
                                 #{i.name}
                             </div>
@@ -54,7 +54,7 @@
 
                         </h:column>
                         <h:column>
-                            <f:facet name="header">Brand</f:facet>
+                            <f:facet name="header">#{lc.getEntry('brand')}:</f:facet>
                             <div style="text-align: center">
                                 #{i.brand}
                             </div>
@@ -62,7 +62,7 @@
 
                         </h:column>
                         <h:column>
-                            <f:facet name="header">Fats</f:facet>
+                            <f:facet name="header">#{lc.getEntry('fats')}:</f:facet>
                             <div style="text-align: center;width: 100%;">
                                 <div style="width: 30%;display: inline-block;text-align: center">
                                     <h:outputText value="#{i.getFats()}" style="width: 100%">
@@ -77,10 +77,10 @@
 
                         </h:column>
                         <h:column>
-                            <f:facet name="header">Protein</f:facet>
+                            <f:facet name="header">#{lc.getEntry('protein')}</f:facet>
                             <div style="text-align: center;width: 100%;">
                                 <div style="width: 30%;display: inline-block;text-align: center">
-                                    <h:outputText value="#{i.getProtein()}" style="width: 100%">
+                                    <h:outputText value="#{i.getProtein()}:" style="width: 100%">
 
                                     </h:outputText>
 
@@ -91,7 +91,7 @@
 
                         </h:column>
                         <h:column>
-                            <f:facet name="header">Carbs</f:facet>
+                            <f:facet name="header">#{lc.getEntry('carbs')}:</f:facet>
                             <div style="text-align: center;width: 100%;">
                                 <div style="width: 30%;display: inline-block;text-align: center">
                                     <h:outputText value="#{i.getCarbs()}" style="width: 100%">
@@ -105,7 +105,7 @@
 
                         </h:column>
                         <h:column>
-                            <f:facet name="header">Calories</f:facet>
+                            <f:facet name="header">#{lc.getEntry('calories')}:</f:facet>
                             <div style="text-align: center">
                                 #{i.getCalories()}
                             </div>
@@ -118,10 +118,10 @@
 
                 </div>
                 <div style="margin-top: 5%">
+                    <h:outputText value="#{lc.getEntry('search')}:"/>
 
                     <h:inputText id="search" value="#{userIngredientBean.s_W}" autocomplete="off"
-
-                               onkeyup="t()"
+                                 onkeyup="t()"
                     >
 
                     </h:inputText>
@@ -143,7 +143,7 @@
                         </h:column>
 
                         <h:column>
-                            <h:commandButton value="Add" action="#{userIngredientBean.add()}">
+                            <h:commandButton value="#{lc.getEntry('add')}" action="#{userIngredientBean.add()}">
                                 <f:ajax render="form" execute="@form"/>
                             </h:commandButton>
                         </h:column>

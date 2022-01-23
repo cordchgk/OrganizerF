@@ -45,9 +45,6 @@ public class HeaderBean implements Serializable {
     private FaceletPath path;
 
 
-
-
-
     @Inject
     UserBean userBean;
 
@@ -60,6 +57,10 @@ public class HeaderBean implements Serializable {
         this.url = Utility.getURL();
     }
 
+
+    public String locale() {
+        return this.userBean.getDto().getUserSettingsDTO().getLocale();
+    }
 
     public void lang() {
         PrimeFaces.current().executeInitScript("showSure()");
@@ -82,7 +83,7 @@ public class HeaderBean implements Serializable {
     }
 
 
-    public static String urlBuilder(){
+    public static String urlBuilder() {
         HttpServletRequest origRequest = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
 
         StringBuilder stringBuilder = new StringBuilder();

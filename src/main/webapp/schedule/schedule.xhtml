@@ -19,7 +19,7 @@
             <h:form>
                 <p:growl id="messages" showDetail="true"/>
 
-                <p:schedule id="schedule" value="#{scheduleBean.s_M}" widgetVar="myschedule"
+                <p:schedule id="schedule" value="#{scheduleBean.s_M}" widgetVar="myschedule" locale="#{headerBean.locale()}"
                             timeZone="#{scheduleBean.serverTimeZone}"
                             clientTimeZone="#{scheduleBean.serverTimeZone}">
                     <p:ajax event="dateSelect" listener="#{scheduleBean.onDateSelect}" update="eventDetails"
@@ -35,19 +35,19 @@
 
 
                 </p:schedule>
-                <p:dialog widgetVar="eventDialog" id="eventDialog" header="Event Details">
+                <p:dialog widgetVar="eventDialog" id="eventDialog" header="#{lc.getEntry('eventdetails')}">
                     <h:panelGrid id="eventDetails" columns="2" cellpadding="7" style="width: 100%">
-                        <p:outputLabel for="title" value="Titles" styleClass="p-text-bold"/>
+                        <p:outputLabel for="title" value="#{lc.getEntry('title')}:" styleClass="p-text-bold"/>
                         <p:inputText id="title" value="#{scheduleBean.e.title}" required="true"
                         />
 
-                        <p:outputLabel for="from" value="From" styleClass="p-text-bold"
+                        <p:outputLabel for="from" value="#{lc.getEntry('from')}:" styleClass="p-text-bold"
                         />
                         <p:datePicker id="from"
                                       value="#{scheduleBean.e.startDate}" pattern="dd/MM/yyyy"
                                       showTime="true" appendTo="@(body)"/>
 
-                        <p:outputLabel for="to" value="To" styleClass="p-text-bold"
+                        <p:outputLabel for="to" value="#{lc.getEntry('to')}:" styleClass="p-text-bold"
                         />
                         <p:datePicker id="to"
                                       value="#{scheduleBean.e.endDate}" pattern="dd/MM/yyyy"

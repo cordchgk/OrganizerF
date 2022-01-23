@@ -23,6 +23,7 @@ import java.util.List;
 @ViewScoped
 @Getter
 @Setter
+
 public class NewIngredientBean implements Serializable {
     private IngredientDTO i_DTO;
     private List<IngredientDTO> i_DTO_L;

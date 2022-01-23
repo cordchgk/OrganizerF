@@ -83,6 +83,7 @@ public class UserBean implements Serializable {
         dto = new UserDTO();
         dto.setUserSettingsDTO(userSettingsDTO);
 
+
         verificationHash = "";
 
         return FaceletPath.INDEX.getRedirectionPath();
