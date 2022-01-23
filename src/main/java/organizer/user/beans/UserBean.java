@@ -3,22 +3,28 @@ package organizer.user.beans;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.primefaces.PrimeFaces;
 import organizer.group.dtos.GroupDTO;
 import organizer.system.enums.FaceletPath;
 import organizer.system.exceptions.DuplicateException;
 import organizer.user.daos.UserDAO;
+import organizer.user.daos.UserSettingsDAO;
 import organizer.user.dtos.UserDTO;
+import organizer.user.dtos.UserSettingsDTO;
 
+import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.ConfigurableNavigationHandler;
 import javax.faces.context.FacesContext;
-import javax.faces.event.ComponentSystemEvent;
+import javax.faces.event.*;
 import javax.faces.push.Push;
 import javax.faces.push.PushContext;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.servlet.http.HttpServletRequest;
 import java.io.Serializable;
 import java.util.List;
+import java.util.Locale;
 
 
 @Named("user")
@@ -28,7 +34,7 @@ import java.util.List;
 public class UserBean implements Serializable {
 
     private Integer userID = null;
-    private UserDTO dto = new UserDTO();
+    private UserDTO dto;
     private String verificationHash;
     private List<GroupDTO> gDTOAccepted;
     private int notifications = 0;
@@ -39,15 +45,24 @@ public class UserBean implements Serializable {
     private UserDAO u_DAO = new UserDAO();
 
 
+    @PostConstruct
+    public void init() {
+        this.dto = new UserDTO();
+        this.dto.setUserSettingsDTO(new UserSettingsDTO());
+
+
+    }
+
+
     public String login() {
-
-
-
         List<UserDTO> list;
         list = u_DAO.selectByDto(dto);
         if (!list.isEmpty()) {
             userID = list.get(0).getUserID();
             dto = list.get(0);
+
+            UserSettingsDAO userSettingsDAO = new UserSettingsDAO();
+            this.dto.setUserSettingsDTO(userSettingsDAO.getUserSettingsByDTO(this.dto));
 
             if (dto.isStatus()) {
                 return FaceletPath.MEALS.getRedirectionPath();
@@ -63,7 +78,11 @@ public class UserBean implements Serializable {
 
     public String logout() {
         userID = null;
+        UserSettingsDTO userSettingsDTO = new UserSettingsDTO();
+        userSettingsDTO.setLocale(this.dto.getUserSettingsDTO().getLocale());
         dto = new UserDTO();
+        dto.setUserSettingsDTO(userSettingsDTO);
+
         verificationHash = "";
 
         return FaceletPath.INDEX.getRedirectionPath();
@@ -129,6 +148,9 @@ public class UserBean implements Serializable {
 
         this.notifications = 0;
     }
+
+
+
 
 
 }

@@ -5,7 +5,7 @@
                 xmlns:f="http://xmlns.jcp.org/jsf/core">
 
 
-    <ui:define name="title"></ui:define>
+    <ui:define name="title">#{lc.getEntry('newingredient')}</ui:define>
     <ui:define name="content">
 
 
@@ -19,7 +19,7 @@
                                  columnClasses="columnNI">
 
                         <h:column>
-                            <f:facet name="header">Name:
+                            <f:facet name="header">#{lc.getEntry('name')}:
                             </f:facet>
                             <div style="text-align: center">
                                 <h:inputText styleClass="ui-inputfield" value="#{i.name}"
@@ -31,7 +31,7 @@
                         </h:column>
 
                         <h:column>
-                            <f:facet name="header">Brand:
+                            <f:facet name="header">#{lc.getEntry('brand')}:
                             </f:facet>
                             <div style="text-align: center">
                                 <h:inputText styleClass="ui-inputfield" value="#{i.brand}" onfocus="this.value =''"
@@ -44,7 +44,7 @@
 
 
                         <h:column>
-                            <f:facet name="header">Fats:
+                            <f:facet name="header">#{lc.getEntry('fats')}:
                             </f:facet>
                             <div style="text-align: center">
                                 <h:inputText styleClass="ui-inputfield" value="#{i.macroDTO.fatDTO.amount}"
@@ -57,7 +57,7 @@
                         </h:column>
 
                         <h:column>
-                            <f:facet name="header">Protein:
+                            <f:facet name="header">#{lc.getEntry('protein')}:
                             </f:facet>
                             <div style="text-align: center">
                                 <h:inputText styleClass="ui-inputfield" value="#{i.macroDTO.proteinDTO.amount}"
@@ -70,7 +70,7 @@
                         </h:column>
 
                         <h:column>
-                            <f:facet name="header">Carbs:
+                            <f:facet name="header">#{lc.getEntry('carbs')}:
                             </f:facet>
                             <div style="text-align: center">
                                 <h:inputText styleClass="ui-inputfield" value="#{i.macroDTO.carbDTO.amount}"
@@ -84,7 +84,7 @@
 
 
                         <h:column>
-                            <f:facet name="header">Calories:
+                            <f:facet name="header">#{lc.getEntry('calories')}:
                             </f:facet>
                             <div style="text-align: center">
                                 <h:inputText styleClass="ui-inputfield" value="#{i.calories}" onfocus="this.value =''"
@@ -97,7 +97,7 @@
 
                     </h:dataTable>
                     <div style="margin-top: 1%;text-align: center">
-                        <h:commandButton style="margin-bottom: 1%" value="Create"
+                        <h:commandButton style="margin-bottom: 1%" value="#{lc.getEntry('create')}"
                                          action="#{newIngredientBean.create()}">
 
 

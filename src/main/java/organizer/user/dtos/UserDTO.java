@@ -1,14 +1,19 @@
 package organizer.user.dtos;
 
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.xml.bind.annotation.*;
 import java.io.Serializable;
+import java.util.Locale;
 
 /**
  * Created by cord on 07.06.16.
  */
 @XmlRootElement(name = "user")
-
+@Getter
+@Setter
 public class UserDTO implements Serializable {
 
     private static final long serialVersionUID = 3461340127831352062L;
@@ -21,6 +26,9 @@ public class UserDTO implements Serializable {
     private String address;
     private String verificationHash = null;
     private Boolean status;
+    private String language = "en";
+
+    private UserSettingsDTO userSettingsDTO;
 
     @XmlElement
     public String getFirstname() {

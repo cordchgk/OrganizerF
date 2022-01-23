@@ -100,7 +100,9 @@ public class ShoppingListBean implements Serializable {
             this.s_DAO.addToShoppingList(this.u_Bean.getDto(), t_A);
             this.clean();
             this.filter();
-
+            for (IngredientDTO i_DTO : this.s_L_DTO.getI_DTO_L()) {
+                i_DTO.createImageUrlList();
+            }
 
         } else {
 
@@ -192,7 +194,6 @@ public class ShoppingListBean implements Serializable {
             }
         }
         this.r_DM = new ListDataModel<>(this.r_L);
-
     }
 
 

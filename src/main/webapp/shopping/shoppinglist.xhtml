@@ -44,7 +44,10 @@
                         <h:column>
                             <f:facet name="header">Ingredient</f:facet>
                             <div style="text-align: center">
-                                #{s.name}
+                                <h:link outcome="/diet/ingredient/ingredient.xhtml">
+                                    <f:param name="iID" value="#{s.IID}"/>
+                                    #{s.name}
+                                </h:link>
                             </div>
                         </h:column>
                         <h:column>

@@ -7,11 +7,13 @@ import organizer.diet.ingredient.daos.IngredientDAO;
 import organizer.diet.ingredient.dtos.IngredientDTO;
 import organizer.diet.system.IngredientSearch;
 import organizer.system.exceptions.DuplicateException;
+import organizer.user.beans.UserBean;
 
 import javax.annotation.PostConstruct;
 import javax.faces.model.DataModel;
 import javax.faces.model.ListDataModel;
 import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
 import javax.inject.Named;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -28,6 +30,9 @@ public class NewIngredientBean implements Serializable {
     private IngredientDAO i_DAO;
 
 
+    @Inject
+    private UserBean u_Bean;
+
     @PostConstruct
     public void init() {
         this.build();
@@ -38,7 +43,7 @@ public class NewIngredientBean implements Serializable {
         for (IngredientDTO pointerDTO : this.i_DTO_L) {
 
             try {
-                this.i_DAO.createNewIngredient(pointerDTO);
+                this.i_DAO.createNewIngredient(pointerDTO, u_Bean.getDto());
 
 
             } catch (DuplicateException e) {

@@ -33,9 +33,15 @@ public class IngredientDTO implements Comparable {
 
     private String firstImage;
 
+    private int u_ID;
+
 
     public IngredientDTO() {
         this.macroDTO = new MacroDTO();
+    }
+
+    public IngredientDTO(int id) {
+        this.iID = id;
     }
 
 
@@ -46,11 +52,10 @@ public class IngredientDTO implements Comparable {
     }
 
 
-
     public void createImageUrlList() {
 
         this.i_U_L = new ImageDAO().getIngredientImagesUrls(this);
-        if(!this.i_U_L.isEmpty()){
+        if (!this.i_U_L.isEmpty()) {
             this.firstImage = this.i_U_L.get(0);
         }
 
@@ -128,7 +133,6 @@ public class IngredientDTO implements Comparable {
         IngredientDTO toCompare = (IngredientDTO) o;
         return this.iID == toCompare.iID;
     }
-
 
 
 }

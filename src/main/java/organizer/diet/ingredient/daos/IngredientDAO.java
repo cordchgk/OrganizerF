@@ -79,7 +79,7 @@ public class IngredientDAO {
     }
 
 
-    public int createNewIngredient(IngredientDTO i_DTO)
+    public int createNewIngredient(IngredientDTO i_DTO,UserDTO u_DTO)
             throws DatabaseException, DuplicateException {
 
         Connection conn = pool.getConnection();
@@ -88,8 +88,8 @@ public class IngredientDAO {
         int iD = 0;
 
         String query =
-                "INSERT INTO ingredient (name, fat, protein, carbs, calories, manufacturer, categorie, co) " +
-                        "VALUES (?,?,?,?,?,?,?,?)";
+                "INSERT INTO ingredient (name, fat, protein, carbs, calories, manufacturer, categorie, co,uid) " +
+                        "VALUES (?,?,?,?,?,?,?,?,?)";
 
         try {
             PreparedStatement statement = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
@@ -101,9 +101,12 @@ public class IngredientDAO {
             statement.setString(6, i_DTO.getBrand());
             statement.setString(7, "");
             statement.setString(8, "");
-            r_Set = statement.executeQuery();
+            statement.setInt(9,u_DTO.getUserID());
+            statement.executeUpdate();
+            r_Set = statement.getGeneratedKeys();
             while (r_Set.next()) {
                 iD = r_Set.getInt(1);
+
             }
 
         } catch (SQLException ex) {
@@ -212,6 +215,50 @@ public class IngredientDAO {
         return true;
     }
 
+    public IngredientDTO getIngredientByDTO(IngredientDTO i_DTO) {
+        IngredientDTO t_R = new IngredientDTO();
+
+
+        Connection conn = pool.getConnection();
+        String query = "SELECT ingredient.iid,ingredient.name,ingredient.fat,ingredient.protein,ingredient.carbs," +
+                "ingredient.calories,ingredient.manufacturer,ingredient.uid FROM ingredient " +
+                "WHERE ingredient.iid = ? ";
+        PreparedStatement statement = null;
+        ResultSet result;
+        try {
+            statement = conn.prepareStatement(query);
+
+            statement.setInt(1, i_DTO.getIID());
+
+        } catch (SQLException ex) {
+            Logger.getLogger(UserDAO.class.getName())
+                    .log(Level.SEVERE, null, ex);
+            pool.releaseConnection(conn);
+        }
+        try {
+
+
+            result = statement.executeQuery();
+            while (result.next()) {
+                t_R.setIID(result.getInt(1));
+                t_R.setName(result.getString(2));
+                t_R.setFats(result.getFloat(3));
+                t_R.setProtein(result.getFloat(4));
+                t_R.setCarbs(result.getFloat(5));
+                t_R.setCalories(result.getFloat(6));
+                t_R.setBrand(result.getString(7));
+                t_R.setU_ID(result.getInt(8));
+                t_R.createImageUrlList();
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(UserDAO.class.getName())
+                    .log(Level.SEVERE, null, ex);
+            pool.releaseConnection(conn);
+        }
+        pool.releaseConnection(conn);
+        return t_R;
+
+    }
 
 
 }

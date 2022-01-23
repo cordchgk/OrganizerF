@@ -1,15 +1,53 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:f="http://xmlns.jcp.org/jsf/core"
 
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:p="http://primefaces.org/ui">
+
 
 <ui:composition>
     <h:outputScript name="/js/common.js"/>
 
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <header style="background-color: #8a6642 " class="ci">
+        <div>
+
+            <h:form>
+                <div>
+                    <h:selectOneMenu value="#{user.dto.userSettingsDTO.locale}">
+                        <f:selectItems value="#{lc.locales}"/>
+                        <f:ajax listener="#{headerBean.lang()}"/>
+                    </h:selectOneMenu>
+                </div>
+                <script>
+
+                    function showSure() {
+
+                        var myEle = document.getElementById('sure');
+
+                        console.log(myEle);
+                        PF('sure').show();
+
+                    }
+
+                </script>
+                <p:dialog id="sure" widgetVar="sure">
+                    <div style="width: 100%">
+                        <h:outputText value="#{lc.getEntry('areyousure')}"/>
+                    </div>
+                    <div style="width: 100%;text-align: center;margin-top: 15px">
+                        <h:outputLink value="#{headerBean.updateUserLanguage()}" styleClass="ui-button"
+                                      style="height: max-content;width: 50%;background-color: #cc2222">
+
+                            #{lc.getEntry('reload')}
+
+                        </h:outputLink>
+
+                    </div>
+
+                </p:dialog>
+            </h:form>
+        </div>
         <div>
             <h1><a href="#{facesContext.externalContext.requestContextPath}">Organize It</a></h1>
 
@@ -20,12 +58,12 @@
             <h:panelGroup rendered="#{!user.isAuthenticated()}" style="height: 50%">
                 <li>
                     <h:link styleClass="login waves-effect btn-flat"
-                            value="LOGIN"
+                            value="#{lc.getEntry('login')}"
                             outcome="/user/login.xhtml"/>
                 </li>
                 <li>
                     <h:link styleClass="login waves-effect btn-flat"
-                            value="Registration"
+                            value="#{lc.getEntry('registration')}"
                             outcome="/user/registration.xhtml"/>
                 </li>
 
@@ -37,19 +75,19 @@
 
 
                     </f:websocket>
-                    <p:outputLabel id="nots" value="#{headerBean.notifications}" binding="#{headerBean.uiComponent}">
+                    <p:outputLabel id="nots" value="#{headerBean.notifications}" binding="#{headerBean.uiComponent}" >
 
                     </p:outputLabel>
 
                 </li>
                 <li>
                     <p:remoteCommand name="resetCommand" action="#{user.reset()}"/>
-                    <div class="popup" onclick="notificationPopUp()">Notifications
+                    <div class="popup" onclick="notificationPopUp()">#{lc.getEntry('notifications')}
 
                         <iframe allowtransparency="false" id="myPopup" class="popuptext login card-no-hover"
                                 src="#{headerBean.url}/user/notifications.xhtml"
                                 height="600"
-                                style="width: 500px" name="Notifications">
+                                style="width: 500px" name="#{lc.getEntry('notifications')}">
 
                         </iframe>
 
@@ -64,18 +102,15 @@
                 </li>
 
 
-
-
-
                 <li>
                     <h:link styleClass="profile waves-effect btn-flat"
-                            value="My Shopping"
+                            value="#{lc.getEntry('myshopping')}"
                             outcome="/shopping/shoppinglist.xhtml"/>
 
                 </li>
                 <li>
                     <h:link styleClass="profile waves-effect btn-flat"
-                            value="My Schedule"
+                            value="#{lc.getEntry('myschedule')}"
                             outcome="/schedule/basic.xhtml"/>
 
                 </li>
@@ -83,31 +118,31 @@
 
                 <li>
                     <h:link styleClass="profile waves-effect btn-flat"
-                            value="My Stock"
+                            value="#{lc.getEntry('mystock')}"
                             outcome="/diet/useringredient.xhtml"/>
 
                 </li>
                 <li>
                     <h:link styleClass="profile waves-effect btn-flat"
-                            value="My Meals"
+                            value="#{lc.getEntry('mymeals')}"
                             outcome="/diet/meals.xhtml"/>
 
                 </li>
                 <li>
                     <h:link styleClass="profile waves-effect btn-flat"
-                            value="New Ingredient"
+                            value="#{lc.getEntry('newingredient')}"
                             outcome="/diet/ingredient/newingredient.xhtml"/>
 
                 </li>
                 <li>
                     <h:link styleClass="profile waves-effect btn-flat"
-                            value="My Groups"
+                            value="#{lc.getEntry('mygroups')}"
                             outcome="/group/groups.xhtml"/>
 
                 </li>
                 <li>
                     <h:link styleClass="profile waves-effect btn-flat"
-                            value="Profile"
+                            value="#{lc.getEntry('profile')}"
                             outcome="/user/profile.xhtml"/>
 
                 </li>
@@ -116,7 +151,7 @@
                     <h:form>
                         <h:commandLink
                                 styleClass="logout waves-effect btn-flat"
-                                value="LOGOUT"
+                                value="#{lc.getEntry('logout')}"
                                 action="#{user.logout()}">
                         </h:commandLink>
                     </h:form>
@@ -125,6 +160,7 @@
         </ul>
 
     </header>
+
 
 </ui:composition>
 

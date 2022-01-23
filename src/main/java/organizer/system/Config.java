@@ -42,6 +42,7 @@ public enum Config {
     public static Integer getEntry(final String key,
             final Integer defaultValue) {
 
+
         final String defaultString = String.valueOf(defaultValue);
         final String entry = getEntry(key, defaultString);
         return Integer.parseInt(entry);

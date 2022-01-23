@@ -18,11 +18,8 @@ import java.util.logging.Logger;
  * Created by cord on 07.06.16.
  */
 public class UserDAO {
-    private static UserDAO instance = new UserDAO();
 
-    public static UserDAO getInstance() {
-        return instance;
-    }
+    ConnectionPool pool = ConnectionPool.getInstance();
 
 
     public void insert(UserDTO dto)
@@ -91,6 +88,28 @@ public class UserDAO {
             PreparedStatement statement = conn.prepareStatement(query);
             statement.setString(1, password);
             statement.setString(2, email);
+            statement.execute();
+
+        } catch (SQLException ex) {
+            Logger.getLogger(UserDAO.class.getName())
+                    .log(Level.SEVERE, null, ex);
+            pool.releaseConnection(conn);
+        }
+        pool.releaseConnection(conn);
+    }
+
+
+    public void updateUserLanuage(UserDTO u_DTO)
+            throws DatabaseException, DuplicateException {
+
+
+        Connection conn = pool.getConnection();
+        String query =
+                "UPDATE usersettings SET language = ? WHERE uid = ?;";
+        try {
+            PreparedStatement statement = conn.prepareStatement(query);
+            statement.setString(1, u_DTO.getUserSettingsDTO().getLocale());
+            statement.setInt(2, u_DTO.getUserID());
             statement.execute();
 
         } catch (SQLException ex) {
@@ -274,5 +293,8 @@ public class UserDAO {
         pool.releaseConnection(conn);
         return userDTOs;
     }
+
+
+
 
 }

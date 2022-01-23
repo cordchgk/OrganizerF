@@ -1,6 +1,7 @@
 package organizer.system;
 
 import organizer.system.exceptions.DatabaseException;
+import organizer.system.localization.LocalConfig;
 
 import javax.enterprise.context.ApplicationScoped;
 import java.io.Serializable;
@@ -39,6 +40,10 @@ public class ConnectionPool implements Serializable {
 
 
     private ConnectionPool() {
+
+        LocalConfig localConfig = new LocalConfig();
+
+
 
 
         final Integer maxConnections = Config.getEntry("MAX_CONNECTIONS", 20);
@@ -416,7 +421,8 @@ public class ConnectionPool implements Serializable {
                     "calories float," +
                     "manufacturer varchar," +
                     "categorie varchar," +
-                    "co varchar)";
+                    "co varchar," +
+                    "uID smallint)";
             stmt.executeUpdate(query);
             stmt.close();
         } catch (SQLException ex) {
