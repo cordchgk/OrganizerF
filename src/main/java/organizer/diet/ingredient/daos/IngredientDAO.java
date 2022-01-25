@@ -106,9 +106,7 @@ public class IngredientDAO {
             r_Set = statement.getGeneratedKeys();
             while (r_Set.next()) {
                 iD = r_Set.getInt(1);
-
             }
-
         } catch (SQLException ex) {
             Logger.getLogger(UserDAO.class.getName())
                     .log(Level.SEVERE, null, ex);
@@ -236,7 +234,6 @@ public class IngredientDAO {
             pool.releaseConnection(conn);
         }
         try {
-
 
             result = statement.executeQuery();
             while (result.next()) {

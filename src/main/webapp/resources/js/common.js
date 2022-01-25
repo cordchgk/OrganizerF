@@ -19,7 +19,9 @@ function socketListener(message, channel, event) {
 }
 
 
-
+function reload(){
+    window.location.reload();
+}
 
 
 

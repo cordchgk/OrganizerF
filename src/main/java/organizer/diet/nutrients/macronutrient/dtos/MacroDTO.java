@@ -1,5 +1,10 @@
 package organizer.diet.nutrients.macronutrient.dtos;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class MacroDTO {
     private FatDTO fatDTO;
     private ProteinDTO proteinDTO;
@@ -13,27 +18,31 @@ public class MacroDTO {
     }
 
 
-    public FatDTO getFatDTO() {
-        return fatDTO;
+
+    public float getFats(){
+        return this.fatDTO.getAmount();
     }
 
-    public void setFatDTO(FatDTO fatDTO) {
-        this.fatDTO = fatDTO;
+    public float getProtein() {
+        return this.proteinDTO.getAmount();
     }
 
-    public ProteinDTO getProteinDTO() {
-        return proteinDTO;
+    public float getCarbs(){
+        return this.carbDTO.getAmount();
     }
 
-    public void setProteinDTO(ProteinDTO proteinDTO) {
-        this.proteinDTO = proteinDTO;
+
+    public void setFats(float amount){
+        this.fatDTO.setAmount(amount);
     }
 
-    public CarbDTO getCarbDTO() {
-        return carbDTO;
+    public void setProtein(float amount){
+        this.proteinDTO.setAmount(amount);
+
     }
 
-    public void setCarbDTO(CarbDTO carbDTO) {
-        this.carbDTO = carbDTO;
+
+    public void setCarbs(float amount){
+        this.carbDTO.setAmount(amount);
     }
 }

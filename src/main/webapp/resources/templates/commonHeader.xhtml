@@ -18,7 +18,7 @@
                     <h:selectOneMenu value="#{user.dto.userSettingsDTO.locale}" style="height: 90%"
                                      styleClass="ui-selecton">
                         <f:selectItems value="#{lc.locales}"/>
-                        <f:ajax listener="#{headerBean.lang()}"/>
+                        <f:ajax listener="#{headerBean.updateUserLanguage()}" resetValues="false"/>
                     </h:selectOneMenu>
                 </div>
                 <div>
@@ -74,7 +74,7 @@
             <h:panelGroup rendered="#{user.isAuthenticated()}" style="height: 50%">
                 <li>
 
-                    <f:websocket channel="testChannel" user="#{user.userID}" onmessage="socketListener">
+                    <f:websocket channel="testChannel" user="#{user.dto.userID}" onmessage="socketListener">
 
 
                     </f:websocket>

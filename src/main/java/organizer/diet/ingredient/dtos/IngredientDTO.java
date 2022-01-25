@@ -16,7 +16,6 @@ import java.util.List;
 @Setter
 public class IngredientDTO implements Comparable {
     private int iID;
-
     private boolean shoppingListIngredient = false;
 
     private float calories;
@@ -63,50 +62,30 @@ public class IngredientDTO implements Comparable {
 
 
     public float getFats() {
-        return this.macroDTO.getFatDTO().getAmount();
+        return this.macroDTO.getFats();
     }
 
     public void setFats(float fats) {
-        this.macroDTO.getFatDTO().setAmount(fats);
+        this.macroDTO.setFats(fats);
     }
 
     public float getProtein() {
-        return this.macroDTO.getProteinDTO().getAmount();
+        return this.macroDTO.getProtein();
     }
 
     public void setProtein(float protein) {
-        this.macroDTO.getProteinDTO().setAmount(protein);
+        this.macroDTO.setProtein(protein);
     }
 
     public float getCarbs() {
-        return this.macroDTO.getCarbDTO().getAmount();
+        return this.macroDTO.getCarbs();
     }
 
     public void setCarbs(float carbs) {
-        this.macroDTO.getCarbDTO().setAmount(carbs);
+        this.macroDTO.setCarbs(carbs);
     }
 
-    public float actualFats() {
-        return Utility.twoDecimals(this.macroDTO.getFatDTO().getAmount() * this.percentage());
 
-    }
-
-    public float actualProtein() {
-        return Utility.twoDecimals(this.macroDTO.getProteinDTO().getAmount() * this.percentage());
-    }
-
-    public float actualCarbs() {
-        return Utility.twoDecimals(this.macroDTO.getCarbDTO().getAmount() * this.percentage());
-    }
-
-    public float actualCalories() {
-        return Utility.twoDecimals(this.calories * this.percentage());
-
-    }
-
-    private float percentage() {
-        return this.amount / 100;
-    }
 
     @Override
     public int compareTo(@NotNull Object o) {

@@ -52,7 +52,7 @@ public class IngredientBean implements Serializable {
 
 
     public boolean isUsersIngredient() {
-        return this.i_DTO.getU_ID() == this.u_Bean.getDto().getUserID();
+        return this.i_DTO.getU_ID() == this.u_Bean.getUserId();
     }
 
 

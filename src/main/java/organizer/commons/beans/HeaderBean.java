@@ -35,7 +35,6 @@ public class HeaderBean implements Serializable {
 
     private int notifications;
     private String url;
-
     private int id;
 
     private UIComponent uiComponent;
@@ -51,15 +50,13 @@ public class HeaderBean implements Serializable {
     @PostConstruct
     public void init() {
 
-
         this.currentURL = urlBuilder();
-
         this.url = Utility.getURL();
     }
 
 
     public String locale() {
-        return this.userBean.getDto().getUserSettingsDTO().getLocale();
+        return this.userBean.getLocale();
     }
 
     public void lang() {
@@ -67,8 +64,8 @@ public class HeaderBean implements Serializable {
     }
 
 
-    public String updateUserLanguage() {
-        if (this.userBean.getDto() != null && this.userBean.getDto().getUserID() != null) {
+    public void updateUserLanguage() {
+        if (this.userBean.getDto() != null && this.userBean.getUserId() != null) {
             try {
                 UserDAO u_DAO = new UserDAO();
                 u_DAO.updateUserLanuage(this.userBean.getDto());
@@ -77,8 +74,7 @@ public class HeaderBean implements Serializable {
                 e.printStackTrace();
             }
         }
-        return this.currentURL;
-
+        PrimeFaces.current().executeInitScript("reload()");
 
     }
 

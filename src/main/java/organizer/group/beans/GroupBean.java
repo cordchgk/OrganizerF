@@ -137,7 +137,7 @@ public class GroupBean implements Serializable {
         GroupDAO dao = new GroupDAO();
         GroupUserDTO newGroupUserDTO = new GroupUserDTO();
         newGroupUserDTO.setgName(this.newGroupName);
-        newGroupUserDTO.setUserID(this.userBean.getUserID());
+        newGroupUserDTO.setUserID(this.userBean.getDto().getUserID());
         try {
             dao.createGroup(newGroupUserDTO);
 

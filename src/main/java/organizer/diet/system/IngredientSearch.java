@@ -51,7 +51,6 @@ public class IngredientSearch {
     }
 
 
-
     private void addAllToTrie(List<IngredientDTO> dtos) {
         for (IngredientDTO dto : dtos) {
             this.add(dto.getName(), dto.getIID());
@@ -61,7 +60,9 @@ public class IngredientSearch {
     }
 
     public void add(String word, int value) {
+
         this.trie.add(word, value);
+
         while (word.length() > 0) {
             word = word.substring(1);
             this.trie.add(word, value);
@@ -70,15 +71,13 @@ public class IngredientSearch {
 
     }
 
-    private void addToList(String word, int value) {
-        IngredientDTO toAdd = new IngredientDTO();
-        toAdd.setIID(value);
-        toAdd.setName(word);
-        this.i_L.add(toAdd);
+    public void addToList(IngredientDTO i_DTO) {
+        this.i_L.add(i_DTO);
     }
 
     public List<Integer> search(String searchWord) {
         String[] words = searchWord.split(" ");
+
 
         ArrayList<HashSet<Integer>> all = new ArrayList<>();
 

@@ -36,6 +36,8 @@ public class NewIngredientBean implements Serializable {
 
     @PostConstruct
     public void init() {
+
+
         this.build();
     }
 
@@ -44,14 +46,15 @@ public class NewIngredientBean implements Serializable {
         for (IngredientDTO pointerDTO : this.i_DTO_L) {
 
             try {
-                this.i_DAO.createNewIngredient(pointerDTO, u_Bean.getDto());
-
+                pointerDTO.setIID(this.i_DAO.createNewIngredient(pointerDTO, u_Bean.getDto()));
 
             } catch (DuplicateException e) {
                 e.printStackTrace();
             }
 
+
             IngredientSearch.getInstance().add(pointerDTO.getName(), pointerDTO.getIID());
+            IngredientSearch.getInstance().addToList(pointerDTO);
 
         }
         this.build();

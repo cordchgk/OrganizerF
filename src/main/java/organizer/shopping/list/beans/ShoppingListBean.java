@@ -182,7 +182,7 @@ public class ShoppingListBean implements Serializable {
 
         List<Integer> ids = IngredientSearch.getInstance().search(s_W);
 
-
+        System.out.println(ids);
         if (!ids.isEmpty()) {
             for (Integer i : ids) {
 

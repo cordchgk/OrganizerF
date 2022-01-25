@@ -23,6 +23,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 import java.io.Serializable;
+import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Locale;
 
@@ -33,7 +34,7 @@ import java.util.Locale;
 @Setter
 public class UserBean implements Serializable {
 
-    private Integer userID = null;
+
     private UserDTO dto;
     private String verificationHash;
     private List<GroupDTO> gDTOAccepted;
@@ -57,9 +58,14 @@ public class UserBean implements Serializable {
     public String login() {
         List<UserDTO> list;
         list = u_DAO.selectByDto(dto);
+
         if (!list.isEmpty()) {
-            userID = list.get(0).getUserID();
-            dto = list.get(0);
+
+            this.dto = list.get(0);
+
+
+
+
 
             UserSettingsDAO userSettingsDAO = new UserSettingsDAO();
             this.dto.setUserSettingsDTO(userSettingsDAO.getUserSettingsByDTO(this.dto));
@@ -77,7 +83,7 @@ public class UserBean implements Serializable {
 
 
     public String logout() {
-        userID = null;
+
         UserSettingsDTO userSettingsDTO = new UserSettingsDTO();
         userSettingsDTO.setLocale(this.dto.getUserSettingsDTO().getLocale());
         dto = new UserDTO();
@@ -95,7 +101,7 @@ public class UserBean implements Serializable {
         dto.setVerificationHash(u_DAO.getVerificationHash(dto));
 
         if (!verificationHash.equals(dto.getVerificationHash())) {
-            userID = null;
+
             return FaceletPath.LOGIN.getRedirectionPath();
         } else {
 
@@ -113,7 +119,7 @@ public class UserBean implements Serializable {
 
 
     public Boolean isAuthenticated() {
-        return this.userID != null && this.dto.isStatus();
+        return this.dto.getUserID() != null && this.dto.isStatus();
     }
 
 
@@ -151,7 +157,14 @@ public class UserBean implements Serializable {
     }
 
 
+    public String getLocale(){
+        return this.dto.getLocale();
+    }
 
+
+    public Integer getUserId(){
+        return this.dto.getUserID();
+    }
 
 
 }

@@ -17,7 +17,6 @@ import java.util.Locale;
 public class UserDTO implements Serializable {
 
     private static final long serialVersionUID = 3461340127831352062L;
-
     private Integer userID = null;
     private String email = null;
     private String firstname = null;
@@ -120,5 +119,9 @@ public class UserDTO implements Serializable {
 
     public UserDTO(int id) {
 
+    }
+
+    public String getLocale(){
+        return this.userSettingsDTO.getLocale();
     }
 }
