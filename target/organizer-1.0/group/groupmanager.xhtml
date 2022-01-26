@@ -18,7 +18,7 @@
 
                 <h:dataTable value="#{groupManager.userDataModel}" var="u" columnClasses="column" style="width: 100%">
                     <h:column>
-                        <f:facet name="header">Name</f:facet>
+                        <f:facet name="header">#{lc.getEntry('name')}:</f:facet>
                         <div style="text-align: center">
                             <h:outputText value="#{u.firstname} #{u.surname}">
 
@@ -26,14 +26,14 @@
                         </div>
                     </h:column>
                     <h:column>
-                        <h:commandButton value="Remove?" action="#{groupManager.remove()}"
+                        <h:commandButton value="#{lc.getEntry('remove')}" action="#{groupManager.remove()}"
                                          rendered="#{!groupManager.isLast() and !u.groupAdmin}">
                             <f:ajax render="@form" execute="@form"/>
                         </h:commandButton>
 
                     </h:column>
                     <h:column>
-                        <h:commandButton value="Make Admin" action="#{groupManager.makeAdmin()}"
+                        <h:commandButton value="#{lc.getEntry('makeadmin')}" action="#{groupManager.makeAdmin()}"
                                          rendered="#{!u.groupAdmin}">
                             <f:ajax render="@form" execute="@form"/>
                         </h:commandButton>
@@ -47,7 +47,7 @@
                     <h:inputText value="#{groupManager.newGroupUser.email}">
 
                     </h:inputText>
-                    <h:commandButton value="Add" action="#{groupManager.addUserByEmail()}">
+                    <h:commandButton value="#{lc.getEntry('add')}" action="#{groupManager.addUserByEmail()}">
                         <f:ajax render="@form" execute="@form"/>
                     </h:commandButton>
 

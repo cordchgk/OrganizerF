@@ -22,7 +22,7 @@
                             <f:facet name="header">#{lc.getEntry('name')}:
                             </f:facet>
                             <div style="text-align: center">
-                                <h:inputText styleClass="ui-inputfield" value="#{i.name}"
+                                <h:inputText styleClass="ui-inputfield" value="#{i.name}" required="true"
                                              id="createName" validator="#{validationBean.validateIngredientInput}"
                                 >
 
@@ -34,7 +34,7 @@
                             <f:facet name="header">#{lc.getEntry('brand')}:
                             </f:facet>
                             <div style="text-align: center">
-                                <h:inputText styleClass="ui-inputfield" value="#{i.brand}" onfocus="this.value =''"
+                                <h:inputText styleClass="ui-inputfield" value="#{i.brand}" onfocus="this.value =''" required="true"
                                              id="createBrand"
                                 >
 
@@ -47,7 +47,7 @@
                             <f:facet name="header">#{lc.getEntry('fats')}:
                             </f:facet>
                             <div style="text-align: center">
-                                <h:inputText styleClass="ui-inputfield" value="#{i.macroDTO.fatDTO.amount}"
+                                <h:inputText styleClass="ui-inputfield" value="#{i.macroDTO.fatDTO.amount}" required="true"
                                              onfocus="this.value =''"
                                              id="createFats"
                                 >
@@ -60,7 +60,7 @@
                             <f:facet name="header">#{lc.getEntry('protein')}:
                             </f:facet>
                             <div style="text-align: center">
-                                <h:inputText styleClass="ui-inputfield" value="#{i.macroDTO.proteinDTO.amount}"
+                                <h:inputText styleClass="ui-inputfield" value="#{i.macroDTO.proteinDTO.amount}" required="true"
                                              onfocus="this.value =''"
                                              id="createProtein"
                                 >
@@ -73,7 +73,7 @@
                             <f:facet name="header">#{lc.getEntry('carbs')}:
                             </f:facet>
                             <div style="text-align: center">
-                                <h:inputText styleClass="ui-inputfield" value="#{i.macroDTO.carbDTO.amount}"
+                                <h:inputText styleClass="ui-inputfield" value="#{i.macroDTO.carbDTO.amount}" required="true"
                                              onfocus="this.value =''"
                                              id="createCarbs"
                                 >
@@ -87,7 +87,7 @@
                             <f:facet name="header">#{lc.getEntry('calories')}:
                             </f:facet>
                             <div style="text-align: center">
-                                <h:inputText styleClass="ui-inputfield" value="#{i.calories}" onfocus="this.value =''"
+                                <h:inputText styleClass="ui-inputfield" value="#{i.calories}" onfocus="this.value =''" required="true"
                                              id="createCalories"
                                 >
 

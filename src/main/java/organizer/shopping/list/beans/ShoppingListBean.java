@@ -8,6 +8,7 @@ import organizer.diet.ingredient.dtos.ShoppingListIngredientDTO;
 import organizer.diet.system.IngredientSearch;
 import organizer.shopping.list.daos.ShoppingListDAO;
 import organizer.shopping.list.dtos.ShoppingListDTO;
+import organizer.system.localization.LocalConfig;
 import organizer.user.beans.UserBean;
 
 import javax.annotation.PostConstruct;
@@ -106,7 +107,8 @@ public class ShoppingListBean implements Serializable {
 
         } else {
 
-            FacesMessage facesMessage = new FacesMessage("Already in list!");
+                    String msg = LocalConfig.getEntryForMessages("youalreadyhavethatonyourlist",this.u_Bean);
+            FacesMessage facesMessage = new FacesMessage(msg);
             FacesContext.getCurrentInstance().addMessage("messages", facesMessage);
 
         }

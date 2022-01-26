@@ -1,12 +1,14 @@
 package organizer.diet.ingredient.beans;
 
 
+import com.sun.faces.config.beans.LocaleConfigBean;
 import lombok.Getter;
 import lombok.Setter;
 import organizer.diet.ingredient.daos.IngredientDAO;
 import organizer.diet.ingredient.dtos.IngredientDTO;
 import organizer.diet.system.IngredientSearch;
 import organizer.system.exceptions.DuplicateException;
+import organizer.system.localization.LocalConfig;
 import organizer.user.beans.UserBean;
 
 import javax.annotation.PostConstruct;
@@ -19,6 +21,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Named("userIngredientBean")
@@ -42,14 +45,12 @@ public class UserIngredientsBean implements Serializable {
 
     @PostConstruct
     public void init() {
-
         this.i_DAO = new IngredientDAO();
         this.build();
     }
 
 
     public void search() {
-
 
         this.s_R_L = new ArrayList<>();
         this.s_R_DM = new ListDataModel<>(this.s_R_L);
@@ -80,7 +81,6 @@ public class UserIngredientsBean implements Serializable {
 
         if (!this.contains(to_Add)) {
 
-
             try {
                 i_DAO.addToUserIngredients(this.userBean.getDto(), to_Add);
             } catch (DuplicateException e) {
@@ -91,13 +91,19 @@ public class UserIngredientsBean implements Serializable {
             this.build();
 
         } else {
-
-            FacesMessage facesMessage = new FacesMessage("You already have that in your list!");
+            String msg = LocalConfig.getEntryForMessages("youalreadyhavethatonyourlist", this.userBean);
+            FacesMessage facesMessage = new FacesMessage(msg);
             FacesContext.getCurrentInstance().addMessage("messages", facesMessage);
 
         }
 
 
+    }
+
+    public void remove() {
+        IngredientDTO to_Remove = (IngredientDTO) this.u_I_DM.getRowData();
+        this.i_DAO.removeFromUserIngredients(this.userBean.getDto(), to_Remove);
+        this.build();
     }
 
 
@@ -123,6 +129,9 @@ public class UserIngredientsBean implements Serializable {
 
     private void build() {
         this.u_I_L = i_DAO.getUserIngredients(this.userBean.getDto());
+        Collections.sort(this.u_I_L);
         this.u_I_DM = new ListDataModel(this.u_I_L);
     }
+
+
 }

@@ -51,7 +51,6 @@ public class IngredientDAO {
         }
         pool.releaseConnection(conn);
         return to_Return;
-
     }
 
 
@@ -254,6 +253,30 @@ public class IngredientDAO {
         }
         pool.releaseConnection(conn);
         return t_R;
+
+    }
+
+    public void removeFromUserIngredients(UserDTO u_DTO, IngredientDTO i_DTO) {
+
+        Connection conn = pool.getConnection();
+        String query = "DELETE FROM postgres.public.useringredients WHERE postgres.public.useringredients.uid = ? AND postgres.public.useringredients.iid = ?";
+
+
+        try {
+            PreparedStatement statement = conn.prepareStatement(query);
+            statement.setInt(1, u_DTO.getUserID());
+            statement.setInt(2, i_DTO.getIID());
+
+            statement.execute();
+
+        } catch (SQLException ex) {
+            Logger.getLogger(UserDAO.class.getName())
+                    .log(Level.SEVERE, null, ex);
+            pool.releaseConnection(conn);
+        }
+
+        pool.releaseConnection(conn);
+
 
     }
 

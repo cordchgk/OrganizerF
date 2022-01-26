@@ -8,7 +8,7 @@
         <f:viewParam name="mID"/>
     </f:metadata>
 
-    <ui:define name="title"></ui:define>
+    <ui:define name="title">#{lc.getEntry('myshopping')}</ui:define>
     <ui:define name="content">
 
         <div class="card-no-hover"
@@ -42,7 +42,7 @@
 
 
                         <h:column>
-                            <f:facet name="header">Ingredient</f:facet>
+                            <f:facet name="header">#{lc.getEntry('ingredient')}</f:facet>
                             <div style="text-align: center">
                                 <h:link outcome="/diet/ingredient/ingredient.xhtml">
                                     <f:param name="iID" value="#{s.IID}"/>
@@ -51,7 +51,7 @@
                             </div>
                         </h:column>
                         <h:column>
-                            <f:facet name="header">Amount</f:facet>
+                            <f:facet name="header">#{lc.getEntry('amount')}</f:facet>
                             <h:inputText id="change" value="#{s.amount}" autocomplete="off"
                                          readonly="#{!s.shoppingListIngredient}"
                                          onkeypress="if (event.keyCode == 13) {onchange(event); return false; }"
@@ -68,7 +68,7 @@
 
                         <h:column>
                             <div style="text-align: center">
-                                <h:commandButton value="Remove" actionListener="#{s_L_Bean.remove()}"
+                                <h:commandButton value="#{lc.getEntry('remove')}" actionListener="#{s_L_Bean.remove()}"
                                                  rendered="#{s.shoppingListIngredient}">
                                     <f:ajax render="@form"/>
                                 </h:commandButton>
@@ -84,14 +84,10 @@
                                     <img src="#{s.firstImage}" alt="" style="width: 20%;height: 20%"/>
 
                                 </h:outputLink>
-
                                 <ui:repeat var="i" value="#{s.i_U_L}" varStatus="status" begin="1">
                                     <a href="#{i}"/>
-
                                 </ui:repeat>
-
                             </p:lightBox>
-
 
                         </h:column>
                     </h:dataTable>
@@ -104,7 +100,6 @@
 
                                  onkeyup="t()"
                     >
-
                     </h:inputText>
 
 
@@ -125,7 +120,7 @@
                         </h:column>
 
                         <h:column>
-                            <h:commandButton value="Add" action="#{s_L_Bean
+                            <h:commandButton value="#{lc.getEntry('add')}" action="#{s_L_Bean
                                     .add()}">
                                 <f:ajax render="@form" execute="@form"/>
                             </h:commandButton>

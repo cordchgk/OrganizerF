@@ -5,6 +5,7 @@ import organizer.system.exceptions.DuplicateException;
 import organizer.user.dtos.UserDTO;
 import organizer.system.ConnectionPool;
 
+import javax.servlet.http.Cookie;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -88,6 +89,28 @@ public class UserDAO {
             PreparedStatement statement = conn.prepareStatement(query);
             statement.setString(1, password);
             statement.setString(2, email);
+            statement.execute();
+
+        } catch (SQLException ex) {
+            Logger.getLogger(UserDAO.class.getName())
+                    .log(Level.SEVERE, null, ex);
+            pool.releaseConnection(conn);
+        }
+        pool.releaseConnection(conn);
+    }
+
+
+    public void updateUserCookie(UserDTO u_DTO, Cookie cookie)
+            throws DatabaseException, DuplicateException {
+
+
+        Connection conn = pool.getConnection();
+        String query =
+                "UPDATE postgres.public.users SET sessioncookie = ? WHERE postgres.public.users.userid = ?;";
+        try {
+            PreparedStatement statement = conn.prepareStatement(query);
+            statement.setString(1, cookie.getValue());
+            statement.setInt(2, u_DTO.getUserID());
             statement.execute();
 
         } catch (SQLException ex) {
@@ -295,6 +318,48 @@ public class UserDAO {
     }
 
 
+    public UserDTO selectByCookie(Cookie cookie) throws DatabaseException {
+        ConnectionPool pool = ConnectionPool.getInstance();
+        UserDTO t_R = null;
+
+        Connection conn = pool.getConnection();
+        String query = "SELECT userid, email, password, firstname, surname, "
+                + "address,verificationhash,accountstatus,sessioncookie"
+                + " FROM users WHERE sessioncookie = ?";
+        PreparedStatement statement = null;
+        ResultSet result;
+        try {
+            statement = conn.prepareStatement(query);
+        } catch (SQLException ex) {
+            Logger.getLogger(UserDAO.class.getName())
+                    .log(Level.SEVERE, null, ex);
+            pool.releaseConnection(conn);
+        }
+        try {
+            statement.setString(1, cookie.getValue());
+
+            result = statement.executeQuery();
+            while (result.next()) {
+                t_R = new UserDTO();
+                t_R.setUserID(Integer.parseInt(result.getString(1)));
+                t_R.setEmail(result.getString(2));
+                t_R.setPasswordHash(result.getString(3));
+                t_R.setFirstname(result.getString(4));
+                t_R.setSurname(result.getString(5));
+                t_R.setAddress(result.getString(6));
+                t_R.setVerificationHash(result.getString(7));
+                t_R.setStatus(result.getBoolean(8));
+                t_R.setSessioncookie(result.getString(9));
+
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(UserDAO.class.getName())
+                    .log(Level.SEVERE, null, ex);
+            pool.releaseConnection(conn);
+        }
+        pool.releaseConnection(conn);
+        return t_R;
+    }
 
 
 }

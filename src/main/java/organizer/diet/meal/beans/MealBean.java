@@ -93,7 +93,6 @@ public class MealBean implements Serializable {
 
         this.build();
 
-
     }
 
 

@@ -29,6 +29,8 @@ public class UserDTO implements Serializable {
 
     private UserSettingsDTO userSettingsDTO;
 
+    private String sessioncookie;
+
     @XmlElement
     public String getFirstname() {
         return firstname;
@@ -121,7 +123,7 @@ public class UserDTO implements Serializable {
 
     }
 
-    public String getLocale(){
+    public String getLocale() {
         return this.userSettingsDTO.getLocale();
     }
 }

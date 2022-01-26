@@ -13,6 +13,7 @@ import organizer.user.dtos.UserDTO;
 import organizer.user.dtos.UserSettingsDTO;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.ConfigurableNavigationHandler;
 import javax.faces.context.FacesContext;
@@ -21,11 +22,11 @@ import javax.faces.push.Push;
 import javax.faces.push.PushContext;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import java.io.Serializable;
 import java.lang.reflect.Field;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 
 @Named("user")
@@ -48,8 +49,19 @@ public class UserBean implements Serializable {
 
     @PostConstruct
     public void init() {
-        this.dto = new UserDTO();
-        this.dto.setUserSettingsDTO(new UserSettingsDTO());
+
+
+        Cookie c = this.getCookie();
+        this.dto = this.u_DAO.selectByCookie(c);
+
+        if (this.dto == null) {
+            this.dto = new UserDTO();
+            this.dto.setUserSettingsDTO(new UserSettingsDTO());
+
+        } else {
+            UserSettingsDAO userSettingsDAO = new UserSettingsDAO();
+            this.dto.setUserSettingsDTO(userSettingsDAO.getUserSettingsByDTO(this.dto));
+        }
 
 
     }
@@ -64,11 +76,9 @@ public class UserBean implements Serializable {
             this.dto = list.get(0);
 
 
-
-
-
             UserSettingsDAO userSettingsDAO = new UserSettingsDAO();
             this.dto.setUserSettingsDTO(userSettingsDAO.getUserSettingsByDTO(this.dto));
+
 
             if (dto.isStatus()) {
                 return FaceletPath.MEALS.getRedirectionPath();
@@ -114,12 +124,30 @@ public class UserBean implements Serializable {
             return FaceletPath.PROFILE.getRedirectionPath();
         }
 
-
     }
 
 
+    @PreDestroy
+    public void destroy() {
+        try {
+            this.u_DAO.updateUserCookie(this.dto, this.getCookie());
+        } catch (DuplicateException e) {
+            e.printStackTrace();
+        }
+    }
+
     public Boolean isAuthenticated() {
-        return this.dto.getUserID() != null && this.dto.isStatus();
+        if (!this.getCookie().getValue().equals(this.dto.getSessioncookie()) && this.dto.getUserID() != null) {
+
+            try {
+                this.u_DAO.updateUserCookie(this.dto, this.getCookie());
+                this.dto.setSessioncookie(this.getCookie().getValue());
+            } catch (DuplicateException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return this.dto.getUserID() != null;
     }
 
 
@@ -157,14 +185,28 @@ public class UserBean implements Serializable {
     }
 
 
-    public String getLocale(){
+    public String getLocale() {
         return this.dto.getLocale();
     }
 
 
-    public Integer getUserId(){
+    public Integer getUserId() {
         return this.dto.getUserID();
     }
 
+    private Cookie getCookie() {
+        HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
 
+        Cookie t_r = null;
+
+        Cookie[] cookies = request.getCookies();
+
+
+        for (int i = 0; i < cookies.length; i++) {
+            if (cookies[i].getName().equals("JSESSIONID")) {
+                return cookies[i];
+            }
+        }
+        return t_r;
+    }
 }

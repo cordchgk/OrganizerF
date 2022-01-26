@@ -48,6 +48,7 @@
                         <h:column>
                             <f:facet name="header">#{lc.getEntry('name')}:</f:facet>
                             <div style="text-align: center">
+
                                 #{i.name}
                             </div>
 
@@ -77,10 +78,10 @@
 
                         </h:column>
                         <h:column>
-                            <f:facet name="header">#{lc.getEntry('protein')}</f:facet>
+                            <f:facet name="header">#{lc.getEntry('protein')}:</f:facet>
                             <div style="text-align: center;width: 100%;">
                                 <div style="width: 30%;display: inline-block;text-align: center">
-                                    <h:outputText value="#{i.getProtein()}:" style="width: 100%">
+                                    <h:outputText value="#{i.getProtein()}" style="width: 100%">
 
                                     </h:outputText>
 
@@ -111,6 +112,16 @@
                             </div>
 
 
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">#{lc.getEntry('remove')}</f:facet>
+                            <div style="text-align: center">
+                                <h:commandButton value="#{lc.getEntry('remove')}" actionListener="#{userIngredientBean.remove()}"
+                                                 >
+                                    <f:ajax render="@form"/>
+                                </h:commandButton>
+
+                            </div>
                         </h:column>
 
 

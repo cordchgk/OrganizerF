@@ -9,7 +9,7 @@
     </f:metadata>
 
 
-    <ui:define name="title">Products</ui:define>
+    <ui:define name="title">#{product.groupDTO.name}</ui:define>
     <ui:define name="content">
         <f:event listener="#{product.isAllowed()}" type="preRenderView"/>
 
@@ -22,7 +22,7 @@
                     <h:dataTable id="table" columnClasses="column" style="width: 100%"
                                  var="p" width="100" value="#{product.productModel}">
                         <h:column>
-                            <f:facet name="header">Name</f:facet>
+                            <f:facet name="header">#{lc.getEntry('name')}:</f:facet>
                             <div style="text-align: center">
                                 #{p.name}
                             </div>
@@ -30,13 +30,13 @@
 
                         </h:column>
                         <h:column>
-                            <f:facet name="header">Stock</f:facet>
+                            <f:facet name="header">#{lc.getEntry('stock')}:</f:facet>
                             <div style="text-align: center">
                                 #{p.count}
                             </div>
                         </h:column>
                         <h:column>
-                            <f:facet name="header">Decrease</f:facet>
+                            <f:facet name="header">#{lc.getEntry('decrease')}</f:facet>
                             <div style="text-align: center">
                                 <h:commandButton rendered="#{product.rendered()}" value="-"
                                                  action="#{product.dec()}">
@@ -58,7 +58,7 @@
                             <h:message for="input"/>
                         </h:column>
                         <h:column>
-                            <f:facet name="header">Increase</f:facet>
+                            <f:facet name="header">#{lc.getEntry('increase')}</f:facet>
                             <div style="text-align: center">
                                 <h:commandButton value="+" action="#{product.inc()}">
                                     <f:ajax execute="form" render="form"/>
@@ -67,16 +67,16 @@
                         </h:column>
                         <h:column>
 
-                            <f:facet name="header">Already Ordered?
+                            <f:facet name="header">#{lc.getEntry('alreadyordered')}?
                             </f:facet>
                             <div style="text-align: center">
                                 <h:selectBooleanCheckbox disabled="#{!product.isGroupAdmin()}" value="#{p.ordered}"/>
                             </div>
                         </h:column>
                         <h:column rendered="#{!product.isEmpty()}">
-                            <f:facet name="header">DELETE?</f:facet>
+                            <f:facet name="header">#{lc.getEntry('delete')}?</f:facet>
                             <div style="text-align: center">
-                                <h:commandButton value="DELETE" disabled="#{!product.isGroupAdmin()}"
+                                <h:commandButton value="#{lc.getEntry('delete')}" disabled="#{!product.isGroupAdmin()}"
                                                  action="#{product.delete()}">
                                     <f:ajax execute="form" render="form"/>
                                 </h:commandButton>
@@ -85,7 +85,7 @@
 
                     </h:dataTable>
                     <div style="margin-top: 5%;margin-bottom: 5%;text-align: center">
-                        <h:commandButton id="save" value="Save" action="#{product.save()}"
+                        <h:commandButton id="save" value="#{lc.getEntry('save')}" action="#{product.save()}"
                                          binding="#{product.saveButton}">
                             <f:ajax execute="@form" render="@form"/>
 
@@ -99,7 +99,7 @@
 
                 <h:form style="border-top: black 1px solid;margin-top: 10%">
                     <div style="text-align: center">
-                        <h:outputText style="font-weight: bold" value="Create new Product:">
+                        <h:outputText style="font-weight: bold" value="#{lc.getEntry('createnewproduct')}:">
 
                         </h:outputText>
 
@@ -111,7 +111,7 @@
 
                     >
                         <h:column>
-                            <f:facet name="header">Name
+                            <f:facet name="header">#{lc.getEntry('name')}:
                             </f:facet>
                             <div style="text-align: center">
                                 <h:inputText styleClass="ui-inputfield" value="#{nP.name}" id="createName"
@@ -122,7 +122,7 @@
                         </h:column>
 
                         <h:column>
-                            <f:facet name="header">Description
+                            <f:facet name="header">#{lc.getEntry('description')}
                             </f:facet>
                             <div style="text-align: center">
                                 <h:inputText styleClass="ui-inputfield" value="#{nP.description}" id="createDescription"
@@ -132,7 +132,7 @@
                             </div>
                         </h:column>
                         <h:column>
-                            <f:facet name="header">Stock
+                            <f:facet name="header">#{lc.getEntry('stock')}
                             </f:facet>
                             <div style="text-align: center">
                                 <h:inputText styleClass="ui-inputfield" value="#{nP.count}" id="createStock"
@@ -145,7 +145,7 @@
 
                     </h:dataTable>
                     <div style="margin-top: 1%;text-align: center">
-                        <h:commandButton style="margin-bottom: 1%" value="Create"
+                        <h:commandButton style="margin-bottom: 1%" value="#{lc.getEntry('create')}"
                                          action="#{product.createProduct()}">
                             <f:ajax render="form mDIV" execute="@form"/>
                             <f:param name="gID" value="#{product.groupDTO.gID}"/>
@@ -158,7 +158,7 @@
 
                     <h:outputLink value="#{product.toGroupManager()}" rendered="#{product.isGroupAdmin()}"
                                   style="margin-bottom: 5px;margin-left: 5px">
-                        Manage Group
+                        #{lc.getEntry('managegroup')}
                     </h:outputLink>
                 </h:form>
 
@@ -257,7 +257,7 @@
                         </div>
 
                         <div style="text-align: center;height: 10%">
-                            <h:commandButton value="Send!" action="#{product.sendMessage()}">
+                            <h:commandButton value="#{lc.getEntry('send')}!" action="#{product.sendMessage()}">
                                 <f:ajax render="newMessageInput" execute="@form"/>
 
                             </h:commandButton>

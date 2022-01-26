@@ -3,6 +3,7 @@ package organizer.system;
 import organizer.system.exceptions.DatabaseException;
 import organizer.system.localization.LocalConfig;
 
+import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
 import java.io.Serializable;
 import java.sql.Connection;
@@ -37,6 +38,8 @@ public class ConnectionPool implements Serializable {
     private final List<Connection> blockedConnections;
     private Integer failedConnections;
     private Boolean closed;
+
+
 
 
     private ConnectionPool() {

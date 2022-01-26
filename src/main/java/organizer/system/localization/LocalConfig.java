@@ -52,7 +52,7 @@ public class LocalConfig implements Serializable {
             Logger.getLogger(Config.class.getName());
 
 
-    public String getEntry(final String key) {
+    public String getEntry(String key) {
 
         String t_R = "";
         try {
@@ -67,6 +67,32 @@ public class LocalConfig implements Serializable {
         }
 
         return t_R;
+    }
+
+
+    public static String getEntryForMessages(String key, UserBean u_bean) {
+
+        ResourceBundle b = LocalConfig.getBundleForMsg(u_bean);
+        String t_R = "";
+        try {
+
+            final String result = b.getString(key);
+            t_R = result.trim();
+        } catch (final MissingResourceException e) {
+            final String infoMsg =
+                    Messages.getFormattedString("CONFIG.OPTIONAL_MISSING", key);
+            t_R = ResourceBundle.getBundle(Locales.getPath(Locale.ENGLISH.toLanguageTag())).getString(key);
+            LOGGER.log(Level.INFO, infoMsg, e);
+        }
+
+        return t_R;
+    }
+
+    private static ResourceBundle getBundleForMsg(UserBean u_bean) {
+
+
+        return ResourceBundle.getBundle(Locales.getPath(u_bean.getLocale()));
+
     }
 
 

@@ -14,7 +14,7 @@
 
 
                     <h:form id="form">
-                        <h:outputText value="Accepted:"/>
+                        <h:outputText value="#{lc.getEntry('accepted')}:"/>
                         <h:dataTable id="table" cellspacing=" 10" value="#{group.groupModelAccepted}"
                                      columnClasses="column" style="width: 100%"
                                      var="gAccepted">
@@ -43,7 +43,7 @@
 
                 <h:panelGroup style="width: auto">
                     <h:form>
-                        <h:outputText value="Not Accepted:"/>
+                        <h:outputText value="#{lc.getEntry('notaccepted')}:"/>
                         <h:dataTable id="notacceptedtable" cellspacing="10" columnClasses="column"
                                      value="#{group.groupModelNotAccepted}" var="gNotAccepted" style="width: 100%">
 
@@ -57,7 +57,7 @@
 
                             </h:column>
                             <h:column>
-                                <h:commandButton value="Accept!" action="#{group.accept()}">
+                                <h:commandButton value="#{lc.getEntry('accept')}" action="#{group.accept()}">
                                     <f:ajax execute="@form" render="@form"/>
                                 </h:commandButton>
                             </h:column>
@@ -72,7 +72,7 @@
 
                 <h:form style="border-top: black 1px solid;margin-top: 10%">
                     <div style="text-align: center">
-                        <h:outputText style="font-weight: bold" value="Create new Group:">
+                        <h:outputText style="font-weight: bold" value="#{lc.getEntry('createnewgroup')}">
 
                         </h:outputText>
 
@@ -87,7 +87,7 @@
 
                             </h:inputText>
                             <div>
-                                <h:commandButton style="margin-bottom: 1%;margin-top: 5%" value="Create"
+                                <h:commandButton style="margin-bottom: 1%;margin-top: 5%" value="#{lc.getEntry('create')}"
                                                  action="#{group.createGroup()}">
 
                                     <f:ajax render="form" execute="@form"/>

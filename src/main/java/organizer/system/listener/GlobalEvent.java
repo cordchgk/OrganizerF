@@ -1,4 +1,4 @@
-package organizer.system.EventListener;
+package organizer.system.listener;
 
 import java.io.Serializable;
 
