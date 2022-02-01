@@ -104,7 +104,7 @@ public class ProductDAO {
     }
 
 
-    public void insert(ProductDTO dto, UserBean userBean)
+    public void insert(ProductDTO dto)
             throws DatabaseException, DuplicateException {
 
         ConnectionPool pool = ConnectionPool.getInstance();
@@ -141,7 +141,7 @@ public class ProductDAO {
             nDTO.setMessage(new NotificationCreator().newProductNotification(nDTO));
             NotifcationDAO dao = new NotifcationDAO();
             dao.insertByDTO(nDTO);
-            userBean.send(this.getUserIds(dto.getgID()));
+
 
         } catch (SQLException ex) {
             Logger.getLogger(UserDAO.class.getName())

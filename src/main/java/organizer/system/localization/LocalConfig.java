@@ -2,14 +2,11 @@ package organizer.system.localization;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.jetbrains.annotations.NonNls;
 import organizer.system.Config;
 import organizer.system.Messages;
-import organizer.system.exceptions.ConfigException;
 import organizer.user.beans.UserBean;
 
 import javax.annotation.PostConstruct;
-import javax.enterprise.context.RequestScoped;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -36,10 +33,10 @@ public class LocalConfig implements Serializable {
     public void init() {
 
         if (this.u_bean != null) {
-            if (this.u_bean.getDto().getUserSettingsDTO() != null) {
-                bundle = ResourceBundle.getBundle(Locales.getPath(this.u_bean.getDto().getUserSettingsDTO().getLocale()));
+            if (this.u_bean.getU_DTO().getUserSettingsDTO() != null) {
+                bundle = ResourceBundle.getBundle(Locales.getPath(this.u_bean.getU_DTO().getUserSettingsDTO().getLocale()));
             } else {
-                bundle = ResourceBundle.getBundle(Locales.getPath(this.u_bean.getDto().getLanguage()));
+                bundle = ResourceBundle.getBundle(Locales.getPath(this.u_bean.getU_DTO().getLanguage()));
             }
 
         } else {

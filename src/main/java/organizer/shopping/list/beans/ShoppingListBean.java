@@ -98,7 +98,7 @@ public class ShoppingListBean implements Serializable {
 
         if (!this.o_I_L.contains(t_A)) {
 
-            this.s_DAO.addToShoppingList(this.u_Bean.getDto(), t_A);
+            this.s_DAO.addToShoppingList(this.u_Bean.getU_DTO(), t_A);
             this.clean();
             this.filter();
             for (IngredientDTO i_DTO : this.s_L_DTO.getI_DTO_L()) {
@@ -119,14 +119,14 @@ public class ShoppingListBean implements Serializable {
     public void update() {
         IngredientDTO t_U = this.s_L_DM.getRowData();
 
-        this.s_DAO.updateShoppingListAmount(this.u_Bean.getDto(), t_U);
+        this.s_DAO.updateShoppingListAmount(this.u_Bean.getU_DTO(), t_U);
         this.clean();
     }
 
 
     public void remove() {
         IngredientDTO t_Remove = this.s_L_DM.getRowData();
-        this.s_DAO.removeFromShoppingList(this.u_Bean.getDto(), t_Remove);
+        this.s_DAO.removeFromShoppingList(this.u_Bean.getU_DTO(), t_Remove);
         this.clean();
     }
 
@@ -171,8 +171,8 @@ public class ShoppingListBean implements Serializable {
     }
 
     private void clean() {
-        this.s_L_DTO.setI_DTO_L(s_DAO.getIngredientssByUserDTO(this.u_Bean.getDto(), this.s_L_DTO));
-        this.o_I_L = s_DAO.getShoppingListIngredients(this.u_Bean.getDto());
+        this.s_L_DTO.setI_DTO_L(s_DAO.getIngredientssByUserDTO(this.u_Bean.getU_DTO(), this.s_L_DTO));
+        this.o_I_L = s_DAO.getShoppingListIngredients(this.u_Bean.getU_DTO());
         this.s_L_DTO.getI_DTO_L().addAll(this.o_I_L);
         this.s_L_DM = new ListDataModel<>(this.s_L_DTO.getI_DTO_L());
     }
@@ -184,7 +184,7 @@ public class ShoppingListBean implements Serializable {
 
         List<Integer> ids = IngredientSearch.getInstance().search(s_W);
 
-        System.out.println(ids);
+
         if (!ids.isEmpty()) {
             for (Integer i : ids) {
 

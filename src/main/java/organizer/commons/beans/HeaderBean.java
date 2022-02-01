@@ -13,20 +13,17 @@ import organizer.user.daos.UserDAO;
 import javax.annotation.PostConstruct;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
-import javax.faces.event.AbortProcessingException;
-import javax.faces.event.ValueChangeEvent;
-import javax.faces.event.ValueChangeListener;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpServletRequest;
 import java.io.Serializable;
-import java.net.URLEncoder;
-import java.util.Enumeration;
-import java.util.Map;
 
+import static organizer.system.Utility.urlBuilder;
 
+/**
+ * CDI BEAN for the page header
+ */
 @Named("headerBean")
 @ViewScoped
 @Getter
@@ -41,8 +38,6 @@ public class HeaderBean implements Serializable {
 
     private String currentURL;
 
-    private FaceletPath path;
-
 
     @Inject
     UserBean userBean;
@@ -50,50 +45,17 @@ public class HeaderBean implements Serializable {
     @PostConstruct
     public void init() {
 
-        this.currentURL = urlBuilder();
+        this.currentURL = Utility.urlBuilder();
         this.url = Utility.getURL();
     }
 
 
+    /**
+     * @return Locale tag of the users language
+     */
     public String locale() {
         return this.userBean.getLocale();
     }
 
-    public void lang() {
-        PrimeFaces.current().executeInitScript("showSure()");
-    }
-
-
-    public void updateUserLanguage() {
-        if (this.userBean.getDto() != null && this.userBean.getUserId() != null) {
-            try {
-                UserDAO u_DAO = new UserDAO();
-                u_DAO.updateUserLanuage(this.userBean.getDto());
-
-            } catch (DuplicateException e) {
-                e.printStackTrace();
-            }
-        }
-        PrimeFaces.current().executeInitScript("reload()");
-
-    }
-
-
-    public static String urlBuilder() {
-        HttpServletRequest origRequest = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(origRequest.getRequestURL());
-        if (!FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().isEmpty()) {
-            stringBuilder.append("?");
-
-            for (String s : FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().keySet()) {
-                stringBuilder.append(s);
-                stringBuilder.append("=");
-                stringBuilder.append(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get(s));
-            }
-        }
-        return stringBuilder.toString();
-    }
 
 }

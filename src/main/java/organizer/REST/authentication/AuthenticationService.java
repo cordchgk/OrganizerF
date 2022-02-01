@@ -16,21 +16,6 @@ import java.util.Map;
 public class AuthenticationService {
 
 
-    private static Map<String, String> getHeadersInfo(HttpServletRequest request) {
-
-        Map<String, String> map = new HashMap<String, String>();
-
-        Enumeration headerNames = request.getHeaderNames();
-
-        while (headerNames.hasMoreElements()) {
-            String key = (String) headerNames.nextElement();
-            String value = request.getHeader(key);
-            map.put(key, value);
-        }
-
-        return map;
-    }
-
 
     public static UserDTO assignUser(HttpServletRequest request) throws UnsupportedEncodingException, NoSuchAlgorithmException {
 
@@ -46,13 +31,35 @@ public class AuthenticationService {
         userDTO.setEmail(username);
         userDTO.setPasswordHash(HashConverter.sha384(password));
 
-        List<UserDTO> users = new UserDAO().selectByDto(userDTO);
-        if (users.size() == 0) {
+
+
+        UserDTO t_R = new UserDAO().selectByDto(userDTO);
+
+        if (t_R == null) {
 
             throw new WebApplicationException(401);
         }
-        return users.get(0);
+        return t_R;
 
 
     }
+
+
+
+
+    private static Map<String, String> getHeadersInfo(HttpServletRequest request) {
+
+        Map<String, String> map = new HashMap<String, String>();
+
+        Enumeration headerNames = request.getHeaderNames();
+
+        while (headerNames.hasMoreElements()) {
+            String key = (String) headerNames.nextElement();
+            String value = request.getHeader(key);
+            map.put(key, value);
+        }
+
+        return map;
+    }
+
 }

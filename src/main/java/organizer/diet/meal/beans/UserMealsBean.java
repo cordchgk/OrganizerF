@@ -48,7 +48,7 @@ public class UserMealsBean implements Serializable {
 
     public void create() {
 
-        m_DAO.createMeal(this.n_M_DTO, this.u_Bean.getDto());
+        m_DAO.createMeal(this.n_M_DTO, this.u_Bean.getU_DTO());
 
         this.build();
     }
@@ -72,7 +72,7 @@ public class UserMealsBean implements Serializable {
 
     private void build() {
         this.n_M_DTO = new MealDTO();
-        this.m_DTO_L = m_DAO.getMealsByUserDTO(this.u_Bean.getDto());
+        this.m_DTO_L = m_DAO.getMealsByUserDTO(this.u_Bean.getU_DTO());
         this.m_DM = new ListDataModel<>(this.m_DTO_L);
     }
 

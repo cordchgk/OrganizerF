@@ -30,7 +30,7 @@ public class NotificationBean implements Serializable {
     public void init() {
 
         NotifcationDAO dao = new NotifcationDAO();
-        this.dtos = dao.selectByUserDTO(this.userBean.getDto());
+        this.dtos = dao.selectByUserDTO(this.userBean.getU_DTO());
         Collections.reverse(this.dtos);
 
         this.notificationDataModel = new

@@ -44,11 +44,6 @@ public class ConnectionPool implements Serializable {
 
     private ConnectionPool() {
 
-        LocalConfig localConfig = new LocalConfig();
-
-
-
-
         final Integer maxConnections = Config.getEntry("MAX_CONNECTIONS", 20);
         final String dbDriver =
                 Config.getEntry("DB_DRIVER", "org.postgresql.Driver");
@@ -315,7 +310,8 @@ public class ConnectionPool implements Serializable {
                     + "surname varchar(30) NOT NULL, "
                     + "address varchar(100),"
                     + "verificationhash varchar(100),"
-                    + "accountstatus BOOLEAN)";
+                    + "accountstatus BOOLEAN," +
+                    "sessioncookie varchar)";
             stmt.executeUpdate(query);
             stmt.close();
         } catch (SQLException ex) {

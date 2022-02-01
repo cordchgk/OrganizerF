@@ -1,12 +1,10 @@
 package organizer.group.beans;
 
-import organizer.group.daos.GroupDAO;
 import organizer.group.daos.GroupUserDAO;
 import organizer.product.beans.ProductsBean;
 import organizer.user.beans.UserBean;
 
 import javax.enterprise.context.RequestScoped;
-import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.io.Serializable;
@@ -25,7 +23,7 @@ public class GroupUserBean implements Serializable {
 
 
     public boolean isGroupAdmin() {
-        return new GroupUserDAO().isGroupAdminByDTO(this.productsBean.getGroupDTO(), this.userBean.getDto());
+        return new GroupUserDAO().isGroupAdminByDTO(this.productsBean.getGroupDTO(), this.userBean.getU_DTO());
     }
 
 

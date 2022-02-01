@@ -6,10 +6,7 @@ import organizer.user.dtos.UserDTO;
 import organizer.system.ConnectionPool;
 
 import javax.servlet.http.Cookie;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -147,8 +144,8 @@ public class UserDAO {
     public void updateStatus(String email)
             throws DatabaseException, DuplicateException {
 
-        ConnectionPool pool = ConnectionPool.getInstance();
         Connection conn = pool.getConnection();
+
         String query =
                 "UPDATE users SET accountstatus = TRUE WHERE email = ?;";
         try {
@@ -162,13 +159,6 @@ public class UserDAO {
             pool.releaseConnection(conn);
         }
         pool.releaseConnection(conn);
-    }
-
-    public UserDTO selectById(Integer id) throws DatabaseException {
-        UserDTO dto = new UserDTO();
-        dto.setUserID(id);
-        UserDTO result = selectByDto(dto).get(0);
-        return result;
     }
 
     public String getVerificationHash(UserDTO dto) {
@@ -210,10 +200,9 @@ public class UserDAO {
         return hash.get(0);
     }
 
-    public List<UserDTO> selectByDto(UserDTO DTO) throws DatabaseException {
-        ConnectionPool pool = ConnectionPool.getInstance();
-        List<UserDTO> userDTOs;
-        userDTOs = new ArrayList<>();
+    public UserDTO selectByDto(UserDTO u_DTO) throws DatabaseException {
+
+        UserDTO t_R = null;
 
         Connection conn = pool.getConnection();
         String query = "SELECT userid, email, password, firstname, surname, "
@@ -237,76 +226,76 @@ public class UserDAO {
             pool.releaseConnection(conn);
         }
         try {
-            if (DTO.getUserID() != null && !DTO.getUserID().equals("")) {
-                statement.setInt(1, DTO.getUserID());
-                statement.setInt(2, DTO.getUserID());
+            if (u_DTO.getUserID() != null && !u_DTO.getUserID().equals("")) {
+                statement.setInt(1, u_DTO.getUserID());
+                statement.setInt(2, u_DTO.getUserID());
             } else {
-                statement.setNull(1, java.sql.Types.VARCHAR);
+                statement.setNull(1, Types.VARCHAR);
                 statement.setNull(2, 0);
             }
-            if (DTO.getEmail() != null && !DTO.getEmail().equals("")) {
-                statement.setString(3, "" + DTO.getEmail() + "%");
-                statement.setString(4, "" + DTO.getEmail() + "%");
+            if (u_DTO.getEmail() != null && !u_DTO.getEmail().equals("")) {
+                statement.setString(3, "" + u_DTO.getEmail() + "%");
+                statement.setString(4, "" + u_DTO.getEmail() + "%");
             } else {
-                statement.setNull(3, java.sql.Types.VARCHAR);
-                statement.setNull(4, java.sql.Types.VARCHAR);
+                statement.setNull(3, Types.VARCHAR);
+                statement.setNull(4, Types.VARCHAR);
             }
-            if (DTO.getPasswordHash() != null) {
-                statement.setString(5, "" + DTO.getPasswordHash() + "");
-                statement.setString(6, "" + DTO.getPasswordHash() + "");
+            if (u_DTO.getPasswordHash() != null) {
+                statement.setString(5, "" + u_DTO.getPasswordHash() + "");
+                statement.setString(6, "" + u_DTO.getPasswordHash() + "");
             } else {
-                statement.setNull(5, java.sql.Types.VARCHAR);
-                statement.setNull(6, java.sql.Types.VARCHAR);
+                statement.setNull(5, Types.VARCHAR);
+                statement.setNull(6, Types.VARCHAR);
             }
-            if (DTO.getFirstname() != null) {
-                statement.setString(7, "%" + DTO.getFirstname() + "%");
-                statement.setString(8, "%" + DTO.getFirstname() + "%");
+            if (u_DTO.getFirstname() != null) {
+                statement.setString(7, "%" + u_DTO.getFirstname() + "%");
+                statement.setString(8, "%" + u_DTO.getFirstname() + "%");
             } else {
-                statement.setNull(7, java.sql.Types.VARCHAR);
-                statement.setNull(8, java.sql.Types.VARCHAR);
+                statement.setNull(7, Types.VARCHAR);
+                statement.setNull(8, Types.VARCHAR);
             }
-            if (DTO.getSurname() != null) {
-                statement.setString(9, "%" + DTO.getSurname() + "%");
-                statement.setString(10, "%" + DTO.getSurname() + "%");
+            if (u_DTO.getSurname() != null) {
+                statement.setString(9, "%" + u_DTO.getSurname() + "%");
+                statement.setString(10, "%" + u_DTO.getSurname() + "%");
             } else {
-                statement.setNull(9, java.sql.Types.VARCHAR);
-                statement.setNull(10, java.sql.Types.VARCHAR);
+                statement.setNull(9, Types.VARCHAR);
+                statement.setNull(10, Types.VARCHAR);
             }
-            if (DTO.getAddress() != null) {
-                statement.setString(11, "%" + DTO.getAddress() + "%");
-                statement.setString(12, "%" + DTO.getAddress() + "%");
+            if (u_DTO.getAddress() != null) {
+                statement.setString(11, "%" + u_DTO.getAddress() + "%");
+                statement.setString(12, "%" + u_DTO.getAddress() + "%");
             } else {
-                statement.setNull(11, java.sql.Types.VARCHAR);
-                statement.setNull(12, java.sql.Types.VARCHAR);
+                statement.setNull(11, Types.VARCHAR);
+                statement.setNull(12, Types.VARCHAR);
             }
-            if (DTO.getVerificationHash() != null) {
-                statement.setString(13, "%" + DTO.getVerificationHash() + "%");
-                statement.setString(14, "%" + DTO.getVerificationHash() + "%");
+            if (u_DTO.getVerificationHash() != null) {
+                statement.setString(13, "%" + u_DTO.getVerificationHash() + "%");
+                statement.setString(14, "%" + u_DTO.getVerificationHash() + "%");
             } else {
-                statement.setNull(13, java.sql.Types.VARCHAR);
-                statement.setNull(14, java.sql.Types.VARCHAR);
+                statement.setNull(13, Types.VARCHAR);
+                statement.setNull(14, Types.VARCHAR);
             }
-            if (DTO.isStatus() != null) {
-                statement.setString(15, DTO.isStatus().toString());
-                statement.setString(16, DTO.isStatus().toString());
+            if (u_DTO.isStatus() != null) {
+                statement.setString(15, u_DTO.isStatus().toString());
+                statement.setString(16, u_DTO.isStatus().toString());
             } else {
-                statement.setNull(15, java.sql.Types.VARCHAR);
-                statement.setNull(16, java.sql.Types.VARCHAR);
+                statement.setNull(15, Types.VARCHAR);
+                statement.setNull(16, Types.VARCHAR);
             }
 
             result = statement.executeQuery();
             while (result.next()) {
-                UserDTO dto = new UserDTO();
-                dto.setUserID(Integer.parseInt(result.getString(1)));
-                dto.setEmail(result.getString(2));
-                dto.setPasswordHash(result.getString(3));
-                dto.setFirstname(result.getString(4));
-                dto.setSurname(result.getString(5));
-                dto.setAddress(result.getString(6));
-                dto.setVerificationHash(result.getString(7));
-                dto.setStatus(result.getBoolean(8));
+                t_R = new UserDTO();
+                t_R.setUserID(Integer.parseInt(result.getString(1)));
+                t_R.setEmail(result.getString(2));
+                t_R.setPasswordHash(result.getString(3));
+                t_R.setFirstname(result.getString(4));
+                t_R.setSurname(result.getString(5));
+                t_R.setAddress(result.getString(6));
+                t_R.setVerificationHash(result.getString(7));
+                t_R.setStatus(result.getBoolean(8));
 
-                userDTOs.add(dto);
+
             }
         } catch (SQLException ex) {
             Logger.getLogger(UserDAO.class.getName())
@@ -314,7 +303,7 @@ public class UserDAO {
             pool.releaseConnection(conn);
         }
         pool.releaseConnection(conn);
-        return userDTOs;
+        return t_R;
     }
 
 
@@ -350,7 +339,6 @@ public class UserDAO {
                 t_R.setVerificationHash(result.getString(7));
                 t_R.setStatus(result.getBoolean(8));
                 t_R.setSessioncookie(result.getString(9));
-
             }
         } catch (SQLException ex) {
             Logger.getLogger(UserDAO.class.getName())

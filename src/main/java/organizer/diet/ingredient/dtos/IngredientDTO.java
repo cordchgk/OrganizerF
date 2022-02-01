@@ -52,12 +52,10 @@ public class IngredientDTO implements Comparable {
 
 
     public void createImageUrlList() {
-
         this.i_U_L = new ImageDAO().getIngredientImagesUrls(this);
         if (!this.i_U_L.isEmpty()) {
             this.firstImage = this.i_U_L.get(0);
         }
-
     }
 
 

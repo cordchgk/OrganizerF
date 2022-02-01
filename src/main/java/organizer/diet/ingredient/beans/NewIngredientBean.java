@@ -19,11 +19,17 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * CDI BEAN providing information and methods for creating a new ingredient
+ *
+ *
+ */
+
+
 @Named("newIngredientBean")
 @ViewScoped
 @Getter
 @Setter
-
 public class NewIngredientBean implements Serializable {
     private IngredientDTO i_DTO;
     private List<IngredientDTO> i_DTO_L;
@@ -39,23 +45,25 @@ public class NewIngredientBean implements Serializable {
 
 
         this.build();
+        this.i_DAO = new IngredientDAO();
     }
 
+
+    /**
+     * Creates the new ingredient,loads it into the database
+     * and rebuilds the DataModels
+     */
     public void create() {
-
         for (IngredientDTO pointerDTO : this.i_DTO_L) {
-
             try {
-                pointerDTO.setIID(this.i_DAO.createNewIngredient(pointerDTO, u_Bean.getDto()));
+                pointerDTO.setIID(this.i_DAO.createNewIngredient(pointerDTO, u_Bean.getU_DTO()));
 
             } catch (DuplicateException e) {
                 e.printStackTrace();
             }
 
-
             IngredientSearch.getInstance().add(pointerDTO.getName(), pointerDTO.getIID());
             IngredientSearch.getInstance().addToList(pointerDTO);
-
         }
         this.build();
     }
@@ -66,7 +74,7 @@ public class NewIngredientBean implements Serializable {
         this.i_DTO_L = new ArrayList<>();
         this.i_DTO_L.add(i_DTO);
         this.i_DM = new ListDataModel<>(this.i_DTO_L);
-        this.i_DAO = new IngredientDAO();
+
     }
 
 }

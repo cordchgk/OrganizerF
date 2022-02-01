@@ -8,17 +8,18 @@
 <ui:composition>
     <h:outputScript name="/js/common.js"/>
 
+    <f:event listener="#{user.updateJSESSIONID()}" type="preRenderView"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <header style="background-color: #8a6642 " class="ci">
 
 
         <h:form>
-            <div style="width: 10%;height: 100%;margin-left: 5%" >
+            <div style="width: 10%;height: 100%;margin-left: 5%">
                 <div class="headerselect">
-                    <h:selectOneMenu value="#{user.dto.userSettingsDTO.locale}" style="height: 90%"
+                    <h:selectOneMenu value="#{user.u_DTO.userSettingsDTO.locale}" style="height: 90%"
                                      styleClass="ui-selecton">
                         <f:selectItems value="#{lc.locales}"/>
-                        <f:ajax listener="#{headerBean.updateUserLanguage()}" resetValues="false"/>
+                        <f:ajax listener="#{user.updateUserLanguage()}" resetValues="false"/>
                     </h:selectOneMenu>
                 </div>
                 <div>
@@ -41,21 +42,6 @@
         </h:form>
 
 
-        <p:dialog id="sure" widgetVar="sure">
-            <div style="width: 100%">
-                <h:outputText value="#{lc.getEntry('areyousure')}"/>
-            </div>
-            <div style="width: 100%;text-align: center;margin-top: 15px">
-                <h:outputLink value="#{headerBean.updateUserLanguage()}" styleClass="ui-button"
-                              style="height: max-content;width: 50%;background-color: #cc2222">
-
-                    #{lc.getEntry('reload')}
-
-                </h:outputLink>
-
-            </div>
-
-        </p:dialog>
         <ul class="navbar">
 
             <h:panelGroup rendered="#{!user.isAuthenticated()}" style="height: 50%">
@@ -74,7 +60,7 @@
             <h:panelGroup rendered="#{user.isAuthenticated()}" style="height: 50%">
                 <li>
 
-                    <f:websocket channel="testChannel" user="#{user.dto.userID}" onmessage="socketListener">
+                    <f:websocket channel="testChannel" user="#{user.u_DTO.userID}" onmessage="socketListener">
 
 
                     </f:websocket>

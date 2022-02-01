@@ -108,7 +108,7 @@ public class GroupManagerBean implements Serializable {
 
         FacesContext fc = FacesContext.getCurrentInstance();
 
-        boolean b = new GroupUserDAO().isGroupAdminByDTO(this.getDto(), this.userBean.getDto());
+        boolean b = new GroupUserDAO().isGroupAdminByDTO(this.getDto(), this.userBean.getU_DTO());
 
 
         if (!b) {

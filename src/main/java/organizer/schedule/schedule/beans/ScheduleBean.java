@@ -87,7 +87,7 @@ public class ScheduleBean implements Serializable {
     public void init() {
 
 
-        if (this.u_Bean.getDto().getUserID() == null) {
+        if (this.u_Bean.getU_DTO().getUserID() == null) {
             this.allowedAndLoggedIn();
         } else {
             this.s_M = new DefaultScheduleModel();
@@ -99,7 +99,7 @@ public class ScheduleBean implements Serializable {
             this.m_DAO = new MealDAO();
 
 
-            List<EventDTO> u_E_L = new EventDAO().selectByUserDto(u_Bean.getDto());
+            List<EventDTO> u_E_L = new EventDAO().selectByUserDto(u_Bean.getU_DTO());
 
 
             for (EventDTO eventDTO : u_E_L) {
@@ -122,11 +122,11 @@ public class ScheduleBean implements Serializable {
             this.createTotals();
 
             this.buildUserMeals();
-            this.e = this.s_M.getEvent(this.u_Bean.getCurrentEventId());
+            this.e = this.s_M.getEvent(this.u_Bean.getC_E_ID());
 
             EventDTO e_DTO = new EventDTO();
-            if (this.u_Bean.getCurrentEventId() != null) {
-                e_DTO.setEID(Integer.parseInt(this.u_Bean.getCurrentEventId()));
+            if (this.u_Bean.getC_E_ID() != null) {
+                e_DTO.setEID(Integer.parseInt(this.u_Bean.getC_E_ID()));
 
                 this.buildEventMeals(e_DTO);
 
@@ -146,7 +146,7 @@ public class ScheduleBean implements Serializable {
                 EventDTO t_A = getFromScheduleEvent(e);
                 t_A.setDate(e.getStartDate().toLocalDate());
                 t_A.setEID(0);
-                this.e_DAO.createNewEvent(t_A, this.u_Bean.getDto());
+                this.e_DAO.createNewEvent(t_A, this.u_Bean.getU_DTO());
             } catch (DuplicateException e) {
                 e.printStackTrace();
             }
@@ -182,7 +182,7 @@ public class ScheduleBean implements Serializable {
 
         this.buildEventMeals(e_DTO);
 
-        this.u_Bean.setCurrentEventId(e.getId());
+        this.u_Bean.setC_E_ID(e.getId());
 
     }
 
@@ -255,7 +255,7 @@ public class ScheduleBean implements Serializable {
             this.buildUserMeals();
 
             PrimeFaces.current().executeInitScript("showDialog();");
-            this.u_Bean.setCurrentEventId(e.getId());
+            this.u_Bean.setC_E_ID(e.getId());
 
 
         }
@@ -318,7 +318,7 @@ public class ScheduleBean implements Serializable {
     }
 
     private void buildUserMeals() {
-        this.u_M_L = this.m_DAO.getMealsByUserDTO(this.u_Bean.getDto());
+        this.u_M_L = this.m_DAO.getMealsByUserDTO(this.u_Bean.getU_DTO());
         this.u_M_DM = new ListDataModel(this.u_M_L);
 
     }
@@ -333,7 +333,7 @@ public class ScheduleBean implements Serializable {
 
         FacesContext fc = FacesContext.getCurrentInstance();
 
-        if (this.u_Bean.getDto().getUserID() == null) {
+        if (this.u_Bean.getU_DTO().getUserID() == null) {
             ConfigurableNavigationHandler nav = (ConfigurableNavigationHandler) fc.getApplication()
                     .getNavigationHandler();
             nav.performNavigation(FaceletPath.LOGIN.getPath());

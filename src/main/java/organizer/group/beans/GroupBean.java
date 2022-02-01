@@ -1,7 +1,6 @@
 package organizer.group.beans;
 
 import organizer.group.daos.GroupDAO;
-import organizer.group.daos.GroupUserDAO;
 import organizer.group.dtos.GroupDTO;
 import organizer.group.dtos.GroupUserDTO;
 import organizer.system.Utility;
@@ -10,7 +9,6 @@ import organizer.system.exceptions.DuplicateException;
 import organizer.user.beans.UserBean;
 
 import javax.annotation.PostConstruct;
-import javax.faces.context.FacesContext;
 import javax.faces.model.DataModel;
 import javax.faces.model.ListDataModel;
 import javax.faces.view.ViewScoped;
@@ -18,7 +16,6 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -96,7 +93,7 @@ public class GroupBean implements Serializable {
         gDTOAccepted = new ArrayList<>();
         gDTONotAccepted = new ArrayList<>();
         GroupDAO dao = new GroupDAO();
-        this.allGroups = dao.selectByUser(userBean.getDto());
+        this.allGroups = dao.selectByUser(userBean.getU_DTO());
         for (GroupDTO g : this.allGroups
         ) {
             if (g.isAccepted()) {
@@ -124,7 +121,7 @@ public class GroupBean implements Serializable {
         dto.setAccepted(true);
         GroupDAO dao = new GroupDAO();
         try {
-            dao.update(dto, userBean.getDto());
+            dao.update(dto, userBean.getU_DTO());
         } catch (DuplicateException e) {
             e.printStackTrace();
         }
@@ -137,7 +134,7 @@ public class GroupBean implements Serializable {
         GroupDAO dao = new GroupDAO();
         GroupUserDTO newGroupUserDTO = new GroupUserDTO();
         newGroupUserDTO.setgName(this.newGroupName);
-        newGroupUserDTO.setUserID(this.userBean.getDto().getUserID());
+        newGroupUserDTO.setUserID(this.userBean.getU_DTO().getUserID());
         try {
             dao.createGroup(newGroupUserDTO);
 

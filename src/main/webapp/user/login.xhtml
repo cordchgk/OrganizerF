@@ -22,7 +22,7 @@
                 <ul>
                     <li><h:outputText value="E-Mail-Adresse"/></li>
                     <li>
-                        <h:inputText id="email" value="#{user.dto.email}"
+                        <h:inputText id="email" value="#{user.u_DTO.email}"
                                      required="true"
                                      requiredMessage="E-Mail-Adresse angeben"
                                      label="E-Mail" p:min="1" p:required="true"
@@ -37,7 +37,7 @@
                     </li>
                     <li><h:outputText value="Passwort"/></li>
                     <li><h:inputSecret id="password"
-                                       value="#{user.dto.passwordHash}"
+                                       value="#{user.u_DTO.passwordHash}"
                                        required="true"
                                        requiredMessage="Passwort angeben"
                                        label="Password" p:min="1" p:required="true">

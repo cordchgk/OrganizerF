@@ -70,7 +70,7 @@ public class GroupMessagesBean implements Serializable {
     public void init() {
         this.groupDTO = new GroupDTO();
         GroupMessageDAO dao = new GroupMessageDAO();
-        this.dtos = dao.getMessages(this.groupDTO, userBean.getDto());
+        this.dtos = dao.getMessages(this.groupDTO, userBean.getU_DTO());
         this.messagesDataModel = new ListDataModel(this.dtos);
 
     }
@@ -81,7 +81,7 @@ public class GroupMessagesBean implements Serializable {
         this.groupDTO = new GroupDTO();
         this.groupDTO.setgID(Integer.parseInt(parameter.get("gID")));
         GroupMessageDAO dao = new GroupMessageDAO();
-        dao.insertByDTOs(this.groupDTO, this.userBean.getDto(), this.newDTO);
+        dao.insertByDTOs(this.groupDTO, this.userBean.getU_DTO(), this.newDTO);
 
     }
 
