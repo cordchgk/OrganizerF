@@ -20,7 +20,7 @@ import java.util.List;
 
 /**
  * CDI BEAN for the Ingredient Page
- * there is nothing special,just a simple bean holding all ingredient informations
+ *
  */
 @ViewScoped
 @Named("i_Bean")
@@ -42,6 +42,7 @@ public class IngredientBean implements Serializable {
     @PostConstruct
     public void init() {
         int id = Integer.parseInt(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("iID"));
+
         this.i_DTO = new IngredientDTO(id);
         this.i_DAO = new IngredientDAO();
         this.i_DTO = i_DAO.getIngredientByDTO(this.i_DTO);

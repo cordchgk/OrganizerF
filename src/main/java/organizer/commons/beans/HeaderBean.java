@@ -51,11 +51,18 @@ public class HeaderBean implements Serializable {
 
 
     /**
+     *
      * @return Locale tag of the users language
      */
     public String locale() {
         return this.userBean.getLocale();
     }
+
+
+
+
+
+
 
 
 }
