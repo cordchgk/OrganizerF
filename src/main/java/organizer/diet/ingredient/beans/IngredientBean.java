@@ -29,26 +29,26 @@ import java.util.List;
 public class IngredientBean implements Serializable {
 
 
-    private IngredientDTO i_DTO;
-    private IngredientDAO i_DAO;
+    private IngredientDTO ingredientDTO;
+    private IngredientDAO ingredientDAO;
 
-    private List<IngredientDTO> i_DTO_L;
-    private DataModel<IngredientDTO> i_DTO_DM;
+    private List<IngredientDTO> ingredients;
+    private DataModel<IngredientDTO> ingredientsDataModel;
 
     @Inject
-    private UserBean u_Bean;
+    private UserBean userBean;
 
 
     @PostConstruct
     public void init() {
         int id = Integer.parseInt(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("iID"));
 
-        this.i_DTO = new IngredientDTO(id);
-        this.i_DAO = new IngredientDAO();
-        this.i_DTO = i_DAO.getIngredientByDTO(this.i_DTO);
-        this.i_DTO_L = new ArrayList<IngredientDTO>();
-        this.i_DTO_L.add(this.i_DTO);
-        this.i_DTO_DM = new ListDataModel<>(this.i_DTO_L);
+        this.ingredientDTO = new IngredientDTO(id);
+        this.ingredientDAO = new IngredientDAO();
+        this.ingredientDTO = ingredientDAO.getIngredientByDTO(this.ingredientDTO);
+        this.ingredients = new ArrayList<IngredientDTO>();
+        this.ingredients.add(this.ingredientDTO);
+        this.ingredientsDataModel = new ListDataModel<>(this.ingredients);
 
 
 

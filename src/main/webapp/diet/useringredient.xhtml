@@ -29,7 +29,7 @@
                 <div id="mDIV" style="display: inline-block;vertical-align: top;height: auto;width: 100%">
 
                     <h:dataTable id="mealIngredientsTable" columnClasses="column" style="width: 100%"
-                                 var="i" width="100" value="#{userIngredientBean.u_I_DM}">
+                                 var="i" width="100" value="#{userIngredientBean.userIngredientsDataModel}">
 
                         <h:column>
 
@@ -131,7 +131,7 @@
                 <div style="margin-top: 5%">
                     <h:outputText value="#{lc.getEntry('search')}:"/>
 
-                    <h:inputText id="search" value="#{userIngredientBean.s_W}" autocomplete="off"
+                    <h:inputText id="search" value="#{userIngredientBean.searchWord}" autocomplete="off"
                                  onkeyup="t()"
                     >
 
@@ -141,7 +141,7 @@
                 <div>
 
                     <h:dataTable id="searchresults" columnClasses="column" style="width: 100%"
-                                 var="i" width="100" value="#{userIngredientBean.s_R_DM}">
+                                 var="i" width="100" value="#{userIngredientBean.resultsDataModel}">
                         <h:column>
                             <div style="text-align: center">
                                 #{i.name}

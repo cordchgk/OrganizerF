@@ -33,13 +33,13 @@ import java.util.List;
 @Setter
 public class UserIngredientsBean implements Serializable {
 
-    private List<IngredientDTO> u_I_L;
-    private DataModel u_I_DM;
-    private String s_W;
-    private List<IngredientDTO> s_R_L;
-    private DataModel<IngredientDTO> s_R_DM;
+    private List<IngredientDTO> userIngredients;
+    private DataModel userIngredientsDataModel;
+    private String searchWord;
+    private List<IngredientDTO> results;
+    private DataModel<IngredientDTO> resultsDataModel;
 
-    private IngredientDAO i_DAO;
+    private IngredientDAO ingredientDAO;
 
 
     @Inject
@@ -47,7 +47,7 @@ public class UserIngredientsBean implements Serializable {
 
     @PostConstruct
     public void init() {
-        this.i_DAO = new IngredientDAO();
+        this.ingredientDAO = new IngredientDAO();
         this.build();
     }
 
@@ -62,21 +62,21 @@ public class UserIngredientsBean implements Serializable {
      *
      */
     public void search() {
-        this.s_R_L = new ArrayList<>();
-        this.s_R_DM = new ListDataModel<>(this.s_R_L);
+        this.results = new ArrayList<>();
+        this.resultsDataModel = new ListDataModel<>(this.results);
 
-        List<Integer> ids = IngredientSearch.getInstance().search(s_W);
+        List<Integer> ids = IngredientSearch.getInstance().search(searchWord);
         if (!ids.isEmpty()) {
             for (Integer i : ids) {
 
                 for (IngredientDTO to_Add : IngredientSearch.getInstance().getI_L()) {
                     if (i == to_Add.getIID()) {
-                        this.s_R_L.add(to_Add);
+                        this.results.add(to_Add);
                     }
                 }
             }
         }
-        this.s_R_DM = new ListDataModel<>(this.s_R_L);
+        this.resultsDataModel = new ListDataModel<>(this.results);
     }
 
 
@@ -86,14 +86,14 @@ public class UserIngredientsBean implements Serializable {
      *
      */
     public void add() {
-        IngredientDTO to_Add = this.s_R_DM.getRowData();
+        IngredientDTO to_Add = this.resultsDataModel.getRowData();
 
         to_Add.setAmount(100);
 
         if (!this.contains(to_Add)) {
 
             try {
-                i_DAO.addToUserIngredients(this.userBean.getU_DTO(), to_Add);
+                ingredientDAO.addToUserIngredients(this.userBean.getU_DTO(), to_Add);
             } catch (DuplicateException e) {
                 e.printStackTrace();
             }
@@ -115,15 +115,15 @@ public class UserIngredientsBean implements Serializable {
      * Remnoves the selected ingredient from the user's ingredient list
      */
     public void remove() {
-        IngredientDTO to_Remove = (IngredientDTO) this.u_I_DM.getRowData();
-        this.i_DAO.removeFromUserIngredients(this.userBean.getU_DTO(), to_Remove);
+        IngredientDTO to_Remove = (IngredientDTO) this.userIngredientsDataModel.getRowData();
+        this.ingredientDAO.removeFromUserIngredients(this.userBean.getU_DTO(), to_Remove);
         this.build();
     }
 
 
     private boolean contains(IngredientDTO i_DTO) {
 
-        for (IngredientDTO pointer_DTO : this.u_I_L) {
+        for (IngredientDTO pointer_DTO : this.userIngredients) {
             if (i_DTO.getIID() == pointer_DTO.getIID()) {
                 return true;
             }
@@ -135,9 +135,9 @@ public class UserIngredientsBean implements Serializable {
      * Changes amount of the selected ingredient
      */
     public void changeAmount() {
-        IngredientDTO i_DTO = (IngredientDTO) this.u_I_DM.getRowData();
+        IngredientDTO i_DTO = (IngredientDTO) this.userIngredientsDataModel.getRowData();
 
-        i_DAO.updateUserIngredientAmount(this.userBean.getU_DTO(), i_DTO);
+        ingredientDAO.updateUserIngredientAmount(this.userBean.getU_DTO(), i_DTO);
 
         this.build();
     }
@@ -146,9 +146,9 @@ public class UserIngredientsBean implements Serializable {
      * Creates and populates the user's ingredient DataModel
      */
     private void build() {
-        this.u_I_L = i_DAO.getUserIngredients(this.userBean.getU_DTO());
-        Collections.sort(this.u_I_L);
-        this.u_I_DM = new ListDataModel(this.u_I_L);
+        this.userIngredients = ingredientDAO.getUserIngredients(this.userBean.getU_DTO());
+        Collections.sort(this.userIngredients);
+        this.userIngredientsDataModel = new ListDataModel(this.userIngredients);
     }
 
 

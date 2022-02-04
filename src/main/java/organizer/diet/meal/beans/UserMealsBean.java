@@ -18,16 +18,21 @@ import javax.inject.Named;
 import java.io.Serializable;
 import java.util.List;
 
+
+/**
+ *
+ * CDI Bean providing basic methods for managing the user's meals
+ */
 @Named("userMealBean")
 @ViewScoped
 @Getter
 @Setter
 public class UserMealsBean implements Serializable {
-    private MealDTO n_M_DTO;
-    private MealDAO m_DAO;
+    private MealDTO newMealDTO;
+    private MealDAO mealDAO;
 
-    List<MealDTO> m_DTO_L;
-    DataModel<MealDTO> m_DM;
+    List<MealDTO> userMeals;
+    DataModel<MealDTO> mealsDataModel;
 
     @Inject
     UserBean u_Bean;
@@ -35,7 +40,7 @@ public class UserMealsBean implements Serializable {
 
     @PostConstruct
     public void init() {
-        this.m_DAO = new MealDAO();
+        this.mealDAO = new MealDAO();
         this.build();
 
 
@@ -43,12 +48,12 @@ public class UserMealsBean implements Serializable {
 
 
     public String select() {
-        return Utility.getURL() + FaceletPath.MEAL.getPath() + "?mID=" + this.m_DM.getRowData().getMID();
+        return Utility.getURL() + FaceletPath.MEAL.getPath() + "?mID=" + this.mealsDataModel.getRowData().getMID();
     }
 
     public void create() {
 
-        m_DAO.createMeal(this.n_M_DTO, this.u_Bean.getU_DTO());
+        mealDAO.createMeal(this.newMealDTO, this.u_Bean.getU_DTO());
 
         this.build();
     }
@@ -57,7 +62,7 @@ public class UserMealsBean implements Serializable {
     public void delete() {
 
 
-        m_DAO.deleteMeal(this.m_DM.getRowData());
+        mealDAO.deleteMeal(this.mealsDataModel.getRowData());
 
         this.build();
 
@@ -66,14 +71,14 @@ public class UserMealsBean implements Serializable {
 
 
     public boolean isEmpty() {
-        return !this.m_DTO_L.isEmpty();
+        return !this.userMeals.isEmpty();
     }
 
 
     private void build() {
-        this.n_M_DTO = new MealDTO();
-        this.m_DTO_L = m_DAO.getMealsByUserDTO(this.u_Bean.getU_DTO());
-        this.m_DM = new ListDataModel<>(this.m_DTO_L);
+        this.newMealDTO = new MealDTO();
+        this.userMeals = mealDAO.getMealsByUserDTO(this.u_Bean.getU_DTO());
+        this.mealsDataModel = new ListDataModel<>(this.userMeals);
     }
 
 }

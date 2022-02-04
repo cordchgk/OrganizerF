@@ -21,8 +21,6 @@ import java.util.List;
 
 /**
  * CDI BEAN providing information and methods for creating a new ingredient
- *
- *
  */
 
 
@@ -31,10 +29,10 @@ import java.util.List;
 @Getter
 @Setter
 public class NewIngredientBean implements Serializable {
-    private IngredientDTO i_DTO;
-    private List<IngredientDTO> i_DTO_L;
-    private DataModel<IngredientDTO> i_DM;
-    private IngredientDAO i_DAO;
+    private IngredientDTO ingredientDTO;
+    private List<IngredientDTO> ingredients;
+    private DataModel<IngredientDTO> ingredientsDataModel;
+    private IngredientDAO ingredientDAO;
 
 
     @Inject
@@ -45,7 +43,7 @@ public class NewIngredientBean implements Serializable {
 
 
         this.build();
-        this.i_DAO = new IngredientDAO();
+        this.ingredientDAO = new IngredientDAO();
     }
 
 
@@ -54,9 +52,9 @@ public class NewIngredientBean implements Serializable {
      * and rebuilds the DataModels
      */
     public void create() {
-        for (IngredientDTO pointerDTO : this.i_DTO_L) {
+        for (IngredientDTO pointerDTO : this.ingredients) {
             try {
-                pointerDTO.setIID(this.i_DAO.createNewIngredient(pointerDTO, u_Bean.getU_DTO()));
+                pointerDTO.setIID(this.ingredientDAO.createNewIngredient(pointerDTO, u_Bean.getU_DTO()));
 
             } catch (DuplicateException e) {
                 e.printStackTrace();
@@ -70,10 +68,10 @@ public class NewIngredientBean implements Serializable {
 
 
     private void build() {
-        this.i_DTO = new IngredientDTO();
-        this.i_DTO_L = new ArrayList<>();
-        this.i_DTO_L.add(i_DTO);
-        this.i_DM = new ListDataModel<>(this.i_DTO_L);
+        this.ingredientDTO = new IngredientDTO();
+        this.ingredients = new ArrayList<>();
+        this.ingredients.add(ingredientDTO);
+        this.ingredientsDataModel = new ListDataModel<>(this.ingredients);
 
     }
 

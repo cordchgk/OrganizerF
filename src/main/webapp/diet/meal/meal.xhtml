@@ -7,14 +7,14 @@
         <f:viewParam name="mID"/>
     </f:metadata>
 
-    <ui:define name="#{mealBean.m_DTO.name}"></ui:define>
+    <ui:define name="#{mealBean.mealDTO.name}"></ui:define>
     <ui:define name="content">
 
 
         <div class="card-no-hover"
              style="width: 70%;height:auto;margin: 0 auto;text-align: center">
             <h1>#{mealBean
-                    .m_DTO.name}</h1>
+                    .mealDTO.name}</h1>
         </div>
         <div class="card-no-hover"
              style="display:table;width: 70%;height:auto;margin: 0 auto;margin-top: 5%;text-align: center">
@@ -34,7 +34,7 @@
 
                     <h:dataTable id="mealIngredientsTable" columnClasses="column" style="width: 100%"
                                  var="m" width="100" value="#{mealBean
-                                 .i_DM}">
+                                 .ingredientDataModel}">
 
                         <h:column>
 
@@ -160,7 +160,7 @@
 
                                 <div class="totalMacros">
                                     <h:outputText style="width: 100%;" value="Total Fats: #{mealBean
-                                .m_DTO.fats}">
+                                .mealDTO.fats}">
 
                                     </h:outputText>
 
@@ -168,21 +168,21 @@
 
                                 <div class="totalMacros">
                                     <h:outputText style="width: 100%;" value="Total Protein: #{mealBean
-                                .m_DTO.protein}">
+                                .mealDTO.protein}">
 
                                     </h:outputText>
 
                                 </div>
                                 <div class="totalMacros">
                                     <h:outputText style="width: 100%;" value="Total Carbs: #{mealBean
-                                .m_DTO.carbs}">
+                                .mealDTO.carbs}">
 
                                     </h:outputText>
 
                                 </div>
                                 <div class="totalMacros">
                                     <h:outputText style="width: 100%;" value="Total Calories: #{mealBean
-                                .m_DTO.calories}">
+                                .mealDTO.calories}">
 
                                     </h:outputText>
 
@@ -194,7 +194,7 @@
 
                         </div>
                         <div style="margin-top: 5%">
-                            <h:inputText id="search" value="#{mealBean.s_W}" autocomplete="off"
+                            <h:inputText id="search" value="#{mealBean.searchWord}" autocomplete="off"
 
                                          onkeyup="t()"
                             >
@@ -208,7 +208,7 @@
 
                             <h:dataTable id="searchresults" columnClasses="column" style="width: 100%"
                                          var="i" width="100" value="#{mealBean
-                                         .r_DM}">
+                                         .resultsDataModel}">
                                 <h:column>
                                     <div style="text-align: center">
                                         #{i.name}

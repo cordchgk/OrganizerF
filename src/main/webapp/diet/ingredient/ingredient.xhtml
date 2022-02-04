@@ -8,7 +8,7 @@
     </f:metadata>
 
 
-    <ui:define name="#{i_Bean.i_DTO.name}"></ui:define>
+    <ui:define name="#{i_Bean.ingredientDTO.name}"></ui:define>
     <ui:define name="content">
 
 
@@ -18,7 +18,7 @@
             <h:form id="form">
                 <div id="iDIV" style="display: inline-block;vertical-align: top;height: auto;width: 100%">
 
-                    <h:dataTable style="width: 100%" value="#{i_Bean.i_DTO_DM}" var="i"
+                    <h:dataTable style="width: 100%" value="#{i_Bean.ingredientsDataModel}" var="i"
                                  columnClasses="columnNI">
 
                         <h:column>

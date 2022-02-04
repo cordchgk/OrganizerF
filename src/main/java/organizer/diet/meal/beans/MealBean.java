@@ -13,9 +13,6 @@ import organizer.user.beans.UserBean;
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
-import javax.faces.event.AbortProcessingException;
-import javax.faces.event.ValueChangeEvent;
-import javax.faces.event.ValueChangeListener;
 import javax.faces.model.DataModel;
 import javax.faces.model.ListDataModel;
 import javax.faces.view.ViewScoped;
@@ -27,6 +24,12 @@ import java.util.Collections;
 import java.util.List;
 
 
+/**
+ * CDI Bean providing methods for managing a meal
+ *
+ *
+ * @author cordch
+ */
 @Named("mealBean")
 @ViewScoped
 @Getter
@@ -34,24 +37,23 @@ import java.util.List;
 public class MealBean implements Serializable {
     private boolean isAllowed = false;
 
+    private MealDTO mealDTO;
+    private String searchWord;
+    private List<IngredientDTO> results;
+    private DataModel<IngredientDTO> resultsDataModel;
+    private DataModel<IngredientDTO> ingredientDataModel;
 
-    private MealDTO m_DTO;
-    private String s_W;
-    private List<IngredientDTO> r_L;
-    private DataModel<IngredientDTO> r_DM;
-    private DataModel<IngredientDTO> i_DM;
-
-    private MealDAO m_DAO;
+    private MealDAO mealDAO;
 
     @Inject
-    UserBean u_Bean;
+    UserBean userBean;
 
     @PostConstruct
     public void init() {
-        this.m_DTO = new MealDTO();
-        this.m_DAO = new MealDAO();
-        this.s_W = "";
-        this.m_DTO.setMID(Integer.parseInt(FacesContext.getCurrentInstance().getExternalContext()
+        this.mealDTO = new MealDTO();
+        this.mealDAO = new MealDAO();
+        this.searchWord = "";
+        this.mealDTO.setMID(Integer.parseInt(FacesContext.getCurrentInstance().getExternalContext()
                 .getRequestParameterMap().get("mID")));
 
         this.isAllowed = true;
@@ -61,9 +63,13 @@ public class MealBean implements Serializable {
     }
 
 
+    /**
+     * Adds ingredient from the search result list to the meal,
+     * updates the database and rebuilds the DataModel for the current page
+     */
     public void add() {
 
-        IngredientDTO to_Add = this.r_DM.getRowData();
+        IngredientDTO to_Add = this.resultsDataModel.getRowData();
 
         to_Add.setAmount(100);
 
@@ -71,7 +77,7 @@ public class MealBean implements Serializable {
 
             IngredientDAO i_DAO = new IngredientDAO();
             try {
-                i_DAO.addIngredientToMeal(this.m_DTO, to_Add);
+                i_DAO.addIngredientToMeal(this.mealDTO, to_Add);
             } catch (DuplicateException e) {
                 e.printStackTrace();
             }
@@ -87,30 +93,38 @@ public class MealBean implements Serializable {
 
     }
 
+    /**
+     * Upgrades the selected ingredient's amount and rebuilds the DataModel
+     *
+     */
     public void updateIngredientAmount() {
 
-        m_DAO.updateIngredientAmount(this.m_DTO, i_DM.getRowData());
+        mealDAO.updateIngredientAmount(this.mealDTO, ingredientDataModel.getRowData());
 
         this.build();
 
     }
 
-
+    /**
+     * Removes the selected ingredient from the meal and rebuilds the DataModel
+     */
     public void removeIngredient() {
 
 
-        m_DAO.deleteIngredientFromMeal(this.m_DTO, i_DM.getRowData());
+        mealDAO.deleteIngredientFromMeal(this.mealDTO, ingredientDataModel.getRowData());
 
         this.build();
 
     }
 
+
+    //TODO searchBean
     public void search() {
 
-        this.r_L = new ArrayList<>();
-        this.r_DM = new ListDataModel<>(this.r_L);
+        this.results = new ArrayList<>();
+        this.resultsDataModel = new ListDataModel<>(this.results);
 
-        List<Integer> ids = IngredientSearch.getInstance().search(s_W);
+        List<Integer> ids = IngredientSearch.getInstance().search(searchWord);
 
 
         if (!ids.isEmpty()) {
@@ -118,21 +132,26 @@ public class MealBean implements Serializable {
 
                 for (IngredientDTO dto : IngredientSearch.getInstance().getI_L()) {
                     if (i == dto.getIID()) {
-                        this.r_L.add(dto);
+                        this.results.add(dto);
                     }
                 }
             }
         }
-        this.r_DM = new ListDataModel<>(this.r_L);
+        this.resultsDataModel = new ListDataModel<>(this.results);
 
 
     }
 
-
+    /**
+     * Checks if the ingredient {@param IngredientDTO} is alrady in the meal
+     *
+     * @param i_DTO Ingredient to check if it is already in the meal
+     * @return true if ingredient is already in the meal
+     */
     private boolean contains(IngredientDTO i_DTO) {
 
 
-        for (IngredientDTO pointer_DTO : this.m_DTO.getMealIngredients()) {
+        for (IngredientDTO pointer_DTO : this.mealDTO.getMealIngredients()) {
             if (i_DTO.getIID() == pointer_DTO.getIID()) {
                 return true;
             }
@@ -141,12 +160,15 @@ public class MealBean implements Serializable {
     }
 
 
+    /**
+     * Loads the meal from the database,calculates the calories,sort the ingredient list
+     * and build the DataModel
+     */
     private void build() {
-        this.m_DTO = m_DAO.getMealDTO(m_DTO);
-
-        this.m_DTO.calculateCalories();
-        Collections.sort(this.m_DTO.getMealIngredients());
-        this.i_DM = new ListDataModel<>(this.m_DTO.getMealIngredients());
+        this.mealDTO = mealDAO.getMealDTO(mealDTO);
+        this.mealDTO.calculateCalories();
+        Collections.sort(this.mealDTO.getMealIngredients());
+        this.ingredientDataModel = new ListDataModel<>(this.mealDTO.getMealIngredients());
     }
 
 
