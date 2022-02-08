@@ -350,4 +350,48 @@ public class UserDAO {
     }
 
 
+
+    public UserDTO testselectByDto(UserDTO DTO) throws DatabaseException {
+        ConnectionPool pool = ConnectionPool.getInstance();
+        UserDTO dto = new UserDTO();
+
+        Connection conn = pool.getConnection();
+        String query = "SELECT userid, email, password, firstname, surname, "
+                + "address,verificationhash,accountstatus"
+                + " FROM users WHERE userid = ?";
+        PreparedStatement statement = null;
+        ResultSet result;
+        try {
+            statement = conn.prepareStatement(query);
+        } catch (SQLException ex) {
+            Logger.getLogger(UserDAO.class.getName())
+                    .log(Level.SEVERE, null, ex);
+            pool.releaseConnection(conn);
+        }
+        try {
+            statement.setInt(1, DTO.getUserID());
+            result = statement.executeQuery();
+            while (result.next()) {
+
+                dto.setUserID(Integer.parseInt(result.getString(1)));
+                dto.setEmail(result.getString(2));
+                dto.setPasswordHash(result.getString(3));
+                dto.setFirstname(result.getString(4));
+                dto.setSurname(result.getString(5));
+                dto.setAddress(result.getString(6));
+                dto.setVerificationHash(result.getString(7));
+                dto.setStatus(result.getBoolean(8));
+
+
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(UserDAO.class.getName())
+                    .log(Level.SEVERE, null, ex);
+            pool.releaseConnection(conn);
+        }
+        pool.releaseConnection(conn);
+
+        return dto;
+    }
+
 }

@@ -92,7 +92,6 @@ public class UserBean implements Serializable {
         userSettingsDTO.setLocale(this.u_DTO.getUserSettingsDTO().getLocale());
         this.u_DTO = new UserDTO();
         u_DTO.setUserSettingsDTO(userSettingsDTO);
-
         return FaceletPath.INDEX.getRedirectionPath();
     }
 

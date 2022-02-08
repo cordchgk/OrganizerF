@@ -40,8 +40,6 @@ public class ConnectionPool implements Serializable {
     private Boolean closed;
 
 
-
-
     private ConnectionPool() {
 
         final Integer maxConnections = Config.getEntry("MAX_CONNECTIONS", 20);
@@ -310,8 +308,8 @@ public class ConnectionPool implements Serializable {
                     + "surname varchar(30) NOT NULL, "
                     + "address varchar(100),"
                     + "verificationhash varchar(100),"
-                    + "accountstatus BOOLEAN," +
-                    "sessioncookie varchar)";
+                    + "accountstatus BOOLEAN,"
+                    + "sessioncookie varchar)";
             stmt.executeUpdate(query);
             stmt.close();
         } catch (SQLException ex) {
@@ -542,7 +540,7 @@ public class ConnectionPool implements Serializable {
 
         try {
             Statement stmt = connection.createStatement();
-            String query = "CREATE TABLE IF NOT EXISTS  usersettings("+
+            String query = "CREATE TABLE IF NOT EXISTS  usersettings(" +
                     "uID smallint," +
                     "language varchar)";
             stmt.executeUpdate(query);

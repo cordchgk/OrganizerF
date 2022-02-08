@@ -188,7 +188,7 @@ public class ShoppingListBean implements Serializable {
         if (!ids.isEmpty()) {
             for (Integer i : ids) {
 
-                for (IngredientDTO dto : IngredientSearch.getInstance().getI_L()) {
+                for (IngredientDTO dto : IngredientSearch.getInstance().getIngredients()) {
                     if (i == dto.getIID()) {
                         this.r_L.add(dto);
                     }

@@ -69,7 +69,7 @@ public class UserIngredientsBean implements Serializable {
         if (!ids.isEmpty()) {
             for (Integer i : ids) {
 
-                for (IngredientDTO to_Add : IngredientSearch.getInstance().getI_L()) {
+                for (IngredientDTO to_Add : IngredientSearch.getInstance().getIngredients()) {
                     if (i == to_Add.getIID()) {
                         this.results.add(to_Add);
                     }

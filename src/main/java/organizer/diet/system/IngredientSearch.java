@@ -8,33 +8,108 @@ import organizer.diet.ingredient.daos.IngredientDAO;
 import organizer.diet.ingredient.dtos.IngredientDTO;
 
 import javax.enterprise.context.ApplicationScoped;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
+/**
+ * Search service for the ingredient search,holds the current search TRIE and provides
+ * methods for the search itself and for adding ingredients
+ *
+ *
+ *
+ */
 @ApplicationScoped
 @Getter
 @Setter
-public class IngredientSearch {
+public class IngredientSearch implements Serializable {
     private static final IngredientSearch instance = new IngredientSearch();
 
     private Trie trie;
-    private List<IngredientDTO> i_L;
+    private List<IngredientDTO> ingredients;
 
     public static IngredientSearch getInstance() {
         return instance;
     }
 
 
+    /**
+     * Constructor that is only called ONCE in the application lifecycle,
+     * loads the tree and the ingredient list from the database
+     */
     private IngredientSearch() {
 
         this.trie = new Trie();
         IngredientDAO ingredientDAO = new IngredientDAO();
-        this.i_L = new ArrayList<>(ingredientDAO.getIngredientsForTrie());
+        this.ingredients = new ArrayList<>(ingredientDAO.getIngredientsForTrie());
+        this.addAllToTrie(this.ingredients);
 
-        this.addAllToTrie(this.i_L);
+
+    }
 
 
+    /**
+     * Adds the {@param word} to the current trie (and all possible suffixes) and adds the {@param value} to the
+     * node's lists
+     *
+     * @param word Word to add to the trie
+     * @param value Unique identifier (the ingredient id)
+     */
+    public void add(String word, int value) {
+
+        this.trie.add(word, value);
+
+        while (word.length() > 0) {
+            word = word.substring(1);
+            this.trie.add(word, value);
+
+        }
+
+    }
+
+
+    /**
+     * Adds the {@param i_DTO} to the list of all ingredients
+     *
+     *
+     * @param i_DTO IngredientDTO to add to the list of all ingredients
+     */
+    public void addToList(IngredientDTO i_DTO) {
+        this.ingredients.add(i_DTO);
+    }
+
+
+    /**
+     *
+     *
+     *
+     *
+     * @param searchWord
+     * @return
+     */
+    public List<Integer> search(String searchWord) {
+        String[] words = searchWord.split(" ");
+
+        ArrayList<HashSet<Integer>> all = new ArrayList<>();
+
+        for (String s : words) {
+            HashSet set = new HashSet(this.trie.points(s));
+            all.add(set);
+        }
+
+        return this.filter(all);
+
+    }
+
+
+
+
+    private void addAllToTrie(List<IngredientDTO> dtos) {
+        for (IngredientDTO dto : dtos) {
+            this.add(dto.getName(), dto.getIID());
+            this.add(dto.getBrand(), dto.getIID());
+        }
     }
 
 
@@ -48,46 +123,6 @@ public class IngredientSearch {
         }
 
         return new ArrayList<>(toReturn);
-    }
-
-
-    private void addAllToTrie(List<IngredientDTO> dtos) {
-        for (IngredientDTO dto : dtos) {
-            this.add(dto.getName(), dto.getIID());
-
-            this.add(dto.getBrand(), dto.getIID());
-        }
-    }
-
-    public void add(String word, int value) {
-
-        this.trie.add(word, value);
-
-        while (word.length() > 0) {
-            word = word.substring(1);
-            this.trie.add(word, value);
-
-        }
-
-    }
-
-    public void addToList(IngredientDTO i_DTO) {
-        this.i_L.add(i_DTO);
-    }
-
-    public List<Integer> search(String searchWord) {
-        String[] words = searchWord.split(" ");
-
-
-        ArrayList<HashSet<Integer>> all = new ArrayList<>();
-
-        for (String s : words) {
-            HashSet set = new HashSet(this.trie.points(s));
-            all.add(set);
-        }
-
-        return this.filter(all);
-
     }
 
     @Override

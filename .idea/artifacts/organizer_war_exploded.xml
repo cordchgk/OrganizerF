@@ -1,6 +1,9 @@
 <component name="ArtifactManager">
-  <artifact type="exploded-war" name="organizer:war exploded">
+  <artifact type="exploded-war" build-on-make="true" name="organizer:war exploded">
     <output-path>$PROJECT_DIR$/target/organizer-1.0</output-path>
+    <properties id="ant-preprocessing">
+      <options enabled="true" />
+    </properties>
     <properties id="maven-jee-properties">
       <options>
         <exploded>true</exploded>

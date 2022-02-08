@@ -19,14 +19,13 @@ public enum Config {
             Logger.getLogger(Config.class.getName());
 
     /**
-     * The resource bundle name for config.properties.
+     * The resource bundle name for config_de.properties.
      */
     @NonNls
-    private static final String BUNDLE_NAME = "config_de";
+    private static final String BUNDLE_NAME = "config_de" ;
 
     /**
-     * The resource bundle. This property is not final for test classes to mock
-     * their own bundles.
+     * The resource bundle.
      */
     private static ResourceBundle resourceBundle =
             ResourceBundle.getBundle(BUNDLE_NAME);
